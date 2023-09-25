@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Retard.Client", "Retard.Client.csproj", "{32573EBD-145F-439D-8286-9B9A0BB0F623}"
+	ProjectSection(ProjectDependencies) = postProject
+		{926DBDEF-B5D3-457A-90FB-4D0470C07F52} = {926DBDEF-B5D3-457A-90FB-4D0470C07F52}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Retard.Core", "..\Retard.Core\Retard.Core\Retard.Core.csproj", "{926DBDEF-B5D3-457A-90FB-4D0470C07F52}"
 EndProject
