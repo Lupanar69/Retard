@@ -1,11 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Entities;
 
 namespace Retard.Client
 {
-    public class GameRunner : Game
+    /// <summary>
+    /// Callbacks du jeu
+    /// </summary>
+    internal sealed class GameRunner : Game
     {
         #region Variables d'instance
 
@@ -14,9 +16,10 @@ namespace Retard.Client
         /// </summary>
         private World _world;
 
-        Texture2D t;
+        /// <summary>
+        /// Permet de modifier les paramètres de la fenêtre
+        /// </summary>
         private GraphicsDeviceManager _graphics;
-        SpriteBatch sb;
 
         #endregion
 
@@ -27,10 +30,10 @@ namespace Retard.Client
         /// </summary>
         public GameRunner()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            this._graphics = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
-            this.IsMouseVisible = true;
-            this.Window.AllowUserResizing = true;
+
+            this.SetupGameWindow();
         }
 
         #endregion
@@ -49,9 +52,6 @@ namespace Retard.Client
         protected override void LoadContent()
         {
             // TODO: use this.Content to load your game content here
-
-            sb = new SpriteBatch(GraphicsDevice);
-            t = Content.Load<Texture2D>("Resources/Textures/Debug/tiles_test2");
         }
 
         protected override void Update(GameTime gameTime)
@@ -74,11 +74,25 @@ namespace Retard.Client
 
             this._world.Draw(gameTime);
 
-            sb.Begin();
-            sb.Draw(t, new Rectangle(0, 0, 128, 128), Color.White);
-            sb.End();
-
             base.Draw(gameTime);
+        }
+
+        #endregion
+
+        #region Fonctions privées
+
+        /// <summary>
+        /// Initialise la fenêtre de jeu
+        /// </summary>
+        private void SetupGameWindow()
+        {
+            this.IsMouseVisible = true;
+            this.Window.AllowUserResizing = true;
+
+            this._graphics.PreferredBackBufferWidth = 1920;
+            this._graphics.PreferredBackBufferHeight = 1080;
+            //this._graphics.IsFullScreen = true;
+            this._graphics.ApplyChanges();
         }
 
         #endregion
