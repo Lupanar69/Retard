@@ -6,7 +6,7 @@ namespace Retard.Core.Models.Assets
     /// <summary>
     /// Représente un atlas de sprites animé
     /// </summary>
-    public sealed class AnimatedSprite : SpriteAtlas
+    internal sealed class AnimatedSprite : Sprite
     {
         #region Variables d'instance
 
@@ -22,14 +22,11 @@ namespace Retard.Core.Models.Assets
         /// <summary>
         /// Constructeur
         /// </summary>
-        /// <param name="texture">La texture source du sprite</param>
-        /// <param name="rows">Le nombre de lignes de sprite</param>
-        /// <param name="columns">Le nombre de colonnes de sprite</param>
         /// <param name="frame">L'ID de départ de l'animation (0 par défaut.)</param>
-        public AnimatedSprite(Texture2D texture, int rows, int columns, int frame = 0)
-            : base(texture, rows, columns, frame)
+        internal AnimatedSprite(SpriteAtlas atlas, int frame = 0)
+            : base(atlas, frame)
         {
-            this._totalFrames = rows * columns;
+            this._totalFrames = atlas.Rows * atlas.Columns;
         }
 
         #endregion
@@ -39,11 +36,9 @@ namespace Retard.Core.Models.Assets
         /// <summary>
         /// Màj le sprite à afficher au fil du temps
         /// </summary>
-        public void Update()
+        internal void Update()
         {
-            this.Frame++;
-            if (this.Frame == this._totalFrames)
-                this.Frame = 0;
+            this.Frame = (this.Frame + 1) % this._totalFrames;
         }
 
         /// <summary>
@@ -52,10 +47,11 @@ namespace Retard.Core.Models.Assets
         /// </summary>
         /// <param name="spriteBatch">Gère le rendu du sprite à l'écran</param>
         /// <param name="screenPos">La position en pixels</param>
-        public sealed override void Draw(in SpriteBatch spriteBatch, Vector2 screenPos)
+        /// <param name="color">La couleur du sprite</param>
+        internal sealed override void Draw(in SpriteBatch spriteBatch, Vector2 screenPos, Color color)
         {
-            this._sourceRectangle = SpriteAtlas.GetSpriteFromAtlas(this.Texture, this.Rows, this.Columns, this.Frame);
-            base.Draw(spriteBatch, screenPos);
+            this._sourceRectangle = this.Atlas.GetSpriteRect(this.Frame);
+            base.Draw(spriteBatch, screenPos, color);
         }
 
         #endregion

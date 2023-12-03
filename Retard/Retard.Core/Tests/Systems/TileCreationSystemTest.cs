@@ -3,7 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Entities;
 using MonoGame.Extended.Entities.Systems;
-using Retard.Core.Components.Tiles;
+using Retard.Core.Models.Assets;
+using Retard.Core.Tests.Components;
 
 namespace Retard.Core.Tests.Systems
 {
@@ -14,12 +15,12 @@ namespace Retard.Core.Tests.Systems
     {
         private readonly FastRandom _random = new FastRandom();
         private ComponentMapper<Transform2> _transformMapper;
-        private ComponentMapper<TileSpriteCD> _spriteMapper;
+        private ComponentMapper<TileSpriteCDTest> _spriteMapper;
 
         private Texture2D texture;
 
         public TileCreationSystemTest(Texture2D texture)
-            : base(Aspect.All(typeof(Transform2), typeof(TileSpriteCD)))
+            : base(Aspect.All(typeof(Transform2), typeof(TileSpriteCDTest)))
         {
             this.texture = texture;
         }
@@ -27,7 +28,7 @@ namespace Retard.Core.Tests.Systems
         public override void Initialize(IComponentMapperService mapperService)
         {
             _transformMapper = mapperService.GetMapper<Transform2>();
-            _spriteMapper = mapperService.GetMapper<TileSpriteCD>();
+            _spriteMapper = mapperService.GetMapper<TileSpriteCDTest>();
 
             for (int i = 0; i < 200; i++)
             {
@@ -41,7 +42,7 @@ namespace Retard.Core.Tests.Systems
         {
             var entity = CreateEntity();
             entity.Attach(new Transform2(position));
-            entity.Attach(new TileSpriteCD(tex, 4, 4, frame));
+            entity.Attach(new TileSpriteCDTest(new SpriteAtlas(tex, 4, 4/*, frame*/), Color.White));
             return entity.Id;
         }
     }
