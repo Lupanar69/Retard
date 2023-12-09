@@ -39,7 +39,7 @@ namespace Retard.Core.View.Systems
         public MapRenderSystem(GraphicsDevice graphicsDevice)
             : base(Aspect.All(typeof(TilePositionCD), typeof(TileSpriteCD)))
         {
-            _spriteBatch = new SpriteBatch(graphicsDevice);
+            this._spriteBatch = new SpriteBatch(graphicsDevice);
         }
 
         #endregion
@@ -52,8 +52,8 @@ namespace Retard.Core.View.Systems
         /// <param name="mapperService">Pour initialiser les ComponentMappers</param>
         public override void Initialize(IComponentMapperService mapperService)
         {
-            _tilePosMapper = mapperService.GetMapper<TilePositionCD>();
-            _spriteMapper = mapperService.GetMapper<TileSpriteCD>();
+            this._tilePosMapper = mapperService.GetMapper<TilePositionCD>();
+            this._spriteMapper = mapperService.GetMapper<TileSpriteCD>();
         }
 
         /// <summary>
@@ -62,16 +62,16 @@ namespace Retard.Core.View.Systems
         /// <param name="gameTime">Le temps écoulé depuis le lancement de l'application</param>
         public override void Draw(GameTime gameTime)
         {
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            this._spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-            foreach (var entity in ActiveEntities)
+            foreach (int entityID in this.ActiveEntities)
             {
-                TilePositionCD pos = _tilePosMapper.Get(entity);
-                TileSpriteCD sprite = _spriteMapper.Get(entity);
+                TilePositionCD pos = this._tilePosMapper.Get(entityID);
+                TileSpriteCD sprite = this._spriteMapper.Get(entityID);
 
-                sprite.Sprite.Draw(in _spriteBatch, pos.Value, sprite.Color);
+                sprite.Sprite.Draw(in this._spriteBatch, pos.Value, sprite.Color);
             }
-            _spriteBatch.End();
+            this._spriteBatch.End();
         }
 
         #endregion

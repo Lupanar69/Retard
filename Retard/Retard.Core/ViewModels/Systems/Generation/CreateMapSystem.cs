@@ -5,10 +5,13 @@ using MonoGame.Extended.Entities.Systems;
 using MonoGame.Extended.Input;
 using Retard.Core.Models;
 using Retard.Core.Models.Assets;
-using Retard.Core.Models.Entities;
+using Retard.Core.Models.Components.Cell;
+using Retard.Core.Models.Components.Map;
+using Retard.Core.Models.Components.Other;
+using Retard.Core.Models.Components.Tiles;
 using Retard.Core.ViewModels.Generation;
 
-namespace Retard.Core.ViewModels.Systems
+namespace Retard.Core.ViewModels.Systems.Generation
 {
     /// <summary>
     /// Crée l'entité représentant la carte du niveau
@@ -31,7 +34,7 @@ namespace Retard.Core.ViewModels.Systems
         /// </summary>
         /// <param name="atlas">L'atlas contenant les sprites des cases</param>
         public CreateMapSystem(SpriteAtlas atlas)
-            : base(new AspectBuilder())
+            : base(Aspect.One(typeof(MapTag), typeof(CellTag), typeof(TileTag)))
         {
             this._atlas = atlas;
         }
@@ -57,6 +60,16 @@ namespace Retard.Core.ViewModels.Systems
         {
             if (KeyboardExtended.GetState().WasKeyJustDown(Keys.Space))
             {
+                // Détruit l'ancienne carte
+
+                foreach (int entityID in this.ActiveEntities)
+                {
+                    Entity e = this.GetEntity(entityID);
+                    Entities.AddComponent<DestroyTag>(in e);
+                }
+
+                // Génère une nouvelle carte
+
                 int sizeX = (int)GameSession.GenerationRandom.NextSingle(Constants.MIN_MAX_MAP_SIZE.X, Constants.MIN_MAX_MAP_SIZE.Y);
                 int sizeY = (int)GameSession.GenerationRandom.NextSingle(Constants.MIN_MAX_MAP_SIZE.X, Constants.MIN_MAX_MAP_SIZE.Y);
                 int length = sizeX * sizeY;
@@ -64,9 +77,9 @@ namespace Retard.Core.ViewModels.Systems
 
                 IMapGenerationAlgorithm mapGen = Constants.MAP_GENERATION_ALGORITHMS[mapGenIndex];
                 int[] tilesIDs = mapGen.Execute(length, sizeX, sizeY);
-                Entity[] tiles = this.CreateMapTiles(tilesIDs, sizeX, sizeY, in this._atlas);
-                Entity[] cellEs = this.CreateCells(length, sizeX, sizeY, in tiles);
-                this.CreateMap(length, sizeX, sizeY, in cellEs);
+                Entity[] tiles = CreateMapTiles(tilesIDs, sizeX, sizeY, in this._atlas);
+                Entity[] cellEs = CreateCells(length, sizeX, sizeY, in tiles);
+                CreateMap(length, sizeX, sizeY, in cellEs);
             }
         }
 

@@ -5,7 +5,8 @@ using MonoGame.Extended.Entities;
 using Retard.Core.Models;
 using Retard.Core.Models.Assets;
 using Retard.Core.View.Systems;
-using Retard.Core.ViewModels.Systems;
+using Retard.Core.ViewModels.Systems.Generation;
+using Retard.Core.ViewModels.Systems.Other;
 
 namespace Retard.Client
 {
@@ -69,6 +70,7 @@ namespace Retard.Client
             this._world = new WorldBuilder()
                 .AddSystem(new CreateMapSystem(debugAtlas))
                 .AddSystem(new MapRenderSystem(this.GraphicsDevice))
+                .AddSystem(new DestroySystem())
                 .Build();
 
             this.Components.Add(this._world);
