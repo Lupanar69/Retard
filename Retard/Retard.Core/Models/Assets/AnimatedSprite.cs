@@ -31,7 +31,7 @@ namespace Retard.Core.Models.Assets
 
         #endregion
 
-        #region Fonctions publiques
+        #region Fonctions internes
 
         /// <summary>
         /// Màj le sprite à afficher au fil du temps

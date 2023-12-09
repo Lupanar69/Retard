@@ -21,10 +21,10 @@ namespace Retard.Core.Models.Components.Map
         /// <summary>
         /// Constructeur par défaut
         /// </summary>
-        /// <param name="length">Le nombre de cellules de la carte</param>
-        internal MapCellsEntitiesBuffer(int length)
+        /// <param name="cellEs">Les cellules de la carte</param>
+        internal MapCellsEntitiesBuffer(Entity[] cellEs)
         {
-            this.Value = new Entity[length];
+            this.Value = cellEs;
         }
 
         #endregion

@@ -6,7 +6,7 @@ namespace Retard.Core.Models.Assets
     /// <summary>
     /// Représente un sprite provenant d'un atlas
     /// </summary>
-    internal sealed class SpriteAtlas
+    public sealed class SpriteAtlas
     {
         #region Propriétés
 
@@ -35,7 +35,7 @@ namespace Retard.Core.Models.Assets
         /// <param name="texture">La texture source du sprite</param>
         /// <param name="rows">Le nombre de lignes de sprite</param>
         /// <param name="columns">Le nombre de colonnes de sprite</param>
-        internal SpriteAtlas(Texture2D texture, int rows, int columns)
+        public SpriteAtlas(Texture2D texture, int rows, int columns)
         {
             this.Texture = texture;
             this.Rows = rows;
@@ -44,7 +44,7 @@ namespace Retard.Core.Models.Assets
 
         #endregion
 
-        #region Fonctions statiques
+        #region Fonctions internes
 
         /// <summary>
         /// Calcule les dimensions du sprite

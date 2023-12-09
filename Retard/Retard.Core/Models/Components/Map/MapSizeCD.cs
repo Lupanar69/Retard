@@ -10,9 +10,14 @@ namespace Retard.Core.Models.Components.Map
         #region Variables d'instance
 
         /// <summary>
-        /// Les dimensions de la carte
+        /// La taille de la carte sur l'axe X
         /// </summary>
-        internal Vector2 Value;
+        internal int SizeX;
+
+        /// <summary>
+        /// La taille de la carte sur l'axe Y
+        /// </summary>
+        internal int SizeY;
 
         #endregion
 
@@ -21,10 +26,12 @@ namespace Retard.Core.Models.Components.Map
         /// <summary>
         /// Constructeur par défaut
         /// </summary>
-        /// <param name="value">Les dimensions de la carte</param>
-        internal MapSizeCD(Vector2 value)
+        /// <param name="sizeX">La taille de la carte sur l'axe X</param>
+        /// <param name="sizeY">La taille de la carte sur l'axe Y</param>
+        internal MapSizeCD(int sizeX, int sizeY)
         {
-            this.Value = value;
+            this.SizeX = sizeX;
+            this.SizeY = sizeY;
         }
 
         #endregion

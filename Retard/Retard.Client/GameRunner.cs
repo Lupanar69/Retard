@@ -1,6 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Entities;
+using Retard.Core.Models;
+using Retard.Core.Models.Assets;
+using Retard.Core.View.Systems;
+using Retard.Core.ViewModels.Systems;
 
 namespace Retard.Client
 {
@@ -40,37 +45,58 @@ namespace Retard.Client
 
         #region Fonctions protégées
 
+        /// <summary>
+        /// Init
+        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
-            this._world = new WorldBuilder().Build();
+            // Pour l'instant on génère l'aléa ici,
+            // mais on le déplacera au lancement d'une nouvelle partie
+            int seed = 1234;
+            GameSession.New(seed);
 
             base.Initialize();
         }
 
+        /// <summary>
+        /// Chargement du contenu
+        /// </summary>
         protected override void LoadContent()
         {
-            // TODO: use this.Content to load your game content here
+            Texture2D debugTex = Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
+            SpriteAtlas debugAtlas = new(debugTex, 4, 4);
+
+            this._world = new WorldBuilder()
+                .AddSystem(new CreateMapSystem(debugAtlas))
+                .AddSystem(new MapRenderSystem(this.GraphicsDevice))
+                .Build();
+
+            this.Components.Add(this._world);
         }
 
+        /// <summary>
+        /// Màj à chaque frame
+        /// </summary>
+        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
                 Exit();
-
-            // TODO: Add your update logic here
+            }
 
             this._world.Update(gameTime);
 
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Pour afficher des éléments à l'écran
+        /// </summary>
+        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         protected override void Draw(GameTime gameTime)
         {
             this.GraphicsDevice.Clear(Color.Black);
-
-            // TODO: Add your drawing code here
 
             this._world.Draw(gameTime);
 

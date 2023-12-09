@@ -28,6 +28,15 @@ namespace Retard.Core.Models.Components.Cell
             this.Value = new List<Entity>(length);
         }
 
+        /// <summary>
+        /// Constructeur par défaut
+        /// </summary>
+        /// <param name="tilesEs">Les entités des cases par défaut à ajouter à cette cellule</param>
+        internal CellTilesEntitesBuffer(params Entity[] tilesEs)
+        {
+            this.Value = new List<Entity>(tilesEs);
+        }
+
         #endregion
     }
 }
