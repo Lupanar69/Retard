@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Entities;
 using MonoGame.Extended.Entities.Systems;
+using Retard.Core.Models;
 using Retard.Core.Models.Components.Tiles;
 
 namespace Retard.Core.View.Systems
@@ -28,6 +30,11 @@ namespace Retard.Core.View.Systems
         /// </summary>
         private ComponentMapper<TileSpriteCD> _spriteMapper;
 
+        /// <summary>
+        /// La caméra du jeu
+        /// </summary>
+        private Camera _camera;
+
         #endregion
 
         #region Constructeur
@@ -36,10 +43,11 @@ namespace Retard.Core.View.Systems
         /// Constructeur par défaut
         /// </summary>
         /// <param name="graphicsDevice">Utilisé pour créer le SpriteBatch</param>
-        public MapRenderSystem(GraphicsDevice graphicsDevice)
+        public MapRenderSystem(GraphicsDevice graphicsDevice, Camera camera)
             : base(Aspect.All(typeof(TilePositionCD), typeof(TileSpriteCD)))
         {
             this._spriteBatch = new SpriteBatch(graphicsDevice);
+            this._camera = camera;
         }
 
         #endregion
@@ -62,6 +70,14 @@ namespace Retard.Core.View.Systems
         /// <param name="gameTime">Le temps écoulé depuis le lancement de l'application</param>
         public override void Draw(GameTime gameTime)
         {
+            // TAF : Modifier le script de la caméra
+            // pour améliorer le positionnement de la carte
+            // et permettre le déplacement au clavier
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+            {
+                this._camera.UpdateXYPos();
+            }
+
             this._spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
             foreach (int entityID in this.ActiveEntities)
@@ -69,7 +85,7 @@ namespace Retard.Core.View.Systems
                 TilePositionCD pos = this._tilePosMapper.Get(entityID);
                 TileSpriteCD sprite = this._spriteMapper.Get(entityID);
 
-                sprite.Sprite.Draw(in this._spriteBatch, pos.Value, sprite.Color);
+                sprite.Sprite.Draw(in this._spriteBatch, pos.Value + this._camera.MouseXY, sprite.Color);
             }
             this._spriteBatch.End();
         }

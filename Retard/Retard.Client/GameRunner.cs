@@ -27,6 +27,11 @@ namespace Retard.Client
         /// </summary>
         private GraphicsDeviceManager _graphics;
 
+        /// <summary>
+        /// La caméra du jeu
+        /// </summary>
+        private Camera _camera;
+
         #endregion
 
         #region Constructeur
@@ -56,6 +61,8 @@ namespace Retard.Client
             int seed = 1234;
             GameSession.New(seed);
 
+            this._camera = new Camera();
+
             base.Initialize();
         }
 
@@ -69,7 +76,7 @@ namespace Retard.Client
 
             this._world = new WorldBuilder()
                 .AddSystem(new CreateMapSystem(debugAtlas))
-                .AddSystem(new MapRenderSystem(this.GraphicsDevice))
+                .AddSystem(new MapRenderSystem(this.GraphicsDevice, this._camera))
                 .AddSystem(new DestroySystem())
                 .Build();
 
