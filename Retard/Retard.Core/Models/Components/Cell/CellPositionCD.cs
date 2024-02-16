@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Retard.Core.Models.ValueTypes;
 
 namespace Retard.Core.Models.Components.Cell
 {
@@ -12,7 +12,7 @@ namespace Retard.Core.Models.Components.Cell
         /// <summary>
         /// La position de la cellule sur la carte
         /// </summary>
-        internal Vector2 Value;
+        internal int2 Value;
 
         #endregion
 
@@ -22,7 +22,7 @@ namespace Retard.Core.Models.Components.Cell
         /// Constructeur par défaut
         /// </summary>
         /// <param name="value">La position de la cellule sur la carte</param>
-        internal CellPositionCD(Vector2 value)
+        internal CellPositionCD(int2 value)
         {
             this.Value = value;
         }

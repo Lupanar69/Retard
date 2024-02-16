@@ -3,7 +3,9 @@ using MonoGame.Extended.Entities;
 using Retard.Core.Models.Assets;
 using Retard.Core.Models.Components.Cell;
 using Retard.Core.Models.Components.Map;
+using Retard.Core.Models.Components.MapElements;
 using Retard.Core.Models.Components.Tiles;
+using Retard.Core.Models.ValueTypes;
 
 namespace Retard.Core.Models
 {
@@ -14,20 +16,22 @@ namespace Retard.Core.Models
     {
         #region Fonctions statiques
 
+        #region Cells
+
         /// <summary>
         /// Crée une entité représentant la carte du niveau
         /// </summary>
         /// <param name="e">L'entité</param>
-        /// <param name="length">Le nombre total de cellules sur la carte</param>
-        /// <param name="sizeX">La taille de la carte sur l'axe X</param>
-        /// <param name="sizeY">La taille de la carte sur l'axe Y</param>
+        /// <param name="size">La taille de la carte</param>
         /// <param name="cellEs">Les entités des cellules de la carte</param>
-        internal static void CreateMapEntity(in Entity e, int length, int sizeX, int sizeY, Entity[] cellEs)
+        /// <param name="roomsEs">Les entités des salles de la carte</param>
+        internal static void CreateMapEntity(in Entity e, int2 size, in Entity[] cellEs, in Entity[] roomsEs)
         {
             e.Attach(new MapTag());
-            e.Attach(new MapSizeCD(sizeX, sizeY));
-            e.Attach(new MapCellsPositionsBuffer(length));
+            e.Attach(new MapSizeCD(size));
+            e.Attach(new MapCellsPositionsBuffer(size.X * size.Y));
             e.Attach(new MapCellsEntitiesBuffer(cellEs));
+            e.Attach(new MapRoomsEntitiesBuffer(roomsEs));
         }
 
         /// <summary>
@@ -38,7 +42,7 @@ namespace Retard.Core.Models
         /// <param name="column">Le n° de colonne de la cellule</param>
         /// <param name="pos">La position de la cellule</param>
         /// <param name="tileE">L'entité de la case par défaut</param>
-        internal static void CreateCellEntity(in Entity e, int row, int column, Vector2 pos, Entity tileE)
+        internal static void CreateCellEntity(in Entity e, int row, int column, int2 pos, Entity tileE)
         {
             e.Attach(new CellTag());
             e.Attach(new CellRowColumnCD(row, column));
@@ -51,12 +55,40 @@ namespace Retard.Core.Models
         /// </summary>
         /// <param name="e">L'entité</param>
         /// <param name="pos">La position de la cellule</param>
-        internal static void CreateTileEntity(in Entity e, in SpriteAtlas atlas, Vector2 pos, int frame)
+        internal static void CreateTileEntity(in Entity e, in SpriteAtlas atlas, int2 pos, int frame)
         {
             e.Attach(new TileTag());
             e.Attach(new TilePositionCD(pos));
             e.Attach(new TileSpriteCD(atlas, frame, Color.White));
         }
+
+        #endregion
+
+        #region Features
+
+        /// <summary>
+        /// Crée une entité représentant une structure sur la carte
+        /// </summary>
+        /// <param name="e">L'entité</param>
+        internal static void CreateFeatureEntity(in Entity e)
+        {
+            e.Attach(new MapFeatureTag());
+        }
+
+        /// <summary>
+        /// Crée une entité représentant une salle de la carte
+        /// </summary>
+        /// <param name="e">L'entité</param>
+        /// <param name="pos">La position de la salle</param>
+        internal static void CreateRoomEntity(in Entity e, int2 pos, int2 size)
+        {
+            e.Attach(new RoomTag());
+            e.Attach(new RoomDimensionsCD(pos, size));
+        }
+
+        #endregion
+
+        #region Manipulation de components
 
         /// <summary>
         /// Ajoute un component à l'entité
@@ -78,6 +110,8 @@ namespace Retard.Core.Models
         {
             entity.Attach(comp);
         }
+
+        #endregion
 
         #endregion
     }

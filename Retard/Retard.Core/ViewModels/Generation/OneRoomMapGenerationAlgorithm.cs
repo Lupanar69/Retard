@@ -1,4 +1,7 @@
-﻿namespace Retard.Core.ViewModels.Generation
+﻿using Retard.Core.Models.Generation;
+using Retard.Core.Models.ValueTypes;
+
+namespace Retard.Core.ViewModels.Generation
 {
     /// <summary>
     /// Génère une seule salle s'étendant 
@@ -9,33 +12,31 @@
         #region Fonctins publiques
 
         /// <summary>
-        /// Génère le niveau
+        /// Génère un nouveau niveau selon l'algorithme implémenté
         /// </summary>
-        /// <param name="length">Le nombre total de cellules sur la carte</param>
-        /// <param name="sizeX">La taille de la carte sur l'axe X</param>
-        /// <param name="sizeY">La taille de la carte sur l'axe Y</param>
-        /// <returns>Les IDs de toutes les cases à instancier par cellule</returns>
-        int[] IMapGenerationAlgorithm.Execute(int length, int sizeX, int sizeY)
+        /// <param name="size">La taille de la carte</param>
+        /// <param name="mapGenerationData">Contient les infos sur la carte générée</param>
+        public void Execute(int2 size, out MapGenerationData mapGenerationData)
         {
-            int[] tilesIDs = new int[length];
+            int[] tilesIDs = new int[size.X * size.Y];
             int count = 0;
 
             // Crée le mur du bas
-            for (int x = 0; x < sizeX; x++)
+            for (int x = 0; x < size.X; x++)
             {
                 tilesIDs[count] = 0;
                 count++;
             }
 
             // Crée le sol de la salle et les murs latéraux
-            for (int y = 1; y < sizeY - 1; y++)
+            for (int y = 1; y < size.Y - 1; y++)
             {
                 // Crée le mur de gauche
                 tilesIDs[count] = 0;
                 count++;
 
                 // Crée le sol
-                for (int x = 1; x < sizeX - 1; x++)
+                for (int x = 1; x < size.X - 1; x++)
                 {
                     tilesIDs[count] = 1;
                     count++;
@@ -47,13 +48,20 @@
             }
 
             // Crée le mur du haut
-            for (int x = 0; x < sizeX; x++)
+            for (int x = 0; x < size.X; x++)
             {
                 tilesIDs[count] = 0;
                 count++;
             }
 
-            return tilesIDs;
+            // Assigne les données de retour
+
+            mapGenerationData = new MapGenerationData
+            {
+                TilesIDs = tilesIDs,
+                RoomPoses = new int2[1] { int2.Zero },
+                RoomSizes = new int2[1] { size - int2.One }
+            };
         }
 
         #endregion

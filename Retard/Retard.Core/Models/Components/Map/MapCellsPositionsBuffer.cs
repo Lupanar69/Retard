@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Retard.Core.Models.ValueTypes;
 
 namespace Retard.Core.Models.Components.Map
 {
@@ -12,7 +12,7 @@ namespace Retard.Core.Models.Components.Map
         /// <summary>
         /// La liste des positions des cellules de la carte
         /// </summary>
-        internal Vector2[] Value;
+        internal int2[] Value;
 
         #endregion
 
@@ -24,7 +24,7 @@ namespace Retard.Core.Models.Components.Map
         /// <param name="length">Le nombre de cellules de la carte</param>
         internal MapCellsPositionsBuffer(int length)
         {
-            this.Value = new Vector2[length];
+            this.Value = new int2[length];
         }
 
         #endregion

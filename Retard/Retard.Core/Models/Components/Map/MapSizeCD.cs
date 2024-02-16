@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Retard.Core.Models.ValueTypes;
 
 namespace Retard.Core.Models.Components.Map
 {
@@ -12,12 +12,7 @@ namespace Retard.Core.Models.Components.Map
         /// <summary>
         /// La taille de la carte sur l'axe X
         /// </summary>
-        internal int SizeX;
-
-        /// <summary>
-        /// La taille de la carte sur l'axe Y
-        /// </summary>
-        internal int SizeY;
+        internal int2 Size;
 
         #endregion
 
@@ -30,8 +25,17 @@ namespace Retard.Core.Models.Components.Map
         /// <param name="sizeY">La taille de la carte sur l'axe Y</param>
         internal MapSizeCD(int sizeX, int sizeY)
         {
-            this.SizeX = sizeX;
-            this.SizeY = sizeY;
+            this.Size.X = sizeX;
+            this.Size.Y = sizeY;
+        }
+
+        /// <summary>
+        /// Constructeur par défaut
+        /// </summary>
+        /// <param name="size">La taille de la carte</param>
+        internal MapSizeCD(int2 size)
+        {
+            this.Size = size;
         }
 
         #endregion

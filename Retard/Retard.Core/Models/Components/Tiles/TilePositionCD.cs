@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Retard.Core.Models.ValueTypes;
 
 namespace Retard.Core.Models.Components.Tiles
 {
@@ -12,7 +12,7 @@ namespace Retard.Core.Models.Components.Tiles
         /// <summary>
         /// La position de la case sur la carte
         /// </summary>
-        internal Vector2 Value;
+        internal int2 Value;
 
         #endregion
 
@@ -22,7 +22,7 @@ namespace Retard.Core.Models.Components.Tiles
         /// Constructeur par défaut
         /// </summary>
         /// <param name="value">La position de la case sur la carte</param>
-        internal TilePositionCD(Vector2 value)
+        internal TilePositionCD(int2 value)
         {
             this.Value = value;
         }
