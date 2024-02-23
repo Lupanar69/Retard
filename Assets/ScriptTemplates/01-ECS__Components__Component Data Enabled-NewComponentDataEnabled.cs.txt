@@ -1,0 +1,15 @@
+using Unity.Entities;
+using Unity.Mathematics;
+
+namespace Retard.ECS 
+{
+    /// <summary>
+    /// 
+    /// </summary>
+	public class #SCRIPTNAME# : IComponentData, IEnableableComponent
+	{
+        #region Variables d'instance
+
+        #endregion
+	}
+}

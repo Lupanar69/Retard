@@ -1,0 +1,24 @@
+using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Collections;
+
+namespace Retard.ECS 
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public readonly partial struct #SCRIPTNAME# : IAspect
+    {
+        #region Variables d'instance
+
+        #endregion
+
+        #region Fonctions publiques
+
+        #endregion
+
+        #region Fonctions privées
+
+        #endregion
+    }
+}
