@@ -1,0 +1,27 @@
+using Unity.Burst;
+using Unity.Jobs;
+
+/// <summary>
+/// 
+/// </summary>
+[BurstCompile]
+public partial struct #SCRIPTNAME# : IJobFor
+{
+    #region Variables d'instance
+
+    #endregion
+
+    #region Fonctions publiques
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="index">La position actuelle dans la liste</param>
+    [BurstCompile]
+    public void Execute(int index)
+    {
+
+    }
+
+    #endregion
+}

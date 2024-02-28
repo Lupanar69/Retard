@@ -6,7 +6,7 @@ namespace Retard.ECS
     /// <summary>
     /// 
     /// </summary>
-	public class #SCRIPTNAME# : IComponentData
+	public struct #SCRIPTNAME# : IComponentData
 	{
         #region Variables d'instance
 

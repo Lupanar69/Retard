@@ -6,7 +6,7 @@ namespace Retard.ECS
     /// <summary>
     /// 
     /// </summary>
-	public class #SCRIPTNAME# : IBufferElementData, IEnableableComponent
+	public struct #SCRIPTNAME# : IBufferElementData
 	{
         #region Variables d'instance
 

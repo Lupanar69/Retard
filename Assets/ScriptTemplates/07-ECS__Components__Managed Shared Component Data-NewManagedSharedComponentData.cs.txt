@@ -1,0 +1,36 @@
+using System;
+using Unity.Entities;
+using Unity.Mathematics;
+
+namespace Retard.ECS 
+{
+    /// <summary>
+    /// 
+    /// </summary>
+	public struct #SCRIPTNAME# : ISharedComponentData, IEquatable<#SCRIPTNAME#>
+	{
+        #region Variables d'instance
+
+        #endregion
+
+        #region Fonctions publiques
+        
+        /// <summary>
+        /// <see langword="true"/> si les deux components ont la même valeur
+        /// </summary>
+        public bool Equals(#SCRIPTNAME# other)
+        {
+
+        }
+        
+        /// <summary>
+        /// Calcule le hash du component pour assurer son unicité
+        /// </summary>
+        public override int GetHashCode()
+        {
+
+        }
+
+        #endregion
+	}
+}
