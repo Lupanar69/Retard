@@ -1,9 +1,9 @@
 using System.Collections;
 using System.IO;
-using UnityEditor;
 using Unity.EditorCoroutines.Editor;
+using UnityEditor;
 
-namespace Essentials.ManualCompilation
+namespace Assets.Editor.ManualCompilation
 {
     /// <summary>
     /// Affiche les menus de la compilation manuelle 

@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Retard.ECS
+namespace Assets.Scripts.ECS.Components
 {
     /// <summary>
     /// Représente une case dans la pile de cases aux coordonnées

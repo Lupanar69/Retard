@@ -1,8 +1,10 @@
+using Assets.Scripts.ECS.Components;
+using Assets.Scripts.ECS.Entities;
 using Unity.Burst;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Retard.ECS
+namespace Assets.Scripts.ECS.Systems.Generation
 {
     /// <summary>
     /// Génère les entités des randoms utilisés

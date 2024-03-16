@@ -1,8 +1,9 @@
+using Assets.Scripts.ECS.Entities;
 using Unity.Burst;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Retard.ECS
+namespace Assets.Scripts.ECS.Systems
 {
     /// <summary>
     /// Chargé de détruire les entités
@@ -53,10 +54,6 @@ namespace Retard.ECS
                 EntityFactory.DestroyAllEntities(ref this._em);
             }
         }
-
-        #endregion
-
-        #region Fonctions priv�es
 
         #endregion
     }

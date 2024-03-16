@@ -7,7 +7,7 @@ using UnityToolbarExtender;
  using System.Reflection;
 #endif
 
-namespace Essentials.ManualCompilation
+namespace Assets.Editor.ManualCompilation
 
 {
     /// <summary>

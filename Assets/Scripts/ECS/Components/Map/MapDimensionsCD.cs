@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Retard.ECS
+namespace Assets.Scripts.ECS.Components
 {
     /// <summary>
     /// Les dimensions de la carte

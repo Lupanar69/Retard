@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Retard.ECS
+namespace Assets.Scripts.ECS.Components
 {
     /// <summary>
     /// L'id du type d'objet que représente cette case

@@ -1,7 +1,15 @@
 {
     "name": "Retard.Mono",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:2227cbef5abe32d4e9d06126c0f67f86",
+        "GUID:9197eac3a780a6a42a36a063790544d3",
+        "GUID:2665a8d13d1b3f18800f46e256720795",
+        "GUID:734d92eba21c94caba915361bd5ac177",
+        "GUID:8819f35a0fc84499b990e90a4ca1911f",
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:e0cd26848372d4e5c891c569017e11f1"
+    ],
     "includePlatforms": [
         "Editor",
         "WebGL",

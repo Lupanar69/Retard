@@ -1,0 +1,35 @@
+using Unity.Burst;
+using Unity.Entities;
+using Unity.Jobs;
+
+/// <summary>
+/// 
+/// </summary>
+public class #SCRIPTNAME# : MonoBehaviour
+{
+    #region Variables Unity
+
+    #endregion
+
+    #region Baker
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    private class #SCRIPTNAME#Baker : Baker<#SCRIPTNAME#>
+    {
+        #region Fonctions publiques
+        
+         /// <summary>
+         /// 
+         /// </summary>
+         public override void Bake(#SCRIPTNAME# authoring)
+         {
+             
+         }
+
+        #endregion
+    }
+
+    #endregion
+}

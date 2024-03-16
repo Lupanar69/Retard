@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Essentials.Performance
+namespace Assets.Scripts.App
 {
     /// <summary>
     /// Allows to edit the application's

@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Retard.ECS
+namespace Assets.Scripts.ECS.Components
 {
     /// <summary>
     /// Indique que cette entité est une case
