@@ -6,7 +6,7 @@ namespace Retard.ECS
     /// <summary>
     /// L'intervalle de taille possible pour une carte
     /// </summary>
-    public struct MapGenerationSettingsMinMaxSizeCD : IComponentData
+    public struct MapGenSettingsMinMaxSizeCD : IComponentData
     {
         #region Variables d'instance
 

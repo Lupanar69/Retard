@@ -13,7 +13,7 @@ namespace Assets.Scripts.ECS.Systems.Generation
     /// Génère l'entité de la carte
     /// </summary>
     [BurstCompile]
-    public partial struct MapCreationSystem : ISystem, ISystemStartStop
+    public partial struct MapGenSystem : ISystem, ISystemStartStop
     {
         #region Variables d'instance
 
@@ -34,6 +34,7 @@ namespace Assets.Scripts.ECS.Systems.Generation
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<MapGenRandomCD>();
+            this._em = state.EntityManager;
         }
 
         /// <summary>
@@ -76,12 +77,12 @@ namespace Assets.Scripts.ECS.Systems.Generation
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 EntityQuery mapQ = SystemAPI.QueryBuilder().WithAll<MapTag>().Build();
-                EntityFactory.DestroyEntitiesOfType(ref _em, ref mapQ);
+                EntityFactory.DestroyEntitiesOfType(ref this._em, ref mapQ);
 
                 var mapGenRandRW = SystemAPI.GetSingletonRW<MapGenRandomCD>();
-                Entity mapSettingsE = SystemAPI.GetSingletonEntity<MapGenerationSettingsMinMaxSizeCD>();
-                var minMaxMapSize = SystemAPI.GetComponent<MapGenerationSettingsMinMaxSizeCD>(mapSettingsE);
-                var mapAlgorithms = SystemAPI.GetBuffer<MapGenerationSettingsAlgorithmIDBE>(mapSettingsE);
+                Entity mapSettingsE = SystemAPI.GetSingletonEntity<MapGenSettingsMinMaxSizeCD>();
+                var minMaxMapSize = SystemAPI.GetComponent<MapGenSettingsMinMaxSizeCD>(mapSettingsE);
+                var mapAlgorithms = SystemAPI.GetBuffer<MapGenSettingsAlgorithmIDBE>(mapSettingsE);
 
                 if (mapAlgorithms.Length == 0)
                     return;
@@ -96,8 +97,12 @@ namespace Assets.Scripts.ECS.Systems.Generation
                 // Génère les IDs des types de cases à créer
 
                 NativeArray<int> tilesIDsResults = new(length, Allocator.TempJob);
+                JobHandle dependency = state.Dependency;
 
-                GenerationAlgorithms.ScheduleMapGenerationAlgorithm(mapGenIndex, length, sizeX, sizeY, ref tilesIDsResults, out JobHandle mapGeHandle);
+                GenerationAlgorithms.ScheduleMapGenerationAlgorithm(mapGenIndex, length, sizeX, sizeY, ref tilesIDsResults, out JobHandle mapGenHandle, in dependency);
+                mapGenHandle.Complete();
+                tilesIDsResults.Dispose();
+
                 //Entity[] tiles = this.CreateMapTiles(tilesIDs, sizeX, sizeY, in this._atlas);
                 //Entity[] cellEs = this.CreateCells(length, sizeX, sizeY, in tiles);
                 //this.CreateMap(length, sizeX, sizeY, in cellEs);

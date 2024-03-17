@@ -31,7 +31,7 @@ namespace Assets.Scripts.Mono.Authoring
         /// <summary>
         /// Convertit les paramètres de génération d'une carte en entité
         /// </summary>
-        private class MapGenerationSettingsBaker : Baker<MapGenSettingsAuthoring>
+        private class MapGenSettingsBaker : Baker<MapGenSettingsAuthoring>
         {
             #region Fonctions publiques
 
@@ -43,16 +43,19 @@ namespace Assets.Scripts.Mono.Authoring
                 this.DependsOn(authoring._settings);
 
                 if (authoring._settings == null)
+                {
+                    Debug.LogError("Erreur : La variable \"Settings\" de MapGenSettingsAuthoring n'est pas assignée");
                     return;
+                }
 
                 Entity e = this.GetEntity(TransformUsageFlags.None);
-                this.AddComponent(e, new MapGenerationSettingsMinMaxSizeCD { Value = authoring._settings.MinMaxMapSize });
-                var algorithms = this.AddBuffer<MapGenerationSettingsAlgorithmIDBE>(e);
+                this.AddComponent(e, new MapGenSettingsMinMaxSizeCD { Value = authoring._settings.MinMaxMapSize });
+                DynamicBuffer<MapGenSettingsAlgorithmIDBE> algorithms = this.AddBuffer<MapGenSettingsAlgorithmIDBE>(e);
 
                 for (int i = 0; i < authoring._settings.AlgorithmsNames.Length; i++)
                 {
                     int indexOfAlgo = authoring._algorithmsList.Values.IndexOf(authoring._settings.AlgorithmsNames[i]);
-                    algorithms.Add(new MapGenerationSettingsAlgorithmIDBE { Value = indexOfAlgo });
+                    algorithms.Add(new MapGenSettingsAlgorithmIDBE { Value = indexOfAlgo });
                 }
             }
 

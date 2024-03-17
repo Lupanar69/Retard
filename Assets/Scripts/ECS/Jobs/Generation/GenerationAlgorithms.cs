@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Assets.Scripts.Core.ViewModels.Generation;
 using Assets.Scripts.ECS.Jobs.Generation;
 using Unity.Burst;
@@ -15,7 +16,7 @@ public static class GenerationAlgorithms
     /// <summary>
     /// Les IDs des algorithmes de génération de carte
     /// </summary>
-    public static readonly NativeHashMap<int, FixedString64Bytes> _mapGenAlgorithms = new();
+    public static readonly Dictionary<int, FixedString64Bytes> _mapGenAlgorithms = new();
 
     #endregion
 
@@ -36,7 +37,7 @@ public static class GenerationAlgorithms
         ([NoAlias] int mapGenIndex, [NoAlias] int length, [NoAlias] int sizeX, [NoAlias] int sizeY,
         ref NativeArray<int> tilesIDsResults, out JobHandle handle, in JobHandle dependsOn = default)
     {
-        FixedString64Bytes key = GenerationAlgorithms._mapGenAlgorithms[mapGenIndex];
+        GenerationAlgorithms.GetKeyFromMapGenAlgList(mapGenIndex, out FixedString64Bytes key);
 
         handle = key switch
         {
@@ -49,6 +50,18 @@ public static class GenerationAlgorithms
     #endregion
 
     #region Fonctions statiques privées
+
+    /// <summary>
+    /// Récupère le nom de l'algorithme lié à cet ID
+    /// </summary>
+    /// <param name="mapGenIndex">L'ID de l'algorithme</param>
+    /// <param name="key">Le nom de l'algorithme lié à cet ID</param>
+    /// <returns>Le nom de l'algorithme lié à cet ID</returns>
+    [BurstDiscard]
+    private static void GetKeyFromMapGenAlgList(int mapGenIndex, out FixedString64Bytes key)
+    {
+        key = GenerationAlgorithms._mapGenAlgorithms[mapGenIndex];
+    }
 
     /// <summary>
     /// Crée un GenerateMapJob<T> avec l'interface générique renseignée
