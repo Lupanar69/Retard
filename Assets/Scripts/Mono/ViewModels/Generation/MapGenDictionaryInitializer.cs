@@ -1,4 +1,6 @@
+using Assets.Scripts.ECS.Jobs.Generation;
 using Assets.Scripts.Mono.Models.SerializedData.MapGeneration;
+using Unity.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts.Mono.ViewModels.Generation
@@ -29,7 +31,7 @@ namespace Assets.Scripts.Mono.ViewModels.Generation
         /// </summary>
         private void OnValidate()
         {
-            if (this._algorithmsList != null)
+            if (this._algorithmsList != null && this._algorithmsList.Values.Count > 0)
             {
                 this.UpdateBurstAlgorithmsList();
             }
@@ -40,17 +42,19 @@ namespace Assets.Scripts.Mono.ViewModels.Generation
         /// </summary>
         private void Reset()
         {
-            if (this._algorithmsList != null)
+            if (this._algorithmsList != null && this._algorithmsList.Values.Count > 0)
             {
                 this.UpdateBurstAlgorithmsList();
             }
         }
 
 #endif
-
+        /// <summary>
+        /// Init
+        /// </summary>
         private void Start()
         {
-            if (this._algorithmsList != null)
+            if (this._algorithmsList != null && this._algorithmsList.Values.Count > 0)
             {
                 this.UpdateBurstAlgorithmsList();
             }
@@ -70,7 +74,13 @@ namespace Assets.Scripts.Mono.ViewModels.Generation
 
             for (int i = 0; i < this._algorithmsList.Values.Count; i++)
             {
-                GenerationAlgorithms._mapGenAlgorithms.Add(i, this._algorithmsList.Values[i]);
+                var alg = this._algorithmsList.Values[i];
+
+                if (alg != null)
+                {
+                    FixedString64Bytes tag = new(this._algorithmsList.Values[i].Tag);
+                    GenerationAlgorithms._mapGenAlgorithms.Add(i, tag);
+                }
             }
         }
 

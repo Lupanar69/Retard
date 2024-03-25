@@ -2,7 +2,6 @@ using Assets.Scripts.ECS.Components;
 using Assets.Scripts.ECS.Entities;
 using Unity.Burst;
 using Unity.Entities;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Assets.Scripts.ECS.Systems.Generation
@@ -60,7 +59,7 @@ namespace Assets.Scripts.ECS.Systems.Generation
                 EntityQuery mapRandQ = SystemAPI.QueryBuilder().WithAll<MapGenRandomCD>().Build();
                 EntityFactory.DestroyEntitiesOfType(ref this._em, ref mapRandQ);
 
-                uint seed = (uint)math.ceil(SystemAPI.Time.ElapsedTime);
+                uint seed = 1;//uint)math.ceil(SystemAPI.Time.ElapsedTime);
                 EntityFactory.CreateMapGenRandomEntity(ref this._em, seed, out _);
             }
         }

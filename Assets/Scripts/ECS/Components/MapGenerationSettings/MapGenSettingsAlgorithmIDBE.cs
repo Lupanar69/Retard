@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Retard.ECS
+namespace Assets.Scripts.ECS.Components
 {
     /// <summary>
     /// L'ID d'un algorithme de génération de carte

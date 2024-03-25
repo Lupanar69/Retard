@@ -7,7 +7,7 @@ namespace Assets.Scripts.Mono.Models.SerializedData.MapGeneration
     /// Paramètres de génération d'une carte
     /// </summary>
     [CreateAssetMenu(fileName = "Map Generation Settings", menuName = "Retard/Generation/Map Generation Settings", order = 0)]
-    public class MapGenSettingsSO : ScriptableObject
+    public sealed class MapGenSettingsSO : ScriptableObject
     {
         #region Propriétés
 
@@ -20,7 +20,7 @@ namespace Assets.Scripts.Mono.Models.SerializedData.MapGeneration
         /// La liste des algorithmes de génération possibles pour une carte donnée
         /// (nous permet de créer des niveaux avec différents algorithmes, comme par ex. pour différents biomes)
         /// </summary>
-        public string[] AlgorithmsNames { get => this._algorithms; }
+        public MapGenAlgorithmSO[] Algorithms { get => this._algorithms; }
 
         #endregion
 
@@ -37,7 +37,7 @@ namespace Assets.Scripts.Mono.Models.SerializedData.MapGeneration
         /// (nous permet de créer des niveaux avec différents algorithmes, comme par ex. pour différents biomes)
         /// </summary>
         [SerializeField]
-        private string[] _algorithms;
+        private MapGenAlgorithmSO[] _algorithms;
 
         #endregion
     }

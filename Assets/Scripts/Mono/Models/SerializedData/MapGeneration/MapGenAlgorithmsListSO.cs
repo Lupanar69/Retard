@@ -7,14 +7,14 @@ namespace Assets.Scripts.Mono.Models.SerializedData.MapGeneration
     /// Liste tous les algorithmes de génération de la carte
     /// </summary>
     [CreateAssetMenu(fileName = "New Map Generation Algorithm List", menuName = "Retard/Generation/Map Generation Algorithm List", order = 2)]
-    public class MapGenAlgorithmsListSO : ScriptableObject
+    public sealed class MapGenAlgorithmsListSO : ScriptableObject
     {
         #region Propriétés
 
         /// <summary>
         /// Liste tous les algorithmes de génération de la carte
         /// </summary>
-        public List<string> Values { get => this._algorithmsTypes; }
+        public List<MapGenAlgorithmSO> Values { get => this._algorithmsTypes; }
 
         #endregion
 
@@ -24,7 +24,7 @@ namespace Assets.Scripts.Mono.Models.SerializedData.MapGeneration
         /// Liste tous les algorithmes de génération de la carte
         /// </summary>
         [SerializeField]
-        private List<string> _algorithmsTypes;
+        private List<MapGenAlgorithmSO> _algorithmsTypes;
 
         #endregion
     }

@@ -9,9 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec9ad1eaa6357fa4891751676f87e814, type: 3}
-  m_Name: Map Generation Algorithms List
+  m_Script: {fileID: 11500000, guid: 83423c6821253f946aa2dd9db23584ed, type: 3}
+  m_Name: GlobalEntitySceneDependency
   m_EditorClassIdentifier: 
-  _algorithmsTypes:
-  - {fileID: 11400000, guid: 4841ecf3670a36143a2e9bcdc042d358, type: 2}
-  - {fileID: 11400000, guid: bb632e6167add8848bac0df873c7bb23, type: 2}
+  cacheGUID:
+    Value:
+      x: 2689893837
+      y: 1094605386
+      z: 868192647
+      w: 4121329196
