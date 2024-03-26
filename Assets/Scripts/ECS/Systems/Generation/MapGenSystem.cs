@@ -25,6 +25,11 @@ namespace Assets.Scripts.ECS.Systems.Generation
         private EntityManager _em;
 
         /// <summary>
+        /// L'archétype de la carte
+        /// </summary>
+        private EntityArchetype _mapArchetype;
+
+        /// <summary>
         /// L'archétype des entités des cases
         /// </summary>
         private EntityArchetype _tileArchetype;
@@ -53,13 +58,18 @@ namespace Assets.Scripts.ECS.Systems.Generation
             types[1] = ComponentType.ReadWrite<TilePositionCD>();
             types[2] = ComponentType.ReadWrite<TileIdCD>();
 
-            this._tileArchetype = state.EntityManager.CreateArchetype(types);
+            this._tileArchetype = this._em.CreateArchetype(types);
 
             types = new(2, Allocator.Temp);
             types[0] = ComponentType.ReadWrite<TileStackPositionCD>();
             types[1] = ComponentType.ReadWrite<TileEntityInStackBE>();
 
-            this._tileStackArchetype = state.EntityManager.CreateArchetype(types);
+            this._tileStackArchetype = this._em.CreateArchetype(types);
+
+            types[0] = ComponentType.ReadWrite<MapTag>();
+            types[1] = ComponentType.ReadWrite<MapSizeCD>();
+
+            this._mapArchetype = this._em.CreateArchetype(types);
         }
 
         /// <summary>
@@ -99,14 +109,14 @@ namespace Assets.Scripts.ECS.Systems.Generation
         [BurstCompile, SkipLocalsInit]
         public void OnUpdate(ref SystemState state)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 // Nettoie la carte précédente
 
-                EntityQuery mapQ = SystemAPI.QueryBuilder().WithAny<MapTag>().Build();
+                EntityQuery mapQ = SystemAPI.QueryBuilder().WithAny<MapTag, TileStackPositionCD>().Build();
                 EntityFactory.DestroyEntitiesOfType(ref this._em, ref mapQ);
 
-                #region Paramètres de la carte
+                // Paramètres de la carte
 
                 var ecbTiles = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
                 var mapGenRandRW = SystemAPI.GetSingletonRW<MapGenRandomCD>();
@@ -117,61 +127,76 @@ namespace Assets.Scripts.ECS.Systems.Generation
                 if (mapAlgorithms.Length == 0)
                     return;
 
-                int sizeX = mapGenRandRW.ValueRW.Value.NextInt(minMaxMapSize.Value.x, minMaxMapSize.Value.y);
-                int sizeY = mapGenRandRW.ValueRW.Value.NextInt(minMaxMapSize.Value.x, minMaxMapSize.Value.y);
-                int length = sizeX * sizeY;
+                int2 size = new
+                    (
+                        mapGenRandRW.ValueRW.Value.NextInt(minMaxMapSize.Value.x, minMaxMapSize.Value.y),
+                        mapGenRandRW.ValueRW.Value.NextInt(minMaxMapSize.Value.x, minMaxMapSize.Value.y)
+                    );
+                int length = size.x * size.y;
                 int mapGenIndex = mapAlgorithms[mapGenRandRW.ValueRW.Value.NextInt(0, mapAlgorithms.Length)].Value;
 
-                #endregion
+                // Génère l'entité de la carte
+
+                EntityFactory.CreateMapEntity(ref this._em, in size, this._mapArchetype, out _);
+
+                // Génère les entités des piles de cases
+
+                new CreateTileStacksJob
+                {
+                    Ecb = ecbTiles,
+                    Size = size,
+                    TileStackArchetype = this._tileStackArchetype,
+                }
+                .ScheduleParallel(length, 64, state.Dependency).Complete();
 
                 #region Génère les IDs des types de cases à créer
 
-                // Liste de tous les IDs et leur positions
-                // (x: posX, y: posY, z: ID)
+                //// Liste de tous les IDs et leur positions
+                //// (x: posX, y: posY, z: ID)
 
-                NativeArray<int3> tilesIDsResults = new(length, Allocator.TempJob);
-                JobHandle dependency = state.Dependency;
+                //NativeArray<int3> tilesIDsResults = new(length, Allocator.TempJob);
+                //JobHandle dependency = state.Dependency;
 
-                int4 mapSettings = new(mapGenIndex, length, sizeX, sizeY);
-                this.ScheduleMapGenerationAlgorithm(mapSettings, ref tilesIDsResults, ref state, out JobHandle mapGenHandle, in dependency);
-                mapGenHandle.Complete();
+                //int4 mapSettings = new(mapGenIndex, length, sizeX, sizeY);
+                //this.ScheduleMapGenerationAlgorithm(mapSettings, ref tilesIDsResults, ref state, out JobHandle mapGenHandle, in dependency);
+                //mapGenHandle.Complete();
 
-                //int count = 0;
-                //StringBuilder sb = new(length + sizeY + 10);
-                //sb.AppendLine($"({sizeX},{sizeY})");
+                ////int count = 0;
+                ////StringBuilder sb = new(length + sizeY + 10);
+                ////sb.AppendLine($"({sizeX},{sizeY})");
 
-                //for (int y = 0; y < sizeY; y++)
-                //{
-                //    for (int x = 0; x < sizeX; x++)
-                //    {
-                //        sb.Append(tilesIDsResults[count + x].z);
-                //    }
+                ////for (int y = 0; y < sizeY; y++)
+                ////{
+                ////    for (int x = 0; x < sizeX; x++)
+                ////    {
+                ////        sb.Append(tilesIDsResults[count + x].z);
+                ////    }
 
-                //    sb.AppendLine();
-                //    count += sizeX;
-                //}
+                ////    sb.AppendLine();
+                ////    count += sizeX;
+                ////}
 
-                //Debug.Log(sb.ToString());
+                ////Debug.Log(sb.ToString());
 
                 #endregion
 
                 #region Crée les entités des cases puis de leurs piles
 
-                // On crée d'abord les cases
+                //// On crée d'abord les cases
 
-                new CreateTilesJob
-                {
-                    Ecb = ecbTiles,
-                    TileArchetype = this._tileArchetype,
-                    TilesIDsRO = tilesIDsResults.AsReadOnly(),
-                }
-                .ScheduleParallel(tilesIDsResults.Length, 64, state.Dependency).Complete();
+                //new CreateTilesJob
+                //{
+                //    Ecb = ecbTiles,
+                //    TileArchetype = this._tileArchetype,
+                //    TilesIDsRO = tilesIDsResults.AsReadOnly(),
+                //}
+                //.ScheduleParallel(tilesIDsResults.Length, 64, state.Dependency).Complete();
 
                 #endregion
 
                 #region Nettoyage
 
-                tilesIDsResults.Dispose();
+                //tilesIDsResults.Dispose();
 
                 #endregion
             }

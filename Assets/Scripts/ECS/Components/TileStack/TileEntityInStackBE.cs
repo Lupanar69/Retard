@@ -6,7 +6,7 @@ namespace Assets.Scripts.ECS.Components
     /// Représente une case dans la pile de cases aux coordonnées
     /// correspondantes sur la carte.
     /// </summary>
-	public struct TileEntityInStackBE : IBufferElementData
+    public struct TileEntityInStackBE : IBufferElementData
     {
         #region Variables d'instance
 

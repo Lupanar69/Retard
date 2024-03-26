@@ -41,8 +41,8 @@ public partial struct CreateTilesJob : IJobFor
     public void Execute(int index)
     {
         int3 data = this.TilesIDsRO[index];
-
         Entity tileE = this.Ecb.CreateEntity(index, this.TileArchetype);
+        this.Ecb.SetName(index, tileE, "Tile Entity");
         this.Ecb.SetComponent(index, tileE, new TilePositionCD { Value = data.xy });
         this.Ecb.SetComponent(index, tileE, new TileIdCD { Value = data.z });
     }

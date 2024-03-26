@@ -49,7 +49,7 @@ namespace Assets.Scripts.ECS.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.A))
             {
                 EntityFactory.DestroyAllEntities(ref this._em);
             }
