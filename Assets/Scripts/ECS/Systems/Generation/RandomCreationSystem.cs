@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Assets.Scripts.ECS.Systems.Generation
 {
     /// <summary>
-    /// Génère les entités des randoms utilisés
+    /// Crée les entités des randoms utilisés
     /// pour la génération procédurale
     /// </summary>
     [BurstCompile]
