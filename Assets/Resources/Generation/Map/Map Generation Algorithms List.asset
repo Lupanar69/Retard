@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: Map Generation Algorithms List
   m_EditorClassIdentifier: 
   _algorithmsTypes:
-  - {fileID: 11400000, guid: 4841ecf3670a36143a2e9bcdc042d358, type: 2}
   - {fileID: 11400000, guid: bb632e6167add8848bac0df873c7bb23, type: 2}

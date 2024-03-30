@@ -26,11 +26,10 @@ namespace Assets.Scripts.ECS.Jobs.Generation
         /// </summary>
         /// <param name="mapGenIndex">L'ID de l'algorithme</param>
         /// <param name="key">Le nom de l'algorithme lié à cet ID</param>
-        /// <returns>Le nom de l'algorithme lié à cet ID</returns>
         [BurstDiscard]
         public static void GetKeyFromMapGenAlgList(int mapGenIndex, out FixedString64Bytes key)
         {
-            key = _mapGenAlgorithms[mapGenIndex];
+            key = GenerationAlgorithms._mapGenAlgorithms[mapGenIndex];
         }
 
         #endregion

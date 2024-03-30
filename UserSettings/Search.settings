@@ -8,6 +8,9 @@ onBoardingDoNotAskAgain = true
 showPackageIndexes = false
 showStatusBar = false
 scopes = {
+	"last_search.223EF03E" = ""
+	"OpenInspectorPreview.223EF03E" = "0"
+	"currentGroup.223EF03E" = "all"
 }
 providers = {
 	archetype = {

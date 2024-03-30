@@ -1,3 +1,4 @@
+using Unity.Collections;
 using Unity.Entities;
 
 namespace Assets.Scripts.ECS.Components
@@ -14,7 +15,7 @@ namespace Assets.Scripts.ECS.Components
         /// L'id du type d'objet que représente cette case
         /// (sol, mur, etc...)
         /// </summary>
-        public int Value;
+        public FixedString32Bytes Value;
 
         #endregion
     }

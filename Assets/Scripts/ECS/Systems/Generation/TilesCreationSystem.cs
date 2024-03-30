@@ -1,3 +1,5 @@
+using Assets.Scripts.Core.Models;
+using Assets.Scripts.Core.Models.Generation;
 using Assets.Scripts.ECS.Components;
 using Assets.Scripts.ECS.Entities;
 using Assets.Scripts.ECS.Jobs.Generation;
@@ -77,67 +79,55 @@ namespace Retard.ECS
 
                 // Paramètres de la carte
 
-                var ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
+                var ecb1 = new EntityCommandBuffer(Allocator.TempJob);
+                var ecb2 = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
                 var mapGenRandRW = SystemAPI.GetSingletonRW<MapGenRandomCD>();
                 Entity mapE = SystemAPI.GetSingletonEntity<MapTag>();
                 var mapSizeRO = SystemAPI.GetComponentRO<MapSizeCD>(mapE);
                 Entity mapSettingsE = SystemAPI.GetSingletonEntity<MapGenSettingsMinMaxSizeCD>();
                 var mapAlgorithms = SystemAPI.GetBuffer<MapGenSettingsAlgorithmIDBE>(mapSettingsE);
 
-                #region Génère les IDs des types de cases à créer
-
                 int2 size = new(mapSizeRO.ValueRO.Value.x, mapSizeRO.ValueRO.Value.y);
                 int length = size.x * size.y;
                 int mapGenIndex = mapAlgorithms[mapGenRandRW.ValueRW.Value.NextInt(0, mapAlgorithms.Length)].Value;
                 int4 mapSettings = new(mapGenIndex, length, size.x, size.y);
-
-                // Liste de tous les IDs et leur positions
-                // (x: posX, y: posY, z: ID)
-
-                NativeArray<int3> tilesIDsResults = new(length, Allocator.TempJob);
+                NativeArray<TilePosAndID> tilesIDsResults = new(length, Allocator.TempJob); // Liste de tous les IDs et leur positions (x: posX, y: posY, z: ID)
                 JobHandle dependency = state.Dependency;
 
+                // Génère les IDs des types de cases à créer
+
                 this.ScheduleMapGenerationAlgorithm(mapSettings, ref tilesIDsResults, ref state, out JobHandle mapGenHandle, in dependency);
-                mapGenHandle.Complete();
 
-                //int count = 0;
-                //StringBuilder sb = new(length + size.y + 10);
-                //sb.AppendLine($"({size.x},{size.y})");
+                // Vide les piles de cases
 
-                //for (int y = 0; y < size.y; y++)
-                //{
-                //    for (int x = 0; x < size.x; x++)
-                //    {
-                //        sb.Append(tilesIDsResults[count + x].z);
-                //    }
+                JobHandle clearHandle = new ClearTerrainCellsJob().ScheduleParallel(mapGenHandle);
 
-                //    sb.AppendLine();
-                //    count += size.x;
-                //}
-
-                //Debug.Log(sb.ToString());
-
-                #endregion
-
-                #region Crée les entités des cases puis de leurs piles
-
-                // On crée d'abord les cases
+                // Crée les entités des cases
 
                 new CreateTilesJob
                 {
-                    Ecb = ecb,
+                    Ecb = ecb1.AsParallelWriter(),
                     TileArchetype = this._tileArchetype,
                     TilesIDsRO = tilesIDsResults.AsReadOnly(),
                 }
-                .ScheduleParallel(tilesIDsResults.Length, 64, state.Dependency).Complete();
+                .ScheduleParallel(tilesIDsResults.Length, 64, clearHandle).Complete();
 
-                #endregion
-
-                #region Nettoyage
-
+                ecb1.Playback(this._em);
                 tilesIDsResults.Dispose();
 
-                #endregion
+                // Ajoute les cases aux cellules
+
+                NativeArray<Entity> tileStacksEs = SystemAPI.QueryBuilder().WithAll<TileEntityInCellCD>().Build().ToEntityArray(Allocator.TempJob);
+
+                new AddTerrainTilesToCellsJob
+                {
+                    SizeX = size.x,
+                    Ecb = ecb2.AsParallelWriter(),
+                    TileStacksEs = tileStacksEs.AsReadOnly(),
+                }
+                .ScheduleParallel(state.Dependency).Complete();
+
+                tileStacksEs.Dispose();
             }
         }
 
@@ -155,7 +145,7 @@ namespace Retard.ECS
         /// <param name="handle">Un job utilisant l'algorithme renseigné, lancé en parallèle</param>
         [BurstCompile]
         private void ScheduleMapGenerationAlgorithm
-            (int4 mapSettings, ref NativeArray<int3> tilesIDsResults, ref SystemState state,
+            (int4 mapSettings, ref NativeArray<TilePosAndID> tilesIDsResults, ref SystemState state,
             [NoAlias] out JobHandle handle, [NoAlias] in JobHandle dependsOn = default)
         {
             int mapGenIndex = mapSettings.x;
@@ -166,7 +156,7 @@ namespace Retard.ECS
 
             handle = key switch
             {
-                var value when value == "OneRoom" => new GenerateOneRoomMapJob
+                var value when value == Constants.ONEROOM_ALG_KEY => new GenerateOneRoomMapJob
                 {
                     Length = length,
                     SizeX = sizeX,
@@ -174,20 +164,7 @@ namespace Retard.ECS
                     TilesIDsWO = tilesIDsResults,
                 }
                 .Schedule(dependsOn),
-
-                var value when value == "Null" => new GenerateNullMapJob
-                {
-                    Length = length,
-                    TilesIDsWO = tilesIDsResults,
-                }
-                .Schedule(dependsOn),
-
-                _ => new GenerateNullMapJob
-                {
-                    Length = length,
-                    TilesIDsWO = tilesIDsResults,
-                }
-                .Schedule(dependsOn),
+                _ => throw new System.Exception($"Erreur : Algorithme de génération \"{key}\" non référencé dans le dictionnaire."),
             };
         }
 

@@ -31,10 +31,7 @@ namespace Assets.Scripts.Mono.ViewModels.Generation
         /// </summary>
         private void OnValidate()
         {
-            if (this._algorithmsList != null && this._algorithmsList.Values.Count > 0)
-            {
-                this.UpdateBurstAlgorithmsList();
-            }
+            this.UpdateBurstAlgorithmsList(this._algorithmsList);
         }
 
         /// <summary>
@@ -42,10 +39,7 @@ namespace Assets.Scripts.Mono.ViewModels.Generation
         /// </summary>
         private void Reset()
         {
-            if (this._algorithmsList != null && this._algorithmsList.Values.Count > 0)
-            {
-                this.UpdateBurstAlgorithmsList();
-            }
+            this.UpdateBurstAlgorithmsList(this._algorithmsList);
         }
 
 #endif
@@ -54,10 +48,7 @@ namespace Assets.Scripts.Mono.ViewModels.Generation
         /// </summary>
         private void Start()
         {
-            if (this._algorithmsList != null && this._algorithmsList.Values.Count > 0)
-            {
-                this.UpdateBurstAlgorithmsList();
-            }
+            this.UpdateBurstAlgorithmsList(this._algorithmsList);
         }
 
         #endregion
@@ -68,17 +59,23 @@ namespace Assets.Scripts.Mono.ViewModels.Generation
         /// On màj le dictionnaire d'algorithms du GenerationAlgorithms.cs
         /// pour que la version Burst puisse lier les algos avec leurs bons IDs
         /// </summary>
-        private void UpdateBurstAlgorithmsList()
+        /// <param name="algorithmsListSO">La liste des algorithmes à convertir</param>
+        private void UpdateBurstAlgorithmsList(MapGenAlgorithmsListSO algorithmsListSO)
         {
             GenerationAlgorithms._mapGenAlgorithms.Clear();
 
-            for (int i = 0; i < this._algorithmsList.Values.Count; i++)
+            if (this._algorithmsList == null ^ this._algorithmsList.Values.Count == 0)
             {
-                var alg = this._algorithmsList.Values[i];
+                return;
+            }
+
+            for (int i = 0; i < algorithmsListSO.Values.Count; i++)
+            {
+                var alg = algorithmsListSO.Values[i];
 
                 if (alg != null)
                 {
-                    FixedString64Bytes tag = new(this._algorithmsList.Values[i].Tag);
+                    FixedString64Bytes tag = new(algorithmsListSO.Values[i].Tag);
                     GenerationAlgorithms._mapGenAlgorithms.Add(i, tag);
                 }
             }

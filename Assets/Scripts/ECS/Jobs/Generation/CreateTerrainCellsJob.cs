@@ -5,10 +5,10 @@ using Unity.Jobs;
 using Unity.Mathematics;
 
 /// <summary>
-/// Crée les piles de cases pour chaque cellule de la carte
+/// Crée les cellules des cases de terrain
 /// </summary>
 [BurstCompile]
-public partial struct CreateTileStacksJob : IJobFor
+public partial struct CreateTerrainCellsJob : IJobFor
 {
     #region Variables d'instance
 
@@ -25,7 +25,7 @@ public partial struct CreateTileStacksJob : IJobFor
     /// <summary>
     /// L'archétype des entités des cases
     /// </summary>
-    public EntityArchetype TileStackArchetype;
+    public EntityArchetype TerrainCellArchetype;
 
     #endregion
 
@@ -38,7 +38,7 @@ public partial struct CreateTileStacksJob : IJobFor
     [BurstCompile]
     public void Execute(int index)
     {
-        EntityFactory.CreateTileStackEntity(index, ref Ecb, in this.Size, this.TileStackArchetype, out _);
+        EntityFactory.CreateTileStackEntity(index, ref Ecb, in this.Size, this.TerrainCellArchetype, out _);
     }
 
     #endregion

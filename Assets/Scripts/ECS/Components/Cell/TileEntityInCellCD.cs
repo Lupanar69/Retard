@@ -3,10 +3,9 @@ using Unity.Entities;
 namespace Assets.Scripts.ECS.Components
 {
     /// <summary>
-    /// Représente une case dans la pile de cases aux coordonnées
-    /// correspondantes sur la carte.
+    /// Représente la case que contient la cellule
     /// </summary>
-    public struct TileEntityInStackBE : IBufferElementData
+    public struct TileEntityInCellCD : IComponentData
     {
         #region Variables d'instance
 

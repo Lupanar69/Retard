@@ -88,7 +88,7 @@ namespace Assets.Scripts.ECS.Entities
         {
             entity = ecb.CreateEntity(sortKey, archetype);
             ecb.SetName(sortKey, entity, $"Tile Stack Entity #{sortKey}");
-            ecb.SetComponent(sortKey, entity, new TileStackPositionCD { Value = new int2(sortKey % size.x, sortKey / size.y) });
+            ecb.SetComponent(sortKey, entity, new CellPositionCD { Value = new int2(sortKey % size.x, sortKey / size.y) });
         }
 
         #endregion

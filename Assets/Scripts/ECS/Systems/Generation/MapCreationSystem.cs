@@ -29,9 +29,9 @@ namespace Assets.Scripts.ECS.Systems.Generation
         private EntityArchetype _mapArchetype;
 
         /// <summary>
-        /// L'archétype des entités des piles de cases
+        /// L'archétype des entités des cellules du terrain
         /// </summary>
-        private EntityArchetype _tileStackArchetype;
+        private EntityArchetype _terrainCellArchetype;
 
         #endregion
 
@@ -49,10 +49,10 @@ namespace Assets.Scripts.ECS.Systems.Generation
             this._em = state.EntityManager;
 
             NativeArray<ComponentType> types = new(2, Allocator.Temp);
-            types[0] = ComponentType.ReadWrite<TileStackPositionCD>();
-            types[1] = ComponentType.ReadWrite<TileEntityInStackBE>();
+            types[0] = ComponentType.ReadWrite<CellPositionCD>();
+            types[1] = ComponentType.ReadWrite<TileEntityInCellCD>();
 
-            this._tileStackArchetype = this._em.CreateArchetype(types);
+            this._terrainCellArchetype = this._em.CreateArchetype(types);
 
             types[0] = ComponentType.ReadWrite<MapTag>();
             types[1] = ComponentType.ReadWrite<MapSizeCD>();
@@ -81,7 +81,7 @@ namespace Assets.Scripts.ECS.Systems.Generation
             {
                 // Nettoie la carte précédente
 
-                EntityQuery mapQ = SystemAPI.QueryBuilder().WithAny<MapTag, TileStackPositionCD>().Build();
+                EntityQuery mapQ = SystemAPI.QueryBuilder().WithAny<MapTag, CellPositionCD>().Build();
                 EntityFactory.DestroyEntitiesOfType(ref this._em, ref mapQ);
 
                 // Paramètres de la carte
@@ -102,13 +102,13 @@ namespace Assets.Scripts.ECS.Systems.Generation
 
                 EntityFactory.CreateMapEntity(ref this._em, in size, this._mapArchetype, out _);
 
-                // Génère les entités des piles de cases
+                // Génère les entités des cellules du terrain
 
-                new CreateTileStacksJob
+                new CreateTerrainCellsJob
                 {
                     Ecb = ecb,
                     Size = size,
-                    TileStackArchetype = this._tileStackArchetype,
+                    TerrainCellArchetype = this._terrainCellArchetype,
                 }
                 .ScheduleParallel(length, 64, state.Dependency).Complete();
             }

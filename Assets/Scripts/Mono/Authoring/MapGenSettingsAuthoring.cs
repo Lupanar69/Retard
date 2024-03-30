@@ -1,3 +1,4 @@
+using System;
 using Assets.Scripts.ECS.Components;
 using Assets.Scripts.Mono.Models.SerializedData.MapGeneration;
 using Unity.Entities;
@@ -69,21 +70,30 @@ namespace Assets.Scripts.Mono.Authoring
 
                 // Crée l'entité
 
-                Entity e = this.GetEntity(TransformUsageFlags.None);
-                this.AddComponent(e, new MapGenSettingsMinMaxSizeCD { Value = authoring._settings.MinMaxMapSize });
-                DynamicBuffer<MapGenSettingsAlgorithmIDBE> algorithms = this.AddBuffer<MapGenSettingsAlgorithmIDBE>(e);
-
-                for (int i = 0; i < authoring._settings.Algorithms.Length; i++)
+                try
                 {
-                    // Ajoute les IDs des algorithmes à utiliser
 
-                    MapGenAlgorithmSO alg = authoring._settings.Algorithms[i];
-                    int indexOfAlgo = authoring._algorithmsList.Values.IndexOf(alg);
-                    algorithms.Add(new MapGenSettingsAlgorithmIDBE { Value = indexOfAlgo });
 
-                    // Pour chaque algorithme, créer l'entité de ses paramètres
+                    Entity e = this.GetEntity(TransformUsageFlags.None);
+                    this.AddComponent(e, new MapGenSettingsMinMaxSizeCD { Value = authoring._settings.MinMaxMapSize });
+                    DynamicBuffer<MapGenSettingsAlgorithmIDBE> algorithms = this.AddBuffer<MapGenSettingsAlgorithmIDBE>(e);
 
-                    this.AddAlgorithmEntities(alg);
+                    for (int i = 0; i < authoring._settings.Algorithms.Length; i++)
+                    {
+                        // Ajoute les IDs des algorithmes à utiliser
+
+                        MapGenAlgorithmSO alg = authoring._settings.Algorithms[i];
+                        int indexOfAlgo = authoring._algorithmsList.Values.IndexOf(alg);
+                        algorithms.Add(new MapGenSettingsAlgorithmIDBE { Value = indexOfAlgo });
+
+                        // Pour chaque algorithme, créer l'entité de ses paramètres
+
+                        this.AddAlgorithmEntities(alg);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e);
                 }
             }
 
@@ -103,9 +113,7 @@ namespace Assets.Scripts.Mono.Authoring
                         this.AddComponent(algE, new OneRoomMapGenAlgorithmCD());
                         break;
 
-                    case NullMapGenAlgorithmSO:
                     default:
-                        this.AddComponent(algE, new NullMapGenAlgorithmCD());
                         break;
                 }
             }

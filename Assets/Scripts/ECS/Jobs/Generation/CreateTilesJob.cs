@@ -1,9 +1,9 @@
+using Assets.Scripts.Core.Models.Generation;
 using Assets.Scripts.ECS.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Mathematics;
 
 /// <summary>
 /// Crée les cases pour chaque cellule de la carte renseignée
@@ -27,7 +27,7 @@ public partial struct CreateTilesJob : IJobFor
     /// Les IDs des cases ainsi que leur position
     /// </summary>
     [ReadOnly]
-    public NativeArray<int3>.ReadOnly TilesIDsRO;
+    public NativeArray<TilePosAndID>.ReadOnly TilesIDsRO;
 
     #endregion
 
@@ -40,11 +40,11 @@ public partial struct CreateTilesJob : IJobFor
     [BurstCompile]
     public void Execute(int index)
     {
-        int3 data = this.TilesIDsRO[index];
+        TilePosAndID data = this.TilesIDsRO[index];
         Entity tileE = this.Ecb.CreateEntity(index, this.TileArchetype);
         this.Ecb.SetName(index, tileE, "Tile Entity");
-        this.Ecb.SetComponent(index, tileE, new TilePositionCD { Value = data.xy });
-        this.Ecb.SetComponent(index, tileE, new TileIdCD { Value = data.z });
+        this.Ecb.SetComponent(index, tileE, new TilePositionCD { Value = data.Pos });
+        this.Ecb.SetComponent(index, tileE, new TileIdCD { Value = data.ID });
     }
 
     #endregion
