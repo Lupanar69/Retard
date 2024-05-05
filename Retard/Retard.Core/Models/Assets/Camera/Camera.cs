@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Retard.Core.Models
+namespace Retard.Core.Models.Assets.Camera
 {
     /// <summary>
     /// Caméra 2D. Prend en charge la souris et le clavier.
@@ -166,11 +166,15 @@ namespace Retard.Core.Models
         /// </summary>
         public float MouseY => _mouseXY.Y;
 
+        public Vector2 MouseXYDelta { get => this._mouseXYDelta; private set => this._mouseXYDelta = value; }
+
         #endregion
 
         #region Variables d'instance
 
         Vector2 _xy, _scale, _origin, _mouseXY;
+
+        Vector2 _previousMouseXY, _mouseXYDelta;
 
         float _angle, _rotCos, _rotSin;
 
@@ -195,15 +199,17 @@ namespace Retard.Core.Models
             {
                 if (p.GetValue(_game) is Game g)
                 {
-                    Camera._game = g;
+                    _game = g;
                 }
             }
 
-            Camera._graphicsDevice = Camera._game.GraphicsDevice;
-            Camera._window = Camera._game.Window;
+            _graphicsDevice = _game.GraphicsDevice;
+            _window = _game.Window;
         }
 
-        /// <summary>Create a 2D camera</summary>
+        /// <summary>
+        /// Create a 2D camera
+        /// </summary>
         /// <param name="xy">X/Y position</param>
         /// <param name="angle">Z rotation (in radians)</param>
         /// <param name="scale">Scale/Zoom</param>
@@ -235,30 +241,42 @@ namespace Retard.Core.Models
             };
         }
 
-        /// <summary>Create a 2D camera</summary>
+        /// <summary>
+        /// Create a 2D camera
+        /// </summary>
         public Camera() : this(Vector2.Zero, 0, Vector2.One, (0, 0)) { }
 
-        /// <summary>Create a 2D camera</summary>
+        /// <summary>
+        /// Create a 2D camera
+        /// </summary>
         /// <param name="xy">X/Y position</param>
         /// <param name="angle">Z rotation (in radians)</param>
         /// <param name="scale">Scale/Zoom</param>
         public Camera(Vector2 xy, float angle, Vector2 scale) : this(xy, angle, scale, (0, 0)) { }
 
-        /// <summary>Create a 2D camera</summary>
+        /// <summary>
+        /// Create a 2D camera
+        /// </summary>
         /// <param name="virtualRes">Virtual resolution</param>
         public Camera((int Width, int Height) virtualRes) : this(Vector2.Zero, 0, Vector2.One, virtualRes) { }
 
-        /// <summary>Create a 2D camera</summary>
+        /// <summary>
+        /// Create a 2D camera
+        /// </summary>
         /// <param name="xy">X/Y position</param>
         /// <param name="angle">Z rotation (in radians)</param>
         public Camera(Vector2 xy, float angle = 0) : this(xy, angle, Vector2.One, (0, 0)) { }
 
-        /// <summary>Create a 2D camera</summary>
+        /// <summary>
+        /// Create a 2D camera
+        /// </summary>
         /// <param name="xy">X/Y position</param>
         /// <param name="virtualRes">Virtual resolution</param>
         public Camera(Vector2 xy, (int Width, int Height) virtualRes) : this(xy, 0, Vector2.One, virtualRes) { }
 
-        /// <summary>Create a 2D camera</summary>
+        /// <summary>
+        /// Create a 2D camera
+        /// </summary>
         /// <param name="xy">X/Y position</param>
         /// <param name="angle">Z rotation (in radians)</param>
         /// <param name="virtualRes">Virtual resolution</param>
@@ -268,28 +286,40 @@ namespace Retard.Core.Models
 
         #region Fonctions publiques
 
-        /// <summary>Re-adds <see cref="Game.GraphicsDevice"/> and <see cref="Game.Window"/> reset/size-changed events (used for keeping <see cref="Origin"/> updated)
-        /// ONLY CALL THIS IF <see cref="Dispose"/> HAS BEEN CALLED BEFORE THIS</summary>
+        /// <summary>
+        /// Re-adds <see cref="Game.GraphicsDevice"/> and <see cref="Game.Window"/> reset/size-changed events 
+        /// (used for keeping <see cref="Origin"/> updated)
+        /// ONLY CALL THIS IF <see cref="Dispose"/> HAS BEEN CALLED BEFORE THIS
+        /// </summary>
         public void Init()
         {
             _graphicsDevice.DeviceReset += WindowSizeChanged;
             _window.ClientSizeChanged += WindowSizeChanged;
         }
-        /// <summary>Removes <see cref="Game.GraphicsDevice"/> and <see cref="Game.Window"/> reset/size-changed events (used for keeping <see cref="Origin"/> updated)
-        /// IF/WHEN RE-USING THIS CAMERA CALL <see cref="Init"/></summary>
+
+        /// <summary>
+        /// Removes <see cref="Game.GraphicsDevice"/> and <see cref="Game.Window"/> reset/size-changed events 
+        /// (used for keeping <see cref="Origin"/> updated)
+        /// IF/WHEN RE-USING THIS CAMERA CALL <see cref="Init"/>
+        /// </summary>
         public void Dispose()
         {
             _window.ClientSizeChanged -= WindowSizeChanged;
             _graphicsDevice.DeviceReset -= WindowSizeChanged;
         }
 
-        /// <summary>Returns true if sprites drawn using <see cref="View(float)"/> at Z <paramref name="z"/> should be visible/drawn</summary>
+        /// <summary>
+        /// Returns true if sprites drawn using <see cref="View(float)"/> at Z <paramref name="z"/> should be visible/drawn
+        /// </summary>
         public bool IsVisible(float z)
         {
             var zoomFromZ = ScaleFromZ(Z, z);
             return zoomFromZ > 0 && zoomFromZ < 10;
         }
-        /// <summary>The scale matrix at Z <paramref name="z"/></summary>
+
+        /// <summary>
+        /// The scale matrix at Z <paramref name="z"/>
+        /// </summary>
         public Matrix ScaleMatrix(float z = 0)
         {
             var matrix = new Matrix { M33 = 1, M44 = 1 };
@@ -298,7 +328,10 @@ namespace Retard.Core.Models
             matrix.M22 = _scale.Y * VirtualScale * zoomFromZ;
             return matrix;
         }
-        /// <summary>The view/transform matrix at Z <paramref name="z"/></summary>
+
+        /// <summary>
+        /// The view/transform matrix at Z <paramref name="z"/>
+        /// </summary>
         public Matrix View(float z = 0)
         {
             UpdateDirtyAngle();
@@ -308,15 +341,18 @@ namespace Retard.Core.Models
                 scaleM22 = _scale.Y * VirtualScale * zoomFromZ,
                 m41 = -_xy.X * scaleM11,
                 m42 = -_xy.Y * scaleM22;
-            matrix.M41 = (m41 * _rotCos) + (m42 * -_rotSin) + _origin.X;
-            matrix.M42 = (m41 * _rotSin) + (m42 * _rotCos) + _origin.Y;
+            matrix.M41 = m41 * _rotCos + m42 * -_rotSin + _origin.X;
+            matrix.M42 = m41 * _rotSin + m42 * _rotCos + _origin.Y;
             matrix.M11 = scaleM11 * _rotCos;
             matrix.M12 = scaleM22 * _rotSin;
             matrix.M21 = scaleM11 * -_rotSin;
             matrix.M22 = scaleM22 * _rotCos;
             return matrix;
         }
-        /// <summary>The inveart matrix of <see cref="View(float)"/> at Z <paramref name="z"/></summary>
+
+        /// <summary>
+        /// The inveart matrix of <see cref="View(float)"/> at Z <paramref name="z"/>
+        /// </summary>
         public Matrix ViewInvert(float z = 0)
         {
             UpdateDirtyAngle();
@@ -330,8 +366,8 @@ namespace Retard.Core.Models
                 viewM12 = scaleM22 * _rotSin,
                 viewM21 = scaleM11 * -_rotSin,
                 viewM22 = scaleM22 * _rotCos,
-                num19 = -((m41 * _rotSin) + (m42 * _rotCos) + _origin.Y),
-                num21 = -((m41 * _rotCos) + (m42 * -_rotSin) + _origin.X),
+                num19 = -(m41 * _rotSin + m42 * _rotCos + _origin.Y),
+                num21 = -(m41 * _rotCos + m42 * -_rotSin + _origin.X),
                 n24 = -viewM21,
                 n27 = (float)(1 / (viewM11 * (double)viewM22 + viewM12 * (double)n24));
             matrix.M41 = (float)-(viewM21 * (double)num19 - viewM22 * (double)num21) * n27;
@@ -342,55 +378,96 @@ namespace Retard.Core.Models
             matrix.M22 = viewM11 * n27;
             return matrix;
         }
-        /// <summary>Converts screen coords to world coords</summary>
+
+        /// <summary>
+        /// Converts screen coords to world coords
+        /// </summary>
         public Vector2 ScreenToWorld(float x, float y, float z = 0)
         {
             var invert = ViewInvert(z);
-            return new Vector2(x * invert.M11 + (y * invert.M21) + invert.M41, x * invert.M12 + (y * invert.M22) + invert.M42);
+            return new Vector2(x * invert.M11 + y * invert.M21 + invert.M41, x * invert.M12 + y * invert.M22 + invert.M42);
         }
-        /// <summary>Converts screen coords to world coords</summary>
+
+        /// <summary>
+        /// Converts screen coords to world coords
+        /// </summary>
         public Vector2 ScreenToWorld(Vector2 xy, float z = 0) => ScreenToWorld(xy.X, xy.Y, z);
-        /// <summary>Converts screen coords to world coords</summary>
+
+        /// <summary>
+        /// Converts screen coords to world coords
+        /// </summary>
         public Vector2 ScreenToWorld(Vector3 xyz) => ScreenToWorld(xyz.X, xyz.Y, xyz.Z);
-        /// <summary>Converts screen coords to world coords</summary>
+
+        /// <summary>
+        /// Converts screen coords to world coords
+        /// </summary>
         public Point ScreenToWorld(Point xy, float z = 0) => ScreenToWorld(xy.X, xy.Y, z).ToPoint();
-        /// <summary>Returns the scale of the world at Z <paramref name="z"/> in relation to the screen</summary>
+
+        /// <summary>
+        /// Returns the scale of the world at Z <paramref name="z"/> in relation to the screen
+        /// </summary>
         public float ScreenToWorldScale(float z = 0) => 1 / Vector2.Distance(ScreenToWorld(0, 0, z), ScreenToWorld(1, 0, z));
-        /// <summary>Converts world coords to screen coords</summary>
+
+        /// <summary>
+        /// Converts world coords to screen coords
+        /// </summary>
         public Vector2 WorldToScreen(float x, float y, float z = 0)
         {
             var view = View(z);
-            return new Vector2(x * view.M11 + (y * view.M21) + view.M41 + x, x * view.M12 + (y * view.M22) + view.M42 + y);
+            return new Vector2(x * view.M11 + y * view.M21 + view.M41 + x, x * view.M12 + y * view.M22 + view.M42 + y);
         }
-        /// <summary>Converts world coords to screen coords</summary>
+
+        /// <summary>
+        /// Converts world coords to screen coords
+        /// </summary>
         public Vector2 WorldToScreen(Vector2 xy, float z = 0) => WorldToScreen(xy.X, xy.Y, z);
-        /// <summary>Converts world coords to screen coords</summary>
+
+        /// <summary>
+        /// Converts world coords to screen coords
+        /// </summary>
         public Vector2 WorldToScreen(Vector3 xyz) => WorldToScreen(xyz.X, xyz.Y, xyz.Z);
-        /// <summary>Converts world coords to screen coords</summary>
+
+        /// <summary>
+        /// Converts world coords to screen coords
+        /// </summary>
         public Point WorldToScreen(Point xy, float z = 0) => WorldToScreen(xy.X, xy.Y, z).ToPoint();
-        /// <summary>Returns the scale of the screen in relation to the world at Z <paramref name="z"/></summary>
+
+        /// <summary>
+        /// Returns the scale of the screen in relation to the world at Z <paramref name="z"/>
+        /// </summary>
         public float WorldToScreenScale(float z = 0) => Vector2.Distance(WorldToScreen(0, 0, z), WorldToScreen(1, 0, z));
 
-        /// <summary>The scale of <see cref="View(float)"/> at Z <paramref name="targetZ"/> from <paramref name="z"/></summary>
+        /// <summary>
+        /// The scale of <see cref="View(float)"/> at Z <paramref name="targetZ"/> from <paramref name="z"/>
+        /// </summary>
         public float ScaleFromZ(float z, float targetZ) => z - targetZ == 0 ? 0 : 1 / (z - targetZ);
-        /// <summary>The camera Z required for sprites at Z <paramref name="targetZ"/> that should be drawn at scale <paramref name="zoom"/></summary>
+
+        /// <summary>
+        /// The camera Z required for sprites at Z <paramref name="targetZ"/> that should be drawn at scale <paramref name="zoom"/>
+        /// </summary>
         public float ZFromScale(float zoom, float targetZ) => 1 / zoom + targetZ;
 
-        /// <summary>A rectangle covering the view given <paramref name="z"/> (in world coords).</summary>
+        /// <summary>
+        /// A rectangle covering the view given <paramref name="z"/> (in world coords).
+        /// </summary>
         public Rectangle WorldBounds(float z = 0)
         {
             var s = ScreenToWorld(_viewportRes.Width / 2f * Scale.X, _viewportRes.Height / 2f * Scale.Y, z);
             return new Rectangle(new Point((int)MathF.Floor(s.X), (int)MathF.Floor(s.Y)), new Point((int)(MathF.Ceiling(Origin.X / _scale.X) * 2), (int)(MathF.Ceiling(Origin.Y / _scale.Y) * 2)));
         }
 
-        /// <summary>Will update <see cref="MouseXY"/>. Call once per frame and before using <see cref="MouseXY"/></summary>
+        /// <summary>
+        /// Will update <see cref="MouseXY"/>. Call once per frame and before using <see cref="MouseXY"/>
+        /// </summary>
         /// <param name="mouseState">null value will auto grab latest state</param>
         public void UpdateXYPos(MouseState? mouseState = null)
         {
             mouseState ??= Mouse.GetState();
             int mouseX = mouseState.Value.Position.X,
                 mouseY = mouseState.Value.Position.Y;
-            _mouseXY = ScreenToWorld(mouseX, mouseY);
+            this._mouseXY = ScreenToWorld(mouseX, mouseY);
+            this._mouseXYDelta = this._mouseXY - this._previousMouseXY;
+            this._previousMouseXY = this._mouseXY;
         }
 
         #endregion
@@ -406,11 +483,13 @@ namespace Retard.Core.Models
                 _angleDirty = false;
             }
         }
+
         private void UpdateOrigin()
         {
             VirtualScale = _hasVirtualRes ? MathF.Min((float)_viewportRes.Width / _virtualRes.Width, (float)_viewportRes.Height / _virtualRes.Height) : 1;
             Origin = new Vector2(_originMatrix.M41 = _origin.X / VirtualScale, _originMatrix.M42 = _origin.Y / VirtualScale);
         }
+
         private void UpdateViewportRes(int width, int height)
         {
             _viewportRes = (width, height);
@@ -438,7 +517,7 @@ namespace Retard.Core.Models
                 width2 = (int)(height2 * targetAspectRatio + .5f);
             }
             _graphicsDevice.SetRenderTarget(null);
-            _graphicsDevice.Viewport = new Viewport((_graphicsDevice.PresentationParameters.BackBufferWidth / 2) - (width2 / 2), (_graphicsDevice.PresentationParameters.BackBufferHeight / 2) - (height2 / 2), width2, height2);
+            _graphicsDevice.Viewport = new Viewport(_graphicsDevice.PresentationParameters.BackBufferWidth / 2 - width2 / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2 - height2 / 2, width2, height2);
         }
 
         #endregion

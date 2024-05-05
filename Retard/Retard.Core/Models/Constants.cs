@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Retard.Core.ViewModels.Generation;
+﻿using Retard.Core.Models.ValueTypes;
 
 namespace Retard.Core.Models
 {
@@ -38,15 +37,7 @@ namespace Retard.Core.Models
         /// <summary>
         /// L'intervalle de taille possible pour une carte
         /// </summary>
-        internal static readonly Vector2 MIN_MAX_MAP_SIZE = new(30, 50);
-
-        /// <summary>
-        /// La liste des algorithmes de génération de niveau disponibles
-        /// </summary>
-        internal static readonly IMapGenerationAlgorithm[] MAP_GENERATION_ALGORITHMS = new IMapGenerationAlgorithm[]
-        {
-            new OneRoomMapGenerationAlgorithm(),
-        };
+        internal static readonly int2 MIN_MAX_MAP_SIZE = new(30, 50);
 
         #endregion
 

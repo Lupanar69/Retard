@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Retard.Core.Models.Assets
+namespace Retard.Core.Models.Assets.Sprites
 {
     /// <summary>
     /// Représente un sprite provenant d'un atlas
@@ -13,17 +13,17 @@ namespace Retard.Core.Models.Assets
         /// <summary>
         /// La texture source du sprite
         /// </summary>
-        internal Texture2D Texture { get; private set; }
+        public Texture2D Texture { get; private set; }
 
         /// <summary>
         /// Le nombre de lignes de sprite
         /// </summary>
-        internal int Rows { get; private set; }
+        public int Rows { get; private set; }
 
         /// <summary>
         /// Le nombre de colonnes de sprite
         /// </summary>
-        internal int Columns { get; private set; }
+        public int Columns { get; private set; }
 
         #endregion
 
@@ -51,7 +51,7 @@ namespace Retard.Core.Models.Assets
         /// </summary>
         /// <param name="frame">L'id du sprite dans l'atlas à afficher</param>
         /// <returns>Les dimensions du sprite</returns>
-        internal Rectangle GetSpriteRect(int frame)
+        public Rectangle GetSpriteRect(int frame)
         {
             int width = this.Texture.Width / this.Columns;
             int height = this.Texture.Height / this.Rows;

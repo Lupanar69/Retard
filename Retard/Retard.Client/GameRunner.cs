@@ -1,12 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended.Entities;
 using Retard.Core.Models;
-using Retard.Core.Models.Assets;
-using Retard.Core.View.Systems;
-using Retard.Core.ViewModels.Systems.Generation;
-using Retard.Core.ViewModels.Systems.Other;
+using Retard.Core.Models.Assets.Camera;
+using Retard.Core.Models.Assets.Sprites;
 
 namespace Retard.Client
 {
@@ -18,19 +15,34 @@ namespace Retard.Client
         #region Variables d'instance
 
         /// <summary>
-        /// Contient les entités et systèmes
-        /// </summary>
-        private World _world;
-
-        /// <summary>
         /// Permet de modifier les paramètres de la fenêtre
         /// </summary>
-        private GraphicsDeviceManager _graphics;
+        private readonly GraphicsDeviceManager _graphics;
+
+        /// <summary>
+        /// Pour afficher les sprites à l'écran
+        /// </summary>
+        private SpriteBatch _spriteBatch;
+
+        /// <summary>
+        /// La caméra du jeu
+        /// </summary>
+        private SpriteAtlas _debugAtlas;
+
+        /// <summary>
+        /// La caméra du jeu
+        /// </summary>
+        private AnimatedSprite _animatedSprite;
 
         /// <summary>
         /// La caméra du jeu
         /// </summary>
         private Camera _camera;
+
+        /// <summary>
+        /// La caméra du jeu
+        /// </summary>
+        private Vector2 _camPos;
 
         #endregion
 
@@ -44,7 +56,8 @@ namespace Retard.Client
             this._graphics = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
 
-            this.SetupGameWindow();
+
+            this.SetupGameWindow(800, 600, false);
         }
 
         #endregion
@@ -56,11 +69,6 @@ namespace Retard.Client
         /// </summary>
         protected override void Initialize()
         {
-            // Pour l'instant on génère l'aléa ici,
-            // mais on le déplacera au lancement d'une nouvelle partie
-            int seed = 1234;
-            GameSession.New(seed);
-
             this._camera = new Camera();
 
             base.Initialize();
@@ -71,16 +79,10 @@ namespace Retard.Client
         /// </summary>
         protected override void LoadContent()
         {
+            this._spriteBatch = new SpriteBatch(this.GraphicsDevice);
             Texture2D debugTex = Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
-            SpriteAtlas debugAtlas = new(debugTex, 4, 4);
-
-            this._world = new WorldBuilder()
-                .AddSystem(new CreateMapSystem(debugAtlas))
-                .AddSystem(new MapRenderSystem(this.GraphicsDevice, this._camera))
-                .AddSystem(new DestroySystem())
-                .Build();
-
-            this.Components.Add(this._world);
+            this._debugAtlas = new(debugTex, 4, 4);
+            this._animatedSprite = new AnimatedSprite(this._debugAtlas, 0, 8);
         }
 
         /// <summary>
@@ -94,7 +96,20 @@ namespace Retard.Client
                 Exit();
             }
 
-            this._world.Update(gameTime);
+            _animatedSprite.Update();
+
+            this._camera.UpdateXYPos();
+
+            if (Mouse.GetState(this.Window).LeftButton == ButtonState.Pressed)
+            {
+                this._camPos += this._camera.MouseXYDelta;
+            }
+
+
+            if (Keyboard.GetState().IsKeyDown(Keys.F))
+            {
+                this._camPos = Vector2.Zero;
+            }
 
             base.Update(gameTime);
         }
@@ -107,8 +122,9 @@ namespace Retard.Client
         {
             this.GraphicsDevice.Clear(Color.Black);
 
-            this._world.Draw(gameTime);
-
+            this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, _camera.View());
+            _animatedSprite.Draw(in _debugAtlas, in this._spriteBatch, this._camPos, Color.White);
+            this._spriteBatch.End();
             base.Draw(gameTime);
         }
 
@@ -119,14 +135,19 @@ namespace Retard.Client
         /// <summary>
         /// Initialise la fenêtre de jeu
         /// </summary>
-        private void SetupGameWindow()
+        /// <param name="resolutionX">La résolution en X de la fenêtre</param>
+        /// <param name="resolutionY">La résolution en Y de la fenêtre</param>
+        /// <param name="fullScreen"><see langword="true"/> pour passer la fenêtre en plein écran</param>
+        /// <param name="mouseVisible"><see langword="true"/> si la souris doit rester visible</param>
+        /// <param name="allowUserResizing"><see langword="true"/> si le joueur peut redimensionner la fenêtre</param>
+        private void SetupGameWindow(int resolutionX, int resolutionY, bool fullScreen = true, bool mouseVisible = true, bool allowUserResizing = true)
         {
-            this.IsMouseVisible = true;
-            this.Window.AllowUserResizing = true;
+            this.IsMouseVisible = mouseVisible;
+            this.Window.AllowUserResizing = allowUserResizing;
 
-            this._graphics.PreferredBackBufferWidth = 1920;
-            this._graphics.PreferredBackBufferHeight = 1080;
-            //this._graphics.IsFullScreen = true;
+            this._graphics.PreferredBackBufferWidth = resolutionX;
+            this._graphics.PreferredBackBufferHeight = resolutionY;
+            this._graphics.IsFullScreen = fullScreen;
             this._graphics.ApplyChanges();
         }
 
