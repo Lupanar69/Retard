@@ -44,7 +44,7 @@ namespace Retard.Core.Models.Assets.Sprites
 
         #endregion
 
-        #region Fonctions internes
+        #region Méthodes internes
 
         /// <summary>
         /// Calcule les dimensions du sprite

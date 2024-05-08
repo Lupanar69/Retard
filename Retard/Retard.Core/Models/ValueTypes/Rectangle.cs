@@ -104,7 +104,7 @@ namespace Retard.Core.Models.ValueTypes
 
         #endregion
 
-        #region Fonctions publiques
+        #region Méthodes publiques
 
         #region Interface
 

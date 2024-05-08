@@ -39,11 +39,6 @@ namespace Retard.Client
         /// </summary>
         private Camera _camera;
 
-        /// <summary>
-        /// La caméra du jeu
-        /// </summary>
-        private Vector2 _camPos;
-
         #endregion
 
         #region Constructeur
@@ -98,18 +93,7 @@ namespace Retard.Client
 
             _animatedSprite.Update();
 
-            this._camera.UpdateXYPos();
-
-            if (Mouse.GetState(this.Window).LeftButton == ButtonState.Pressed)
-            {
-                this._camPos += this._camera.MouseXYDelta;
-            }
-
-
-            if (Keyboard.GetState().IsKeyDown(Keys.F))
-            {
-                this._camPos = Vector2.Zero;
-            }
+            this._camera.Update();
 
             base.Update(gameTime);
         }
@@ -122,9 +106,9 @@ namespace Retard.Client
         {
             this.GraphicsDevice.Clear(Color.Black);
 
-            this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, _camera.View());
-            _animatedSprite.Draw(in _debugAtlas, in this._spriteBatch, this._camPos, Color.White);
-            this._spriteBatch.End();
+            //this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null/*_camera.View()*/);
+            //_animatedSprite.Draw(in _debugAtlas, in this._spriteBatch, this._camera.Position, Color.White);
+            //this._spriteBatch.End();
             base.Draw(gameTime);
         }
 

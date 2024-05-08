@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\RETARD\\Retard.Core\\Retard.Core.csproj": {}
+    "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\Retard\\Retard.Core\\Retard.Core.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\RETARD\\Retard.Core\\Retard.Core.csproj": {
+    "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\Retard\\Retard.Core\\Retard.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\RETARD\\Retard.Core\\Retard.Core.csproj",
+        "projectUniqueName": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\Retard\\Retard.Core\\Retard.Core.csproj",
         "projectName": "Retard.Core",
-        "projectPath": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\RETARD\\Retard.Core\\Retard.Core.csproj",
+        "projectPath": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\Retard\\Retard.Core\\Retard.Core.csproj",
         "packagesPath": "C:\\Users\\Clément\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\RETARD\\Retard.Core\\obj\\",
+        "outputPath": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\Retard\\Retard.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -45,6 +45,38 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Arch": {
+              "target": "Package",
+              "version": "[1.2.8, )"
+            },
+            "Arch.AOT.SourceGenerator": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
+            "Arch.EventBus": {
+              "target": "Package",
+              "version": "[1.0.2, )"
+            },
+            "Arch.LowLevel": {
+              "target": "Package",
+              "version": "[1.1.0, )"
+            },
+            "Arch.Persistence": {
+              "target": "Package",
+              "version": "[1.0.4, )"
+            },
+            "Arch.Relationships": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
+            "Arch.System": {
+              "target": "Package",
+              "version": "[1.0.5, )"
+            },
+            "Arch.System.SourceGenerator": {
+              "target": "Package",
+              "version": "[1.2.1, )"
+            },
             "MonoGame.Extended.Input": {
               "target": "Package",
               "version": "[3.8.0, )"

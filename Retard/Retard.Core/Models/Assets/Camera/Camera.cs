@@ -166,7 +166,15 @@ namespace Retard.Core.Models.Assets.Camera
         /// </summary>
         public float MouseY => _mouseXY.Y;
 
+        /// <summary>
+        /// La différence de position de la souris entre chaque frame
+        /// </summary>
         public Vector2 MouseXYDelta { get => this._mouseXYDelta; private set => this._mouseXYDelta = value; }
+
+        /// <summary>
+        /// La position de la caméra en pixels
+        /// </summary>
+        public Vector2 Position { get => this._position; private set => _position = value; }
 
         #endregion
 
@@ -175,6 +183,11 @@ namespace Retard.Core.Models.Assets.Camera
         Vector2 _xy, _scale, _origin, _mouseXY;
 
         Vector2 _previousMouseXY, _mouseXYDelta;
+
+        /// <summary>
+        /// La position de la caméra
+        /// </summary>
+        private Vector2 _position;
 
         float _angle, _rotCos, _rotSin;
 
@@ -284,7 +297,7 @@ namespace Retard.Core.Models.Assets.Camera
 
         #endregion
 
-        #region Fonctions publiques
+        #region Méthodes publiques
 
         /// <summary>
         /// Re-adds <see cref="Game.GraphicsDevice"/> and <see cref="Game.Window"/> reset/size-changed events 
@@ -306,6 +319,25 @@ namespace Retard.Core.Models.Assets.Camera
         {
             _window.ClientSizeChanged -= WindowSizeChanged;
             _graphicsDevice.DeviceReset -= WindowSizeChanged;
+        }
+
+        /// <summary>
+        /// Màj à chaque frame
+        /// </summary>
+        public void Update()
+        {
+            this.UpdateXYPos();
+
+            if (Mouse.GetState(Camera._window).LeftButton == ButtonState.Pressed)
+            {
+                this._position += this._mouseXYDelta;
+            }
+
+
+            if (Keyboard.GetState().IsKeyDown(Keys.F))
+            {
+                this._position = Vector2.Zero;
+            }
         }
 
         /// <summary>
@@ -472,7 +504,7 @@ namespace Retard.Core.Models.Assets.Camera
 
         #endregion
 
-        #region Fonctions privées
+        #region Méthodes privées
 
         private void UpdateDirtyAngle()
         {

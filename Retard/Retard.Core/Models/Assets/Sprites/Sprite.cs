@@ -41,7 +41,7 @@ namespace Retard.Core.Models.Assets.Sprites
 
         #endregion
 
-        #region Fonctions internes
+        #region Méthodes internes
 
         /// <summary>
         /// Affiche le sprite à l'écran.

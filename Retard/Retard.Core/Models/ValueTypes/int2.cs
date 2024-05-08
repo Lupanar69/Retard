@@ -147,7 +147,7 @@ namespace Retard.Core.Models.ValueTypes
 
         #endregion
 
-        #region Fonctions statiques publiques
+        #region Méthodes statiques publiques
 
         #region Opérateurs
 
@@ -309,7 +309,7 @@ namespace Retard.Core.Models.ValueTypes
     /// </summary>
     public static class int2extensions
     {
-        #region Fonctions statiques publiques
+        #region Méthodes statiques publiques
 
         public static int2 RoundToInt2(this Vector2 v)
         {
