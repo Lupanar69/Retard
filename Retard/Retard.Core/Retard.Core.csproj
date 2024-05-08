@@ -3,22 +3,15 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Resource Include="Content\Resources\Textures\Test\tiles_test2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Content\Resources\Textures\test\tiles_test.psd">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\Resources\Textures\test\tiles_test2.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tests\" />
-    <Folder Include="ViewModels\" />
-    <Folder Include="View\" />
+    <Compile Remove="Tests\**" />
+    <Compile Remove="ViewModels\**" />
+    <Compile Remove="View\**" />
+    <EmbeddedResource Remove="Tests\**" />
+    <EmbeddedResource Remove="ViewModels\**" />
+    <EmbeddedResource Remove="View\**" />
+    <None Remove="Tests\**" />
+    <None Remove="ViewModels\**" />
+    <None Remove="View\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Extended.Input" Version="3.8.0" />
