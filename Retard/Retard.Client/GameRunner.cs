@@ -1,9 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Arch.Core;
+using Arch.System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models;
 using Retard.Core.Models.Assets.Camera;
 using Retard.Core.Models.Assets.Sprites;
+using Retard.Core.Systems;
 
 namespace Retard.Client
 {
@@ -17,27 +20,27 @@ namespace Retard.Client
         /// <summary>
         /// Permet de modifier les paramètres de la fenêtre
         /// </summary>
-        private readonly GraphicsDeviceManager _graphics;
-
-        /// <summary>
-        /// Pour afficher les sprites à l'écran
-        /// </summary>
-        private SpriteBatch _spriteBatch;
-
-        /// <summary>
-        /// La caméra du jeu
-        /// </summary>
-        private SpriteAtlas _debugAtlas;
-
-        /// <summary>
-        /// La caméra du jeu
-        /// </summary>
-        private AnimatedSprite _animatedSprite;
+        private readonly GraphicsDeviceManager _graphicsDeviceManager;
 
         /// <summary>
         /// La caméra du jeu
         /// </summary>
         private Camera _camera;
+
+        /// <summary>
+        /// Le monde contenant les entités
+        /// </summary>
+        private World _world;
+
+        /// <summary>
+        /// Les systèmes du monde à màj dans Update()
+        /// </summary>
+        private Group<float> _spriteUpdateSystems;
+
+        /// <summary>
+        /// Les systèmes du monde
+        /// </summary>
+        private Group<byte> _spriteDrawSystems;
 
         #endregion
 
@@ -48,11 +51,22 @@ namespace Retard.Client
         /// </summary>
         public GameRunner()
         {
-            this._graphics = new GraphicsDeviceManager(this);
+            this._graphicsDeviceManager = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
 
 
             this.SetupGameWindow(800, 600, false);
+        }
+
+        /// <summary>
+        /// Finaliseur
+        /// </summary>
+        ~GameRunner()
+        {
+            this._graphicsDeviceManager.Dispose();
+            this._camera.Dispose();
+            this._world.Dispose();
+            this._spriteDrawSystems.Dispose();
         }
 
         #endregion
@@ -65,6 +79,15 @@ namespace Retard.Client
         protected override void Initialize()
         {
             this._camera = new Camera();
+            this._world = World.Create();
+
+            this._spriteUpdateSystems = new Group<float>
+                (
+                    "Update Systems",
+                    new AnimatedSpriteUpdateSystem(this._world)
+                );
+
+            this._spriteUpdateSystems.Initialize();
 
             base.Initialize();
         }
@@ -74,10 +97,18 @@ namespace Retard.Client
         /// </summary>
         protected override void LoadContent()
         {
-            this._spriteBatch = new SpriteBatch(this.GraphicsDevice);
             Texture2D debugTex = Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
-            this._debugAtlas = new(debugTex, 4, 4);
-            this._animatedSprite = new AnimatedSprite(this._debugAtlas, 0, 8);
+            SpriteAtlas debugAtlas = new(debugTex, 4, 4);
+
+            // Créé ici car on a besoin de récupérer les textures
+
+            this._spriteDrawSystems = new Group<byte>
+                (
+                    "Draw Systems",
+                    new SpriteDrawSystem(this._world, this.GraphicsDevice, debugAtlas, this._camera)
+                );
+
+            this._spriteDrawSystems.Initialize();
         }
 
         /// <summary>
@@ -91,9 +122,8 @@ namespace Retard.Client
                 Exit();
             }
 
-            _animatedSprite.Update();
-
             this._camera.Update();
+            this._spriteUpdateSystems.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
         }
@@ -106,9 +136,8 @@ namespace Retard.Client
         {
             this.GraphicsDevice.Clear(Color.Black);
 
-            //this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null/*_camera.View()*/);
-            //_animatedSprite.Draw(in _debugAtlas, in this._spriteBatch, this._camera.Position, Color.White);
-            //this._spriteBatch.End();
+            this._spriteDrawSystems.Update(0);
+
             base.Draw(gameTime);
         }
 
@@ -129,10 +158,10 @@ namespace Retard.Client
             this.IsMouseVisible = mouseVisible;
             this.Window.AllowUserResizing = allowUserResizing;
 
-            this._graphics.PreferredBackBufferWidth = resolutionX;
-            this._graphics.PreferredBackBufferHeight = resolutionY;
-            this._graphics.IsFullScreen = fullScreen;
-            this._graphics.ApplyChanges();
+            this._graphicsDeviceManager.PreferredBackBufferWidth = resolutionX;
+            this._graphicsDeviceManager.PreferredBackBufferHeight = resolutionY;
+            this._graphicsDeviceManager.IsFullScreen = fullScreen;
+            this._graphicsDeviceManager.ApplyChanges();
         }
 
         #endregion
