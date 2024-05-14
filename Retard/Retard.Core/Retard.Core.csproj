@@ -4,13 +4,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Tests\**" />
-    <Compile Remove="ViewModels\**" />
     <Compile Remove="View\**" />
     <EmbeddedResource Remove="Tests\**" />
-    <EmbeddedResource Remove="ViewModels\**" />
     <EmbeddedResource Remove="View\**" />
     <None Remove="Tests\**" />
-    <None Remove="ViewModels\**" />
     <None Remove="View\**" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Arch.AOT.SourceGenerator;
 
 namespace Retard.Core.Components.Sprites
 {
@@ -6,6 +7,7 @@ namespace Retard.Core.Components.Sprites
     /// Le nombre de frames à attendre avant de màj la frame du sprite.
     /// Plus le nb de frames est grand, plus l'animation est lente.
     /// </summary>
+    [Component]
     public struct AnimatedSpriteSpeedCD
     {
         #region Variables d'instance

@@ -1,4 +1,5 @@
-﻿using Arch.Core;
+﻿using System.Diagnostics;
+using Arch.Core;
 using Arch.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -6,7 +7,10 @@ using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models;
 using Retard.Core.Models.Assets.Camera;
 using Retard.Core.Models.Assets.Sprites;
+using Retard.Core.Models.ValueTypes;
 using Retard.Core.Systems;
+using Retard.Core.Systems.Tests;
+using Retard.Core.ViewModels;
 
 namespace Retard.Client
 {
@@ -35,12 +39,12 @@ namespace Retard.Client
         /// <summary>
         /// Les systèmes du monde à màj dans Update()
         /// </summary>
-        private Group<float> _spriteUpdateSystems;
+        private Group<float> _updateSystems;
 
         /// <summary>
         /// Les systèmes du monde
         /// </summary>
-        private Group<byte> _spriteDrawSystems;
+        private Group<byte> _drawSystems;
 
         #endregion
 
@@ -66,7 +70,7 @@ namespace Retard.Client
             this._graphicsDeviceManager.Dispose();
             this._camera.Dispose();
             this._world.Dispose();
-            this._spriteDrawSystems.Dispose();
+            this._drawSystems.Dispose();
         }
 
         #endregion
@@ -80,14 +84,8 @@ namespace Retard.Client
         {
             this._camera = new Camera();
             this._world = World.Create();
-
-            this._spriteUpdateSystems = new Group<float>
-                (
-                    "Update Systems",
-                    new AnimatedSpriteUpdateSystem(this._world)
-                );
-
-            this._spriteUpdateSystems.Initialize();
+            this._updateSystems = new Group<float>("Update Systems");
+            this._drawSystems = new Group<byte>("Draw Systems");
 
             base.Initialize();
         }
@@ -102,13 +100,15 @@ namespace Retard.Client
 
             // Créé ici car on a besoin de récupérer les textures
 
-            this._spriteDrawSystems = new Group<byte>
-                (
-                    "Draw Systems",
-                    new SpriteDrawSystem(this._world, this.GraphicsDevice, debugAtlas, this._camera)
-                );
+            this._drawSystems.Add(new SpriteDrawSystem(this._world, this.GraphicsDevice, debugAtlas, this._camera));
+            this._updateSystems.Add(new AnimatedSpriteUpdateSystem(this._world));
 
-            this._spriteDrawSystems.Initialize();
+#if DEBUG
+            this._updateSystems.Add(new SpriteCreateSystemTest(this._world, debugAtlas, new int2(60, 60)));
+#endif
+
+            this._updateSystems.Initialize();
+            this._drawSystems.Initialize();
         }
 
         /// <summary>
@@ -117,13 +117,23 @@ namespace Retard.Client
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || KeyboardInput.IsKeyDown(Keys.Escape))
             {
                 Exit();
             }
 
+            if (KeyboardInput.IsKeyDown(Keys.J))
+            {
+                Trace.WriteLine("j");
+            }
+
             this._camera.Update();
-            this._spriteUpdateSystems.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            this._updateSystems.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+
+            // Appelé en dernier pour ne pas écraser le précédent KeyboardState
+            // avant les comparaisons
+
+            KeyboardInput.RefreshKeyboardState();
 
             base.Update(gameTime);
         }
@@ -136,7 +146,7 @@ namespace Retard.Client
         {
             this.GraphicsDevice.Clear(Color.Black);
 
-            this._spriteDrawSystems.Update(0);
+            this._drawSystems.Update(0);
 
             base.Draw(gameTime);
         }
