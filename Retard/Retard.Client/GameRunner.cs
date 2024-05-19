@@ -1,16 +1,12 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
 using Arch.Core;
-using Arch.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Retard.Core.Models;
 using Retard.Core.Models.Assets.Camera;
-using Retard.Core.Models.Assets.Sprites;
-using Retard.Core.Models.ValueTypes;
-using Retard.Core.Systems;
-using Retard.Core.Systems.Tests;
-using Retard.Core.ViewModels;
+using Retard.Core.ViewModels.Input;
+using Retard.Core.ViewModels.Scenes;
+using Retard.Core.ViewModels.Scenes.Tests;
 
 namespace Retard.Client
 {
@@ -27,6 +23,11 @@ namespace Retard.Client
         private readonly GraphicsDeviceManager _graphicsDeviceManager;
 
         /// <summary>
+        /// Pour afficher les sprites à l'écran
+        /// </summary>
+        private SpriteBatch _spriteBatch;
+
+        /// <summary>
         /// La caméra du jeu
         /// </summary>
         private Camera _camera;
@@ -37,14 +38,9 @@ namespace Retard.Client
         private World _world;
 
         /// <summary>
-        /// Les systèmes du monde à màj dans Update()
+        /// Les scènes actives
         /// </summary>
-        private Group<float> _updateSystems;
-
-        /// <summary>
-        /// Les systèmes du monde
-        /// </summary>
-        private Group<byte> _drawSystems;
+        private Stack<Scene> _scenes;
 
         #endregion
 
@@ -58,19 +54,7 @@ namespace Retard.Client
             this._graphicsDeviceManager = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
 
-
             this.SetupGameWindow(800, 600, false);
-        }
-
-        /// <summary>
-        /// Finaliseur
-        /// </summary>
-        ~GameRunner()
-        {
-            this._graphicsDeviceManager.Dispose();
-            this._camera.Dispose();
-            this._world.Dispose();
-            this._drawSystems.Dispose();
         }
 
         #endregion
@@ -84,8 +68,15 @@ namespace Retard.Client
         {
             this._camera = new Camera();
             this._world = World.Create();
-            this._updateSystems = new Group<float>("Update Systems");
-            this._drawSystems = new Group<byte>("Draw Systems");
+            this._spriteBatch = new SpriteBatch(this.GraphicsDevice);
+
+            // Initialise les scènes
+
+#if TESTS
+            SceneManager.AddScene(new SpriteDrawTestScene(this.Content, this._world, this._spriteBatch, this._camera));
+            //SceneManager.AddScene(new BlockInputTestScene(this.Content, this._world, this._spriteBatch));
+#endif
+            SceneManager.InitializeScenes();
 
             base.Initialize();
         }
@@ -95,20 +86,7 @@ namespace Retard.Client
         /// </summary>
         protected override void LoadContent()
         {
-            Texture2D debugTex = Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
-            SpriteAtlas debugAtlas = new(debugTex, 4, 4);
 
-            // Créé ici car on a besoin de récupérer les textures
-
-            this._drawSystems.Add(new SpriteDrawSystem(this._world, this.GraphicsDevice, debugAtlas, this._camera));
-            this._updateSystems.Add(new AnimatedSpriteUpdateSystem(this._world));
-
-#if DEBUG
-            this._updateSystems.Add(new SpriteCreateSystemTest(this._world, debugAtlas, new int2(60, 60)));
-#endif
-
-            this._updateSystems.Initialize();
-            this._drawSystems.Initialize();
         }
 
         /// <summary>
@@ -122,18 +100,20 @@ namespace Retard.Client
                 Exit();
             }
 
-            if (KeyboardInput.IsKeyDown(Keys.J))
-            {
-                Trace.WriteLine("j");
-            }
+            // Màj la caméra
 
-            this._camera.Update();
-            this._updateSystems.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            this._camera.GetMouseXYPos();
+
+            // Màj les scènes
+
+            SceneManager.UpdateSceneInputs();
+            SceneManager.UpdateScenes(gameTime);
 
             // Appelé en dernier pour ne pas écraser le précédent KeyboardState
             // avant les comparaisons
 
-            KeyboardInput.RefreshKeyboardState();
+            KeyboardInput.Update();
+            MouseInput.Update();
 
             base.Update(gameTime);
         }
@@ -146,7 +126,7 @@ namespace Retard.Client
         {
             this.GraphicsDevice.Clear(Color.Black);
 
-            this._drawSystems.Update(0);
+            SceneManager.DrawScenes(gameTime);
 
             base.Draw(gameTime);
         }

@@ -159,6 +159,10 @@
               "target": "Package",
               "version": "[1.2.8, )"
             },
+            "Arch.AOT.SourceGenerator": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
             "Arch.EventBus": {
               "target": "Package",
               "version": "[1.0.2, )"
@@ -182,6 +186,10 @@
             "Arch.System.SourceGenerator": {
               "target": "Package",
               "version": "[1.2.1, )"
+            },
+            "BenchmarkDotNet": {
+              "target": "Package",
+              "version": "[0.13.12, )"
             },
             "MonoGame.Extended.Input": {
               "target": "Package",

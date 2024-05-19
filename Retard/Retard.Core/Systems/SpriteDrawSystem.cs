@@ -49,12 +49,12 @@ namespace Retard.Core.Systems
         /// Constructeur
         /// </summary>
         /// <param name="world">Le monde contenant les entités des sprites</param>
-        /// <param name="graphicsDevice">Pour faire fonctionner le SpriteBatch</param>
+        /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
         /// <param name="spriteAtlas">L'atlas des sprites à afficher</param>
         /// <param name="camera">La caméra du jeu</param>
-        public SpriteDrawSystem(World world, GraphicsDevice graphicsDevice, SpriteAtlas spriteAtlas, Camera camera) : base(world)
+        public SpriteDrawSystem(World world, SpriteBatch spriteBatch, SpriteAtlas spriteAtlas, Camera camera) : base(world)
         {
-            this._spriteBatch = new SpriteBatch(graphicsDevice);
+            this._spriteBatch = spriteBatch;
             this._spriteAtlas = spriteAtlas;
             this._camera = camera;
         }
@@ -73,7 +73,7 @@ namespace Retard.Core.Systems
                 rect.Value = this._spriteAtlas.GetSpriteRect(frame.Value);
             });
 
-            this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null/*camera.View()*/);
+            this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this._camera.View());
 
             this.World.Query(in this._spriteDesc, (ref SpritePositionCD pos, ref SpriteRectCD rect, ref SpriteColorCD color) =>
             {

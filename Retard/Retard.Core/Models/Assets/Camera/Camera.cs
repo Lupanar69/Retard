@@ -3,6 +3,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Retard.Core.ViewModels.Input;
 
 namespace Retard.Core.Models.Assets.Camera
 {
@@ -151,18 +152,18 @@ namespace Retard.Core.Models.Assets.Camera
         public Matrix OriginMatrix => _originMatrix;
 
         /// <summary>
-        /// Mouse/Cursor world X/Y position, make sure to call <see cref="UpdateXYPos(MouseState?)"/> once per frame before using this
+        /// Mouse/Cursor world X/Y position, make sure to call <see cref="GetMouseXYPos(MouseState?)"/> once per frame before using this
         /// </summary>
         public Vector2 MouseXY => _mouseXY;
 
         /// <summary>
-        /// Mouse/Cursor world X position, make sure to call <see cref="UpdateXYPos(MouseState?)"/> once per frame before using this
+        /// Mouse/Cursor world X position, make sure to call <see cref="GetMouseXYPos(MouseState?)"/> once per frame before using this
         /// </summary>
         /// 
         public float MouseX => _mouseXY.X;
 
         /// <summary>
-        /// Mouse/Cursor world Y position, make sure to call <see cref="UpdateXYPos(MouseState?)"/> once per frame before using this
+        /// Mouse/Cursor world Y position, make sure to call <see cref="GetMouseXYPos(MouseState?)"/> once per frame before using this
         /// </summary>
         public float MouseY => _mouseXY.Y;
 
@@ -174,11 +175,23 @@ namespace Retard.Core.Models.Assets.Camera
         /// <summary>
         /// La position de la caméra en pixels
         /// </summary>
-        public Vector2 Position { get => this._position; private set => _position = value; }
+        public Vector2 Position { get => this._position; private set => this._position = value; }
+
+        /// <summary>
+        /// <see langword="true"/> pour bloquer la caméra
+        /// et l'empêcher de bouger
+        /// </summary>
+        public bool Locked { get => this._locked; set => this._locked = value; }
 
         #endregion
 
         #region Variables d'instance
+
+        /// <summary>
+        /// <see langword="true"/> pour bloquer la caméra
+        /// et l'empêcher de bouger
+        /// </summary>
+        bool _locked;
 
         Vector2 _xy, _scale, _origin, _mouseXY;
 
@@ -229,6 +242,10 @@ namespace Retard.Core.Models.Assets.Camera
         /// <param name="virtualRes">Virtual resolution</param>
         public Camera(Vector2 xy, float angle, Vector2 scale, (int Width, int Height) virtualRes)
         {
+            // Débloque la caméra par défaut
+
+            this.Locked = false;
+
             _xy = xy;
             AngleInRadians = angle;
             _scale = scale;
@@ -324,9 +341,12 @@ namespace Retard.Core.Models.Assets.Camera
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
-        public void Update()
+        public void UpdateInput()
         {
-            this.UpdateXYPos();
+            if (this.Locked)
+            {
+                return;
+            }
 
             if (Mouse.GetState(Camera._window).LeftButton == ButtonState.Pressed)
             {
@@ -334,7 +354,7 @@ namespace Retard.Core.Models.Assets.Camera
             }
 
 
-            if (Keyboard.GetState().IsKeyDown(Keys.F))
+            if (KeyboardInput.IsKeyDown(Keys.F))
             {
                 this._position = Vector2.Zero;
             }
@@ -492,7 +512,7 @@ namespace Retard.Core.Models.Assets.Camera
         /// Will update <see cref="MouseXY"/>. Call once per frame and before using <see cref="MouseXY"/>
         /// </summary>
         /// <param name="mouseState">null value will auto grab latest state</param>
-        public void UpdateXYPos(MouseState? mouseState = null)
+        public void GetMouseXYPos(MouseState? mouseState = null)
         {
             mouseState ??= Mouse.GetState();
             int mouseX = mouseState.Value.Position.X,

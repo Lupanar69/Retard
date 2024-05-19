@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
@@ -10,7 +10,18 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
-  <ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);ENABLE_LOGS;TESTS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants);ENABLE_LOGS;TESTS</DefineConstants>
+  </PropertyGroup>
+	
+	<ItemGroup>
+		<Using Include="Retard.Core.ViewModels.Tests.log" Static="True" />
+	</ItemGroup>
+
+	<ItemGroup>
     <None Remove="Content\Resources\Textures\Test\tiles_test2.png" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />

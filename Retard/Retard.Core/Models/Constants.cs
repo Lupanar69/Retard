@@ -16,7 +16,7 @@ namespace Retard.Core.Models
         /// </summary>
         public const string TEXTURES_DIR_PATH = "Resources/Textures/";
 
-#if DEBUG
+#if TESTS
 
         /// <summary>
         /// Le chemin d'accès aux textures de débogage du projet

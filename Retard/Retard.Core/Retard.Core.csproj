@@ -2,6 +2,12 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);ENABLE_LOGS;TESTS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants);ENABLE_LOGS;TESTS</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Tests\**" />
     <Compile Remove="View\**" />
@@ -10,7 +16,12 @@
     <None Remove="Tests\**" />
     <None Remove="View\**" />
   </ItemGroup>
-  <ItemGroup>
+
+	<ItemGroup>
+		<Using Include="Retard.Core.ViewModels.Tests.log" Static="True" />
+	</ItemGroup>
+
+	<ItemGroup>
     <PackageReference Include="Arch" Version="1.2.8" />
     <PackageReference Include="Arch.AOT.SourceGenerator" Version="1.0.1" />
     <PackageReference Include="Arch.EventBus" Version="1.0.2" />
@@ -22,4 +33,8 @@
     <PackageReference Include="MonoGame.Extended.Input" Version="3.8.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
   </ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Systems\Tests\" />
+	</ItemGroup>
 </Project>
