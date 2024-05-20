@@ -1,8 +1,8 @@
-﻿using Arch.Core;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models;
+using Retard.Core.ViewModels.Input;
 
 namespace Retard.Core.ViewModels.Scenes.Tests
 {
@@ -10,8 +10,19 @@ namespace Retard.Core.ViewModels.Scenes.Tests
     /// Scène de test pour vérifier qu'elle bloque bien les entrées
     /// pour les scènes la suivant dans la liste
     /// </summary>
-    public sealed class BlockInputTestScene : Scene
+    public sealed class BlockInputTestScene : IScene
     {
+        #region Properties
+
+        /// <summary>
+        /// <see langword="true"/> si la scène doit bloquer les inputs 
+        /// pour les scènes qui suivent
+        /// (ex: une scène de pause superposée à la scène de jeu)
+        /// </summary>
+        public bool ConsumeInput { get; init; }
+
+        #endregion
+
         #region Variables d'instance
 
         /// <summary>
@@ -26,11 +37,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <summary>
         /// Constructeur
         /// </summary>
-        /// <param name="content">Les assets du jeu</param>
-        /// <param name="world">Le monde contenant les entités</param>
-        /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
-        /// <param name="camera">La caméra du jeu</param>
-        public BlockInputTestScene(ContentManager content, World world, SpriteBatch spriteBatch) : base(content, world, spriteBatch)
+        public BlockInputTestScene() : base()
         {
             this.ConsumeInput = true;
         }
@@ -42,7 +49,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <summary>
         /// Chargement du contenu
         /// </summary>
-        public override void Initialize()
+        public void Initialize()
         {
 
         }
@@ -51,15 +58,27 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// Màj à chaque frame
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public override void LoadContent()
+        public void LoadContent()
         {
-            this._debugTex = this._content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
+            this._debugTex = SceneManager.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
         }
 
         /// <summary>
         /// Récupère les inputs nécessaires au fonctionnement des systèmes
         /// </summary>
-        public override void UpdateInput()
+        public void UpdateInput()
+        {
+            if (KeyboardInput.IsKeyDown(Keys.Space))
+            {
+                SceneManager.RemoveLastScene();
+            }
+        }
+
+        /// <summary>
+        /// Pour afficher des éléments à l'écran
+        /// </summary>
+        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        public void Update(GameTime gameTime)
         {
 
         }
@@ -68,22 +87,13 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// Pour afficher des éléments à l'écran
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public override void Update(GameTime gameTime)
+        public void Draw(GameTime gameTime)
         {
+            SceneManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
 
-        }
+            SceneManager.SpriteBatch.Draw(this._debugTex, Vector2.Zero, Color.White);
 
-        /// <summary>
-        /// Pour afficher des éléments à l'écran
-        /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public override void Draw(GameTime gameTime)
-        {
-            this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
-
-            this._spriteBatch.Draw(this._debugTex, Vector2.Zero, Color.White);
-
-            this._spriteBatch.End();
+            SceneManager.SpriteBatch.End();
         }
 
         #endregion

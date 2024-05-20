@@ -3,7 +3,6 @@ using Arch.Core;
 using Arch.LowLevel;
 using Arch.System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Retard.Core.Components.Sprites;
@@ -19,8 +18,19 @@ namespace Retard.Core.ViewModels.Scenes.Tests
     /// <summary>
     /// Scène de tes
     /// </summary>
-    public sealed class SpriteDrawTestScene : Scene, IDisposable
+    public sealed class SpriteDrawTestScene : IScene, IDisposable
     {
+        #region Properties
+
+        /// <summary>
+        /// <see langword="true"/> si la scène doit bloquer les inputs 
+        /// pour les scènes qui suivent
+        /// (ex: une scène de pause superposée à la scène de jeu)
+        /// </summary>
+        public bool ConsumeInput { get; init; }
+
+        #endregion
+
         #region Variables d'instance
 
         /// <summary>
@@ -70,15 +80,12 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <summary>
         /// Constructeur
         /// </summary>
-        /// <param name="content">Les assets du jeu</param>
-        /// <param name="world">Le monde contenant les entités</param>
-        /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
         /// <param name="camera">La caméra du jeu</param>
-        public SpriteDrawTestScene(ContentManager content, World world, SpriteBatch spriteBatch, Camera camera) : base(content, world, spriteBatch)
+        public SpriteDrawTestScene(Camera camera)
         {
             this._camera = camera;
             this._size = new int2(60);
-            this._world.Reserve(_spriteArchetype, _size.X * _size.Y);
+            SceneManager.World.Reserve(_spriteArchetype, _size.X * _size.Y);
         }
 
         /// <summary>
@@ -98,7 +105,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <summary>
         /// Chargement du contenu
         /// </summary>
-        public override void Initialize()
+        public void Initialize()
         {
             this._updateSystems = new Group<float>("Update Systems");
             this._drawSystems = new Group<byte>("Draw Systems");
@@ -108,15 +115,15 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// Màj à chaque frame
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public override void LoadContent()
+        public void LoadContent()
         {
-            Texture2D debugTex = _content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
+            Texture2D debugTex = SceneManager.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
             this._spriteAtlas = new(debugTex, 4, 4);
 
             // Créé ici car on a besoin de récupérer les textures
 
-            this._drawSystems.Add(new SpriteDrawSystem(_world, _spriteBatch, _spriteAtlas, _camera));
-            this._updateSystems.Add(new AnimatedSpriteUpdateSystem(_world));
+            this._drawSystems.Add(new SpriteDrawSystem(SceneManager.World, SceneManager.SpriteBatch, _spriteAtlas, _camera));
+            this._updateSystems.Add(new AnimatedSpriteUpdateSystem(SceneManager.World));
 
             this._updateSystems.Initialize();
             this._drawSystems.Initialize();
@@ -125,7 +132,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <summary>
         /// Récupère les inputs nécessaires au fonctionnement des systèmes
         /// </summary>
-        public override void UpdateInput()
+        public void UpdateInput()
         {
             this._camera.UpdateInput();
 
@@ -139,7 +146,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// Pour afficher des éléments à l'écran
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             this._updateSystems.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
         }
@@ -148,7 +155,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// Pour afficher des éléments à l'écran
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public override void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime)
         {
             this._drawSystems.Update(0);
         }
@@ -198,19 +205,19 @@ namespace Retard.Core.ViewModels.Scenes.Tests
             {
                 for (int x = 0; x < this._size.X; x++)
                 {
-                    Entity e = es[x + count] = this._world.Create(this._spriteArchetype);
-                    this._world.Set(e, new SpritePositionCD(new Vector2(x, y) * Constants.SPRITE_SIZE_PIXELS));
+                    Entity e = es[x + count] = SceneManager.World.Create(this._spriteArchetype);
+                    SceneManager.World.Set(e, new SpritePositionCD(new Vector2(x, y) * Constants.SPRITE_SIZE_PIXELS));
                 }
 
                 count += this._size.X;
             }
 
-            this._world.Set(in this._spriteDesc, new SpriteColorCD(Color.White));
+            SceneManager.World.Set(in this._spriteDesc, new SpriteColorCD(Color.White));
             count = 0;
 
             for (int i = 0; i < this._size.X; i++)
             {
-                this._world.Set(es[i], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(0) });
+                SceneManager.World.Set(es[i], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(0) });
             }
 
             count += _size.X;
@@ -218,21 +225,21 @@ namespace Retard.Core.ViewModels.Scenes.Tests
 
             for (int y = 1; y < this._size.Y - 1; y++)
             {
-                this._world.Set(es[count], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(0) });
+                SceneManager.World.Set(es[count], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(0) });
 
                 for (int x = 1; x < this._size.X - 1; x++)
                 {
-                    this._world.Set(es[x + count], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(1) });
+                    SceneManager.World.Set(es[x + count], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(1) });
                 }
 
-                this._world.Set(es[count + this._size.X - 1], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(0) });
+                SceneManager.World.Set(es[count + this._size.X - 1], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(0) });
 
                 count += _size.X;
             }
 
             for (int i = count; i < count + this._size.X; i++)
             {
-                this._world.Set(es[i], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(0) });
+                SceneManager.World.Set(es[i], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(0) });
             }
         }
 

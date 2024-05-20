@@ -40,7 +40,7 @@ namespace Retard.Client
         /// <summary>
         /// Les scènes actives
         /// </summary>
-        private Stack<Scene> _scenes;
+        private Stack<IScene> _scenes;
 
         #endregion
 
@@ -69,15 +69,14 @@ namespace Retard.Client
             this._camera = new Camera();
             this._world = World.Create();
             this._spriteBatch = new SpriteBatch(this.GraphicsDevice);
+            SceneManager.Initialize(this.Content, this._world, this._spriteBatch);
 
             // Initialise les scènes
 
 #if TESTS
-            SceneManager.AddScene(new SpriteDrawTestScene(this.Content, this._world, this._spriteBatch, this._camera));
-            //SceneManager.AddScene(new BlockInputTestScene(this.Content, this._world, this._spriteBatch));
+            SceneManager.AddScene(new SpriteDrawTestScene(this._camera));
+            //SceneManager.AddScene(new BlockInputTestScene());
 #endif
-            SceneManager.InitializeScenes();
-
             base.Initialize();
         }
 
