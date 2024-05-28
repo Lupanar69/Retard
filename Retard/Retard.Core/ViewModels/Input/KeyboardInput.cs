@@ -10,7 +10,12 @@ namespace Retard.Core.ViewModels.Input
         #region Variables statiques privées
 
         /// <summary>
-        /// Les touches pressées lors de la frame précédente
+        /// Les entrées lors de la frame actuelle
+        /// </summary>
+        private static KeyboardState _curState;
+
+        /// <summary>
+        /// Les entrées lors de la frame précédente
         /// </summary>
         private static KeyboardState _previousState;
 
@@ -20,12 +25,20 @@ namespace Retard.Core.ViewModels.Input
 
         /// <summary>
         /// Màj le KeyboardState
-        /// A appeler en fin d'Update pour ne pas écraser le précédent KeyboardState
-        /// avant les comparaisons
         /// </summary>
         public static void Update()
         {
-            KeyboardInput._previousState = Keyboard.GetState();
+            KeyboardInput._curState = Keyboard.GetState();
+        }
+
+        /// <summary>
+        /// Màj le KeyboardState
+        /// A appeler en fin d'Update pour ne pas écraser le précédent KeyboardState
+        /// avant les comparaisons
+        /// </summary>
+        public static void AfterUpdate()
+        {
+            KeyboardInput._previousState = KeyboardInput._curState;
         }
 
         /// <summary>
@@ -33,9 +46,9 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <param name="key">La touche pressée</param>
         /// <returns><see langword="true"/> si la touche passe de l'état relâché à l'état pressé</returns>
-        public static bool IsKeyDown(Keys key)
+        public static bool IsKeyPressed(Keys key)
         {
-            return Keyboard.GetState().IsKeyDown(key) && KeyboardInput._previousState.IsKeyUp(key);
+            return KeyboardInput._curState.IsKeyDown(key) && KeyboardInput._previousState.IsKeyUp(key);
         }
 
         /// <summary>
@@ -43,9 +56,19 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <param name="key">La touche relâchée</param>
         /// <returns><see langword="true"/> si la touche passe de l'état pressé à l'état relâché</returns>
-        public static bool IsKeyUp(Keys key)
+        public static bool IsKeyReleased(Keys key)
         {
-            return Keyboard.GetState().IsKeyUp(key) && KeyboardInput._previousState.IsKeyDown(key);
+            return KeyboardInput._curState.IsKeyUp(key) && KeyboardInput._previousState.IsKeyDown(key);
+        }
+
+        /// <summary>
+        /// <see langword="true"/> si la touche est maintenue enfoncée
+        /// </summary>
+        /// <param name="key">La touche maintenue enfoncée</param>
+        /// <returns><see langword="true"/> si la touche est maintenue enfoncée</returns>
+        public static bool IsKeyHeld(Keys key)
+        {
+            return KeyboardInput._curState.IsKeyDown(key) && KeyboardInput._previousState.IsKeyDown(key);
         }
 
         #endregion

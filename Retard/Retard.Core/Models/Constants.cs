@@ -1,6 +1,4 @@
-﻿using Retard.Core.Models.ValueTypes;
-
-namespace Retard.Core.Models
+﻿namespace Retard.Core.Models
 {
     /// <summary>
     /// Les constantes partagées dans tout le projet
@@ -33,11 +31,6 @@ namespace Retard.Core.Models
         /// La taille d'un sprite en pixels
         /// </summary>
         internal static readonly int SPRITE_SIZE_PIXELS = 32;
-
-        /// <summary>
-        /// L'intervalle de taille possible pour une carte
-        /// </summary>
-        internal static readonly int2 MIN_MAX_MAP_SIZE = new(30, 50);
 
         #endregion
 

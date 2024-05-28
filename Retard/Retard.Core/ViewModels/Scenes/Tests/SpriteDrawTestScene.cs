@@ -5,12 +5,13 @@ using Arch.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 using Retard.Core.Components.Sprites;
 using Retard.Core.Models;
-using Retard.Core.Models.Assets.Camera;
+using Retard.Core.Models.Assets.Scene;
 using Retard.Core.Models.Assets.Sprites;
-using Retard.Core.Models.ValueTypes;
 using Retard.Core.Systems;
+using Retard.Core.ViewModels.Controllers;
 using Retard.Core.ViewModels.Input;
 
 namespace Retard.Core.ViewModels.Scenes.Tests
@@ -34,14 +35,19 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         #region Variables d'instance
 
         /// <summary>
-        /// La caméra du jeu
-        /// </summary>
-        private Camera _camera;
-
-        /// <summary>
         /// <see langword="true"/> si l'on a appelé Dispose()
         /// </summary>
         private bool _disposedValue;
+
+        /// <summary>
+        /// Le contrôleur de la caméra du jeu
+        /// </summary>
+        private readonly OrthographicCameraController _cameraController;
+
+        /// <summary>
+        /// La caméra du jeu
+        /// </summary>
+        private readonly OrthographicCamera _camera;
 
         /// <summary>
         /// Les systèmes du monde à màj dans Update()
@@ -61,7 +67,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <summary>
         /// Nb de sprites à créer
         /// </summary>
-        private readonly int2 _size;
+        private readonly Point _size;
 
         /// <summary>
         /// Retrouve les components d'un sprite
@@ -81,21 +87,22 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// Constructeur
         /// </summary>
         /// <param name="camera">La caméra du jeu</param>
-        public SpriteDrawTestScene(Camera camera)
+        public SpriteDrawTestScene(OrthographicCamera camera)
         {
             this._camera = camera;
-            this._size = new int2(60);
+            this._cameraController = new OrthographicCameraController(this._camera);
+            this._size = new Point(60);
             SceneManager.World.Reserve(_spriteArchetype, _size.X * _size.Y);
         }
 
         /// <summary>
         /// Nettoie l'objet
         /// </summary>
-        //// TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        //// TODO: override finalizer only if 'Dispose(bool disposingManaged)' has code to free unmanaged resources
         //~SpriteDrawTestScene()
         //{
-        //    // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //    Dispose(disposing: false);
+        //    // Do not change this code. Put cleanup code in 'Dispose(bool disposingManaged)' method
+        //    Dispose(disposingManaged: false);
         //}
 
         #endregion
@@ -114,7 +121,6 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void LoadContent()
         {
             Texture2D debugTex = SceneManager.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
@@ -122,7 +128,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
 
             // Créé ici car on a besoin de récupérer les textures
 
-            this._drawSystems.Add(new SpriteDrawSystem(SceneManager.World, SceneManager.SpriteBatch, _spriteAtlas, _camera));
+            this._drawSystems.Add(new SpriteDrawSystem(SceneManager.World, SceneManager.SpriteBatch, this._spriteAtlas, this._camera));
             this._updateSystems.Add(new AnimatedSpriteUpdateSystem(SceneManager.World));
 
             this._updateSystems.Initialize();
@@ -132,11 +138,12 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <summary>
         /// Récupère les inputs nécessaires au fonctionnement des systèmes
         /// </summary>
-        public void UpdateInput()
+        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        public void UpdateInput(GameTime gameTime)
         {
-            this._camera.UpdateInput();
+            this._cameraController.Update(gameTime);
 
-            if (KeyboardInput.IsKeyDown(Keys.Space))
+            if (KeyboardInput.IsKeyPressed(Keys.Space))
             {
                 this.CreateSpriteEntities();
             }
@@ -163,24 +170,6 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <summary>
         /// Nettoie l'objet
         /// </summary>
-        /// <param name="disposingManaged"><see langword="true"/>si on doit nettoyer des objets</param>
-        private void Dispose(bool disposingManaged)
-        {
-            if (!this._disposedValue)
-            {
-                if (disposingManaged)
-                {
-                    this._updateSystems.Dispose();
-                    this._drawSystems.Dispose();
-                }
-
-                this._disposedValue = true;
-            }
-        }
-
-        /// <summary>
-        /// Nettoie l'objet
-        /// </summary>
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
@@ -191,6 +180,25 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         #endregion
 
         #region Méthodes privées
+
+        /// <summary>
+        /// Nettoie l'objet
+        /// </summary>
+        /// <param name="disposingManaged"><see langword="true"/> si on doit nettoyer des objets</param>
+        private void Dispose(bool disposingManaged)
+        {
+            if (!this._disposedValue)
+            {
+                if (disposingManaged)
+                {
+                    this._cameraController.Dispose();
+                    this._updateSystems.Dispose();
+                    this._drawSystems.Dispose();
+                }
+
+                this._disposedValue = true;
+            }
+        }
 
         /// <summary>
         /// Crée les entités des sprites

@@ -3,6 +3,7 @@ using Arch.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Retard.Core.Models.Assets.Scene;
 
 namespace Retard.Core.ViewModels.Scenes
 {
@@ -16,17 +17,17 @@ namespace Retard.Core.ViewModels.Scenes
         /// <summary>
         /// Pour afficher les sprites à l'écran
         /// </summary>
-        public static SpriteBatch SpriteBatch { get; private set; }
+        internal static SpriteBatch SpriteBatch { get; private set; }
 
         /// <summary>
         /// Le monde contenant les entités
         /// </summary>
-        public static World World { get; private set; }
+        internal static World World { get; private set; }
 
         /// <summary>
         /// Les assets du jeu
         /// </summary
-        public static ContentManager Content { get; private set; }
+        internal static ContentManager Content { get; private set; }
 
         #endregion
 
@@ -125,12 +126,13 @@ namespace Retard.Core.ViewModels.Scenes
         /// <summary>
         /// Màj les entrées lues par chaque scène
         /// </summary>
-        public static void UpdateSceneInputs()
+        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        public static void UpdateInput(GameTime gameTime)
         {
             for (int i = SceneManager._activeScenes.Count - 1; i >= 0; i--)
             {
                 IScene scene = SceneManager._activeScenes[i];
-                scene.UpdateInput();
+                scene.UpdateInput(gameTime);
 
                 if (scene.ConsumeInput)
                 {
@@ -143,7 +145,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// Màj la logique de chaque scène
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public static void UpdateScenes(GameTime gameTime)
+        public static void Update(GameTime gameTime)
         {
             foreach (IScene scene in SceneManager._activeScenes)
             {
@@ -155,7 +157,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// Affiche le contenu des scènes à l'écran
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public static void DrawScenes(GameTime gameTime)
+        public static void Draw(GameTime gameTime)
         {
             foreach (IScene scene in SceneManager._activeScenes)
             {

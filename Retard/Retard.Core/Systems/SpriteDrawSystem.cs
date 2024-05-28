@@ -3,8 +3,8 @@ using Arch.Core;
 using Arch.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Retard.Core.Components.Sprites;
-using Retard.Core.Models.Assets.Camera;
 using Retard.Core.Models.Assets.Sprites;
 
 namespace Retard.Core.Systems
@@ -29,7 +29,7 @@ namespace Retard.Core.Systems
         /// <summary>
         /// La caméra du jeu
         /// </summary>
-        private Camera _camera;
+        private OrthographicCamera _camera;
 
         /// <summary>
         /// Retrouve les components d'un sprite
@@ -52,7 +52,7 @@ namespace Retard.Core.Systems
         /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
         /// <param name="spriteAtlas">L'atlas des sprites à afficher</param>
         /// <param name="camera">La caméra du jeu</param>
-        public SpriteDrawSystem(World world, SpriteBatch spriteBatch, SpriteAtlas spriteAtlas, Camera camera) : base(world)
+        public SpriteDrawSystem(World world, SpriteBatch spriteBatch, SpriteAtlas spriteAtlas, OrthographicCamera camera) : base(world)
         {
             this._spriteBatch = spriteBatch;
             this._spriteAtlas = spriteAtlas;
@@ -73,12 +73,12 @@ namespace Retard.Core.Systems
                 rect.Value = this._spriteAtlas.GetSpriteRect(frame.Value);
             });
 
-            this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this._camera.View());
+            this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this._camera.GetViewMatrix());
 
-            this.World.Query(in this._spriteDesc, (ref SpritePositionCD pos, ref SpriteRectCD rect, ref SpriteColorCD color) =>
+            this.World.Query(in this._spriteDesc, (ForEach<SpritePositionCD, SpriteRectCD, SpriteColorCD>)((ref SpritePositionCD pos, ref SpriteRectCD rect, ref SpriteColorCD color) =>
             {
-                this.Draw(this._spriteAtlas, this._spriteBatch, rect.Value, pos.Value + this._camera.Position, color.Value);
-            });
+                this.Draw(this._spriteAtlas, this._spriteBatch, rect.Value, (Vector2)(pos.Value), color.Value);
+            }));
 
             this._spriteBatch.End();
         }

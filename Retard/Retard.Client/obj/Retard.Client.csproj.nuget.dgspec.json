@@ -85,6 +85,10 @@
               "target": "Package",
               "version": "[3.8.1.303, )"
             },
+            "MonoGame.Extended": {
+              "target": "Package",
+              "version": "[3.9.0-prerelease.4, )"
+            },
             "MonoGame.Extended.Input": {
               "target": "Package",
               "version": "[3.8.0, )"
@@ -187,9 +191,9 @@
               "target": "Package",
               "version": "[1.2.1, )"
             },
-            "BenchmarkDotNet": {
+            "MonoGame.Extended": {
               "target": "Package",
-              "version": "[0.13.12, )"
+              "version": "[3.8.0, )"
             },
             "MonoGame.Extended.Input": {
               "target": "Package",

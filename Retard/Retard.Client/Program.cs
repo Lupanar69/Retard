@@ -7,7 +7,7 @@
     {
         private static void Main(string[] args)
         {
-            using GameRunner game = new();
+            using App game = new();
             game.Run();
         }
     }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models;
+using Retard.Core.Models.Assets.Scene;
 using Retard.Core.ViewModels.Input;
 
 namespace Retard.Core.ViewModels.Scenes.Tests
@@ -66,9 +67,10 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <summary>
         /// Récupère les inputs nécessaires au fonctionnement des systèmes
         /// </summary>
-        public void UpdateInput()
+        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        public void UpdateInput(GameTime gameTime)
         {
-            if (KeyboardInput.IsKeyDown(Keys.Space))
+            if (KeyboardInput.IsKeyPressed(Keys.Space))
             {
                 SceneManager.RemoveLastScene();
             }

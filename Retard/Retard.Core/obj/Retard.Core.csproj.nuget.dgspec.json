@@ -77,6 +77,10 @@
               "target": "Package",
               "version": "[1.2.1, )"
             },
+            "MonoGame.Extended": {
+              "target": "Package",
+              "version": "[3.8.0, )"
+            },
             "MonoGame.Extended.Input": {
               "target": "Package",
               "version": "[3.8.0, )"
