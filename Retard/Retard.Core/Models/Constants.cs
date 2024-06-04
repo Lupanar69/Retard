@@ -1,4 +1,6 @@
-﻿namespace Retard.Core.Models
+﻿using System;
+
+namespace Retard.Core.Models
 {
     /// <summary>
     /// Les constantes partagées dans tout le projet
@@ -8,6 +10,21 @@
         #region Constants
 
         #region Content
+
+        /// <summary>
+        /// Le chemin d'accès au dossier contenant l'exécutable du jeu
+        /// </summary>
+        public static readonly string GAME_DIR_PATH = AppDomain.CurrentDomain.BaseDirectory;
+
+        /// <summary>
+        /// Le chemin d'accès au fichier de configuration des inputs par défaut
+        /// </summary>
+        public const string DEFAULT_INPUT_CONFIG_PATH = "input/default.json";
+
+        /// <summary>
+        /// Le chemin d'accès au fichier de configuration des inputs définis par le joueur
+        /// </summary>
+        public const string CUSTOM_INPUT_CONFIG_PATH = "input/input.json";
 
         /// <summary>
         /// Le chemin d'accès aux textures du projet
@@ -25,7 +42,7 @@
 
         #endregion
 
-        #region Generation
+        #region Rendering
 
         /// <summary>
         /// La taille d'un sprite en pixels

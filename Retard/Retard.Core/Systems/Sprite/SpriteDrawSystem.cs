@@ -7,7 +7,7 @@ using MonoGame.Extended;
 using Retard.Core.Components.Sprites;
 using Retard.Core.Models.Assets.Sprites;
 
-namespace Retard.Core.Systems
+namespace Retard.Core.Systems.Sprite
 {
     /// <summary>
     /// Affiche les sprites à l'écran
@@ -54,9 +54,9 @@ namespace Retard.Core.Systems
         /// <param name="camera">La caméra du jeu</param>
         public SpriteDrawSystem(World world, SpriteBatch spriteBatch, SpriteAtlas spriteAtlas, OrthographicCamera camera) : base(world)
         {
-            this._spriteBatch = spriteBatch;
-            this._spriteAtlas = spriteAtlas;
-            this._camera = camera;
+            _spriteBatch = spriteBatch;
+            _spriteAtlas = spriteAtlas;
+            _camera = camera;
         }
 
         #endregion
@@ -68,19 +68,19 @@ namespace Retard.Core.Systems
         /// </summary>
         public override void Update(in byte _)
         {
-            this.World.Query(in this._animatedSpriteDesc, (ref SpriteFrameCD frame, ref SpriteRectCD rect) =>
+            World.Query(in _animatedSpriteDesc, (ref SpriteFrameCD frame, ref SpriteRectCD rect) =>
             {
-                rect.Value = this._spriteAtlas.GetSpriteRect(frame.Value);
+                rect.Value = _spriteAtlas.GetSpriteRect(frame.Value);
             });
 
-            this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this._camera.GetViewMatrix());
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, _camera.GetViewMatrix());
 
-            this.World.Query(in this._spriteDesc, (ForEach<SpritePositionCD, SpriteRectCD, SpriteColorCD>)((ref SpritePositionCD pos, ref SpriteRectCD rect, ref SpriteColorCD color) =>
+            World.Query(in _spriteDesc, (ref SpritePositionCD pos, ref SpriteRectCD rect, ref SpriteColorCD color) =>
             {
-                this.Draw(this._spriteAtlas, this._spriteBatch, rect.Value, (Vector2)(pos.Value), color.Value);
-            }));
+                Draw(_spriteAtlas, _spriteBatch, rect.Value, pos.Value, color.Value);
+            });
 
-            this._spriteBatch.End();
+            _spriteBatch.End();
         }
 
         #endregion

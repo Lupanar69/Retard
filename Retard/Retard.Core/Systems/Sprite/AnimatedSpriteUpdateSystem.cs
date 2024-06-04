@@ -2,7 +2,7 @@
 using Arch.System;
 using Retard.Core.Entities;
 
-namespace Retard.Core.Systems
+namespace Retard.Core.Systems.Sprite
 {
     /// <summary>
     /// Màj les frames des des sprites animés
@@ -26,7 +26,7 @@ namespace Retard.Core.Systems
         /// </summary>
         public override void Update(in float _)
         {
-            Queries.UpdateSpriteAnimationQuery(this.World);
+            Queries.UpdateSpriteAnimationQuery(World);
         }
 
         #endregion

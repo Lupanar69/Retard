@@ -31,6 +31,11 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// </summary>
         private Texture2D _debugTex;
 
+        /// <summary>
+        /// Le contrôleur pour clavier
+        /// </summary>
+        private readonly KeyboardInput _keyboardInput;
+
         #endregion
 
         #region Constructeur
@@ -41,6 +46,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         public BlockInputTestScene() : base()
         {
             this.ConsumeInput = true;
+            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
         }
 
         #endregion
@@ -70,7 +76,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void UpdateInput(GameTime gameTime)
         {
-            if (KeyboardInput.IsKeyPressed(Keys.Space))
+            if (this._keyboardInput.IsKeyPressed(Keys.Space))
             {
                 SceneManager.RemoveLastScene();
             }

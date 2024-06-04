@@ -1,13 +1,14 @@
 ﻿using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Retard.Core.Models.Assets.Input;
 
 namespace Retard.Core.ViewModels.Input
 {
     /// <summary>
     /// Utilitaire pour gérer les entrées manette
     /// </summary>
-    public static class GamePadInput
+    public class GamePadInput : IInputScheme
     {
         #region Variables statiques privées
 
@@ -15,39 +16,40 @@ namespace Retard.Core.ViewModels.Input
         /// Les entrées lors de la frame actuelle
         /// pour chaque manette connectée
         /// </summary>
-        private static UnsafeArray<GamePadState> _curStates;
+        private readonly UnsafeArray<GamePadState> _curStates;
 
         /// <summary>
         /// Les entrées lors de la frame précédente
         /// pour chaque manette connectée
         /// </summary>
-        private static UnsafeArray<GamePadState> _previousStates;
+        private readonly UnsafeArray<GamePadState> _previousStates;
 
         /// <summary>
         /// Les axes des joysticks gauche de chaque manette
         /// </summary>
-        private static UnsafeArray<Vector2> _leftThumbsticksAxes;
+        private readonly UnsafeArray<Vector2> _leftThumbsticksAxes;
 
         /// <summary>
         /// Les axes des joysticks droit de chaque manette
         /// </summary>
-        private static UnsafeArray<Vector2> _rightThumbsticksAxes;
+        private readonly UnsafeArray<Vector2> _rightThumbsticksAxes;
 
         /// <summary>
         /// Le niveau de pression des gâchettes gauche de chaque manette
         /// </summary>
-        private static UnsafeArray<float> _leftTriggersValues;
+        private readonly UnsafeArray<float> _leftTriggersValues;
 
         /// <summary>
         /// Le niveau de pression des gâchettes droit de chaque manette
         /// </summary>
-        private static UnsafeArray<float> _rightTriggersValues;
+        private readonly UnsafeArray<float> _rightTriggersValues;
 
         /// <summary>
         /// Le nombre max de manettes pouvant être utilisées
-        /// à la fois
+        /// à la fois.
+        /// Par défaut, Monogame peut accepter jusqu'à 16 manettes.
         /// </summary>
-        private static int _nbMaxGamePads = GamePad.MaximumGamePadCount;
+        private readonly int _nbMaxGamePads;
 
         #endregion
 
@@ -56,16 +58,20 @@ namespace Retard.Core.ViewModels.Input
         /// <summary>
         /// Constructeur
         /// </summary>
-        static GamePadInput()
-        {
-            // Monogame peut accepter jusqu'à 16 manettes
+        public GamePadInput() : this(1) { }
 
-            GamePadInput._curStates = new UnsafeArray<GamePadState>(GamePadInput._nbMaxGamePads);
-            GamePadInput._previousStates = new UnsafeArray<GamePadState>(GamePadInput._nbMaxGamePads);
-            GamePadInput._leftThumbsticksAxes = new UnsafeArray<Vector2>(GamePadInput._nbMaxGamePads);
-            GamePadInput._rightThumbsticksAxes = new UnsafeArray<Vector2>(GamePadInput._nbMaxGamePads);
-            GamePadInput._leftTriggersValues = new UnsafeArray<float>(GamePadInput._nbMaxGamePads);
-            GamePadInput._rightTriggersValues = new UnsafeArray<float>(GamePadInput._nbMaxGamePads);
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        public GamePadInput(int nbMaxGamePads = 1)
+        {
+            this._nbMaxGamePads = nbMaxGamePads;
+            this._curStates = new UnsafeArray<GamePadState>(this._nbMaxGamePads);
+            this._previousStates = new UnsafeArray<GamePadState>(this._nbMaxGamePads);
+            this._leftThumbsticksAxes = new UnsafeArray<Vector2>(this._nbMaxGamePads);
+            this._rightThumbsticksAxes = new UnsafeArray<Vector2>(this._nbMaxGamePads);
+            this._leftTriggersValues = new UnsafeArray<float>(this._nbMaxGamePads);
+            this._rightTriggersValues = new UnsafeArray<float>(this._nbMaxGamePads);
         }
 
         #endregion
@@ -75,16 +81,16 @@ namespace Retard.Core.ViewModels.Input
         /// <summary>
         /// Màj le KeyboardState
         /// </summary>
-        public static void Update()
+        public void Update()
         {
-            for (int i = 0; i < GamePadInput._nbMaxGamePads; i++)
+            for (int i = 0; i < this._nbMaxGamePads; i++)
             {
                 GamePadState state = GamePad.GetState(i);
-                GamePadInput._curStates[i] = state;
-                GamePadInput._leftThumbsticksAxes[i] = state.ThumbSticks.Left;
-                GamePadInput._rightThumbsticksAxes[i] = state.ThumbSticks.Right;
-                GamePadInput._leftTriggersValues[i] = state.Triggers.Left;
-                GamePadInput._rightTriggersValues[i] = state.Triggers.Right;
+                this._curStates[i] = state;
+                this._leftThumbsticksAxes[i] = state.ThumbSticks.Left;
+                this._rightThumbsticksAxes[i] = state.ThumbSticks.Right;
+                this._leftTriggersValues[i] = state.Triggers.Left;
+                this._rightTriggersValues[i] = state.Triggers.Right;
             }
         }
 
@@ -93,11 +99,11 @@ namespace Retard.Core.ViewModels.Input
         /// A appeler en fin d'Update pour ne pas écraser le précédent KeyboardState
         /// avant les comparaisons
         /// </summary>
-        public static void AfterUpdate()
+        public void AfterUpdate()
         {
-            for (int i = 0; i < GamePadInput._nbMaxGamePads; i++)
+            for (int i = 0; i < this._nbMaxGamePads; i++)
             {
-                GamePadInput._previousStates[i] = GamePad.GetState(i);
+                this._previousStates[i] = GamePad.GetState(i);
             }
         }
 
@@ -106,9 +112,9 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <param name="playerIndex">L'ID de la manette</param>
         /// <returns>La valeur de l'axe du joystick gauche de la manette</returns>
-        public static Vector2 GetLeftThumbstickAxis(int playerIndex)
+        public Vector2 GetLeftThumbstickAxis(int playerIndex)
         {
-            return GamePadInput._leftThumbsticksAxes[playerIndex];
+            return this._leftThumbsticksAxes[playerIndex];
         }
 
         /// <summary>
@@ -116,9 +122,9 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <param name="playerIndex">L'ID de la manette</param>
         /// <returns>La valeur de l'axe du joystick droit de la manette</returns>
-        public static Vector2 GetRightThumbstickAxis(int playerIndex)
+        public Vector2 GetRightThumbstickAxis(int playerIndex)
         {
-            return GamePadInput._rightThumbsticksAxes[playerIndex];
+            return this._rightThumbsticksAxes[playerIndex];
         }
 
         /// <summary>
@@ -126,9 +132,9 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <param name="playerIndex">L'ID de la manette</param>
         /// <returns>Le niveau de pression de la gâchette gauche de la manette</returns>
-        public static float GetLeftTriggerValue(int playerIndex)
+        public float GetLeftTriggerValue(int playerIndex)
         {
-            return GamePadInput._leftTriggersValues[playerIndex];
+            return this._leftTriggersValues[playerIndex];
         }
 
         /// <summary>
@@ -136,9 +142,9 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <param name="playerIndex">L'ID de la manette</param>
         /// <returns>Le niveau de pression de la gâchette droit de la manette</returns>
-        public static float GetRightTriggerValue(int playerIndex)
+        public float GetRightTriggerValue(int playerIndex)
         {
-            return GamePadInput._rightTriggersValues[playerIndex];
+            return this._rightTriggersValues[playerIndex];
         }
 
         /// <summary>
@@ -147,9 +153,9 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="playerIndex">L'ID de la manette</param>
         /// <param name="btn">Le bouton pressé</param>
         /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
-        public static bool IsButtonPressed(int playerIndex, Buttons btn)
+        public bool IsButtonPressed(int playerIndex, Buttons btn)
         {
-            return GamePadInput._curStates[playerIndex].IsButtonDown(btn) && GamePadInput._previousStates[playerIndex].IsButtonUp(btn);
+            return this._curStates[playerIndex].IsButtonDown(btn) && this._previousStates[playerIndex].IsButtonUp(btn);
         }
 
         /// <summary>
@@ -158,9 +164,9 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="playerIndex">L'ID de la manette</param>
         /// <param name="btn">Le bouton pressé</param>
         /// <returns><see langword="true"/> si le bouton passe de l'état pressé à l'état relâché</returns>
-        public static bool IsButtonReleased(int playerIndex, Buttons btn)
+        public bool IsButtonReleased(int playerIndex, Buttons btn)
         {
-            return GamePadInput._curStates[playerIndex].IsButtonUp(btn) && GamePadInput._previousStates[playerIndex].IsButtonDown(btn);
+            return this._curStates[playerIndex].IsButtonUp(btn) && this._previousStates[playerIndex].IsButtonDown(btn);
         }
 
         /// <summary>
@@ -169,9 +175,9 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="playerIndex">L'ID de la manette</param>
         /// <param name="btn">Le bouton maintenu enfoncé</param>
         /// <returns><see langword="true"/> si le bouton est maintenu enfoncé</returns>
-        public static bool IsButtonHeld(int playerIndex, Buttons btn)
+        public bool IsButtonHeld(int playerIndex, Buttons btn)
         {
-            return GamePadInput._curStates[playerIndex].IsButtonDown(btn) && GamePadInput._previousStates[playerIndex].IsButtonDown(btn);
+            return this._curStates[playerIndex].IsButtonDown(btn) && this._previousStates[playerIndex].IsButtonDown(btn);
         }
 
         #endregion

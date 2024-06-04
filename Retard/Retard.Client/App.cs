@@ -36,6 +36,16 @@ namespace Retard.Client
         /// </summary>
         private World _world;
 
+        /// <summary>
+        /// Le contrôleur pour clavier
+        /// </summary>
+        private KeyboardInput _keyboardInput;
+
+        /// <summary>
+        /// Le contrôleur pour manette
+        /// </summary>
+        private GamePadInput _gamePadInput;
+
         #endregion
 
         #region Constructeur
@@ -63,9 +73,17 @@ namespace Retard.Client
             this._spriteBatch = new SpriteBatch(this.GraphicsDevice);
             this._camera = new OrthographicCamera(this.GraphicsDevice);
             this._world = World.Create();
-            SceneManager.Initialize(this.Content, this._world, this._spriteBatch);
+
+            // Initialise les inputs
+
+            InputManager.Initialize(new KeyboardInput(), new MouseInput(), new GamePadInput());
+            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
+            this._gamePadInput = InputManager.GetScheme<GamePadInput>();
 
             // Initialise les scènes
+
+            SceneManager.Initialize(this.Content, this._world, this._spriteBatch);
+            SceneManager.AddScene(new DefaultScene());
 
 #if TESTS
             SceneManager.AddScene(new SpriteDrawTestScene(this._camera));
@@ -90,11 +108,9 @@ namespace Retard.Client
         {
             // Màj les inputs
 
-            KeyboardInput.Update();
-            MouseInput.Update();
-            GamePadInput.Update();
+            InputManager.Update();
 
-            if (GamePadInput.IsButtonPressed(1, Buttons.Back) || KeyboardInput.IsKeyPressed(Keys.Escape))
+            if (this._gamePadInput.IsButtonPressed(0, Buttons.Back) || this._keyboardInput.IsKeyPressed(Keys.Escape))
             {
                 Exit();
             }
@@ -107,9 +123,7 @@ namespace Retard.Client
             // Appelé en dernier pour ne pas écraser le précédent KeyboardState
             // avant les comparaisons
 
-            KeyboardInput.AfterUpdate();
-            MouseInput.AfterUpdate();
-            GamePadInput.AfterUpdate();
+            InputManager.AfterUpdate();
 
             base.Update(gameTime);
         }

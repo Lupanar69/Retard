@@ -27,6 +27,8 @@ namespace Retard.Core.Models.ValueTypes
 
         #endregion
 
+        #region Constructeur
+
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -41,6 +43,10 @@ namespace Retard.Core.Models.ValueTypes
                 this._arr[i] = str[i];
             }
         }
+
+        #endregion
+
+        #region Méthodes publiques
 
         /// <summary>
         /// Indexeur
@@ -167,5 +173,16 @@ namespace Retard.Core.Models.ValueTypes
         {
             this._arr.Dispose();
         }
+
+        /// <summary>
+        /// Convertit la NativeString en string
+        /// </summary>
+        /// <returns>La chaîne de caractère contenue dans cette struct</returns>
+        public override string ToString()
+        {
+            return this._arr.AsSpan().ToString();
+        }
+
+        #endregion
     }
 }

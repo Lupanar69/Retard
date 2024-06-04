@@ -10,14 +10,14 @@ using Retard.Core.Components.Sprites;
 using Retard.Core.Models;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.Models.Assets.Sprites;
-using Retard.Core.Systems;
+using Retard.Core.Systems.Sprite;
 using Retard.Core.ViewModels.Controllers;
 using Retard.Core.ViewModels.Input;
 
 namespace Retard.Core.ViewModels.Scenes.Tests
 {
     /// <summary>
-    /// Scène de tes
+    /// Scène de test
     /// </summary>
     public sealed class SpriteDrawTestScene : IScene, IDisposable
     {
@@ -48,6 +48,11 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// La caméra du jeu
         /// </summary>
         private readonly OrthographicCamera _camera;
+
+        /// <summary>
+        /// Le contrôleur pour clavier
+        /// </summary>
+        private readonly KeyboardInput _keyboardInput;
 
         /// <summary>
         /// Les systèmes du monde à màj dans Update()
@@ -91,6 +96,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         {
             this._camera = camera;
             this._cameraController = new OrthographicCameraController(this._camera);
+            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
             this._size = new Point(60);
             SceneManager.World.Reserve(_spriteArchetype, _size.X * _size.Y);
         }
@@ -143,7 +149,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         {
             this._cameraController.Update(gameTime);
 
-            if (KeyboardInput.IsKeyPressed(Keys.Space))
+            if (this._keyboardInput.IsKeyPressed(Keys.Space))
             {
                 this.CreateSpriteEntities();
             }

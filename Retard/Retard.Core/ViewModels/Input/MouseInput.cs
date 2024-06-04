@@ -1,19 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Retard.Core.Models.Assets.Input;
 
 namespace Retard.Core.ViewModels.Input
 {
     /// <summary>
     /// Utilitaire pour gérer les entrées souris
     /// </summary>
-    public static class MouseInput
+    public class MouseInput : IInputScheme
     {
         #region Propriétés
 
         /// <summary>
         /// La position en pixels de la souris dans la fenêtre
         /// </summary>
-        public static Vector2 MousePos
+        public Vector2 MousePos
         {
             get;
             private set;
@@ -23,7 +24,7 @@ namespace Retard.Core.ViewModels.Input
         /// La différence de position de la souris entre la frame actuelle
         /// et la précédente
         /// </summary>
-        public static Vector2 MousePosDelta
+        public Vector2 MousePosDelta
         {
             get;
             private set;
@@ -36,12 +37,12 @@ namespace Retard.Core.ViewModels.Input
         /// <summary>
         /// Les entrées lors de la frame actuelle
         /// </summary>
-        private static MouseState _curState;
+        private MouseState _curState;
 
         /// <summary>
         /// Les entrées lors de la frame précédente
         /// </summary>
-        private static MouseState _previousState;
+        private MouseState _previousState;
 
         #endregion
 
@@ -50,14 +51,14 @@ namespace Retard.Core.ViewModels.Input
         /// <summary>
         /// Màj le MouseState actuel
         /// </summary>
-        public static void Update()
+        public void Update()
         {
-            MouseInput._curState = Mouse.GetState();
+            this._curState = Mouse.GetState();
 
-            Point curMousePos = MouseInput._curState.Position;
-            Point mouseDelta = MouseInput._curState.Position - MouseInput._previousState.Position;
-            MouseInput.MousePosDelta = new Vector2(mouseDelta.X, mouseDelta.Y);
-            MouseInput.MousePos = new Vector2(curMousePos.X, curMousePos.Y);
+            Point curMousePos = this._curState.Position;
+            Point mouseDelta = this._curState.Position - this._previousState.Position;
+            this.MousePosDelta = new Vector2(mouseDelta.X, mouseDelta.Y);
+            this.MousePos = new Vector2(curMousePos.X, curMousePos.Y);
         }
 
         /// <summary>
@@ -65,90 +66,90 @@ namespace Retard.Core.ViewModels.Input
         /// A appeler en fin d'Update pour ne pas écraser le précédent MouseState
         /// avant les comparaisons
         /// </summary>
-        public static void AfterUpdate()
+        public void AfterUpdate()
         {
-            MouseInput._previousState = MouseInput._curState;
+            this._previousState = this._curState;
         }
 
         /// <summary>
         /// <see langword="true"/> si le bouton gauche de la souris est pressé
         /// </summary>
         /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
-        public static bool LeftMousePressed()
+        public bool LeftMousePressed()
         {
-            return MouseInput._curState.LeftButton == ButtonState.Pressed && MouseInput._previousState.LeftButton == ButtonState.Released;
+            return this._curState.LeftButton == ButtonState.Pressed && this._previousState.LeftButton == ButtonState.Released;
         }
 
         /// <summary>
         /// <see langword="true"/> si le bouton gauche de la souris est relâché
         /// </summary>
         /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
-        public static bool LeftMouseReleased()
+        public bool LeftMouseReleased()
         {
-            return MouseInput._curState.LeftButton == ButtonState.Released && MouseInput._previousState.LeftButton == ButtonState.Pressed;
+            return this._curState.LeftButton == ButtonState.Released && this._previousState.LeftButton == ButtonState.Pressed;
         }
 
         /// <summary>
         /// <see langword="true"/> si le bouton gauche de la souris est maintenu enfoncé
         /// </summary>
         /// <returns><see langword="true"/> si le bouton est maintenu</returns>
-        public static bool LeftMouseHeld()
+        public bool LeftMouseHeld()
         {
-            return MouseInput._curState.LeftButton == ButtonState.Pressed && MouseInput._previousState.LeftButton == ButtonState.Pressed;
+            return this._curState.LeftButton == ButtonState.Pressed && this._previousState.LeftButton == ButtonState.Pressed;
         }
 
         /// <summary>
         /// <see langword="true"/> si le bouton droit de la souris est pressé
         /// </summary>
         /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
-        public static bool RightMousePressed()
+        public bool RightMousePressed()
         {
-            return MouseInput._curState.RightButton == ButtonState.Pressed && MouseInput._previousState.RightButton == ButtonState.Released;
+            return this._curState.RightButton == ButtonState.Pressed && this._previousState.RightButton == ButtonState.Released;
         }
 
         /// <summary>
         /// <see langword="true"/> si le bouton droit de la souris est relâché
         /// </summary>
         /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
-        public static bool RightMouseReleased()
+        public bool RightMouseReleased()
         {
-            return MouseInput._curState.RightButton == ButtonState.Released && MouseInput._previousState.RightButton == ButtonState.Pressed;
+            return this._curState.RightButton == ButtonState.Released && this._previousState.RightButton == ButtonState.Pressed;
         }
 
         /// <summary>
         /// <see langword="true"/> si le bouton droit de la souris est maintenu enfoncé
         /// </summary>
         /// <returns><see langword="true"/> si le bouton est maintenu</returns>
-        public static bool RightMouseHeld()
+        public bool RightMouseHeld()
         {
-            return MouseInput._curState.RightButton == ButtonState.Pressed && MouseInput._previousState.RightButton == ButtonState.Pressed;
+            return this._curState.RightButton == ButtonState.Pressed && this._previousState.RightButton == ButtonState.Pressed;
         }
 
         /// <summary>
         /// <see langword="true"/> si le bouton milieu de la souris est pressé
         /// </summary>
         /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
-        public static bool MiddleMousePressed()
+        public bool MiddleMousePressed()
         {
-            return MouseInput._curState.MiddleButton == ButtonState.Pressed && MouseInput._previousState.MiddleButton == ButtonState.Released;
+            return this._curState.MiddleButton == ButtonState.Pressed && this._previousState.MiddleButton == ButtonState.Released;
         }
 
         /// <summary>
         /// <see langword="true"/> si le bouton milieu de la souris est relâché
         /// </summary>
         /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
-        public static bool MiddleMouseReleased()
+        public bool MiddleMouseReleased()
         {
-            return MouseInput._curState.MiddleButton == ButtonState.Released && MouseInput._previousState.MiddleButton == ButtonState.Pressed;
+            return this._curState.MiddleButton == ButtonState.Released && this._previousState.MiddleButton == ButtonState.Pressed;
         }
 
         /// <summary>
         /// <see langword="true"/> si le bouton milieu de la souris est maintenu enfoncé
         /// </summary>
         /// <returns><see langword="true"/> si le bouton est maintenu</returns>
-        public static bool MiddleMouseHeld()
+        public bool MiddleMouseHeld()
         {
-            return MouseInput._curState.MiddleButton == ButtonState.Pressed && MouseInput._previousState.MiddleButton == ButtonState.Pressed;
+            return this._curState.MiddleButton == ButtonState.Pressed && this._previousState.MiddleButton == ButtonState.Pressed;
         }
 
         #endregion

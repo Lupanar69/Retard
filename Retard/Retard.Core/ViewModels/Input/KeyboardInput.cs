@@ -1,23 +1,24 @@
 ﻿using Microsoft.Xna.Framework.Input;
+using Retard.Core.Models.Assets.Input;
 
 namespace Retard.Core.ViewModels.Input
 {
     /// <summary>
     /// Utilitaire pour gérer les entrées clavier
     /// </summary>
-    public static class KeyboardInput
+    public class KeyboardInput : IInputScheme
     {
         #region Variables statiques privées
 
         /// <summary>
         /// Les entrées lors de la frame actuelle
         /// </summary>
-        private static KeyboardState _curState;
+        private KeyboardState _curState;
 
         /// <summary>
         /// Les entrées lors de la frame précédente
         /// </summary>
-        private static KeyboardState _previousState;
+        private KeyboardState _previousState;
 
         #endregion
 
@@ -26,9 +27,9 @@ namespace Retard.Core.ViewModels.Input
         /// <summary>
         /// Màj le KeyboardState
         /// </summary>
-        public static void Update()
+        public void Update()
         {
-            KeyboardInput._curState = Keyboard.GetState();
+            this._curState = Keyboard.GetState();
         }
 
         /// <summary>
@@ -36,9 +37,9 @@ namespace Retard.Core.ViewModels.Input
         /// A appeler en fin d'Update pour ne pas écraser le précédent KeyboardState
         /// avant les comparaisons
         /// </summary>
-        public static void AfterUpdate()
+        public void AfterUpdate()
         {
-            KeyboardInput._previousState = KeyboardInput._curState;
+            this._previousState = this._curState;
         }
 
         /// <summary>
@@ -46,9 +47,9 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <param name="key">La touche pressée</param>
         /// <returns><see langword="true"/> si la touche passe de l'état relâché à l'état pressé</returns>
-        public static bool IsKeyPressed(Keys key)
+        public bool IsKeyPressed(Keys key)
         {
-            return KeyboardInput._curState.IsKeyDown(key) && KeyboardInput._previousState.IsKeyUp(key);
+            return this._curState.IsKeyDown(key) && this._previousState.IsKeyUp(key);
         }
 
         /// <summary>
@@ -56,9 +57,9 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <param name="key">La touche relâchée</param>
         /// <returns><see langword="true"/> si la touche passe de l'état pressé à l'état relâché</returns>
-        public static bool IsKeyReleased(Keys key)
+        public bool IsKeyReleased(Keys key)
         {
-            return KeyboardInput._curState.IsKeyUp(key) && KeyboardInput._previousState.IsKeyDown(key);
+            return this._curState.IsKeyUp(key) && this._previousState.IsKeyDown(key);
         }
 
         /// <summary>
@@ -66,9 +67,9 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <param name="key">La touche maintenue enfoncée</param>
         /// <returns><see langword="true"/> si la touche est maintenue enfoncée</returns>
-        public static bool IsKeyHeld(Keys key)
+        public bool IsKeyHeld(Keys key)
         {
-            return KeyboardInput._curState.IsKeyDown(key) && KeyboardInput._previousState.IsKeyDown(key);
+            return this._curState.IsKeyDown(key) && this._previousState.IsKeyDown(key);
         }
 
         #endregion

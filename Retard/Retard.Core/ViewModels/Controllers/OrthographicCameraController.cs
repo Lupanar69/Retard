@@ -36,6 +36,16 @@ namespace Retard.Core.ViewModels.Controllers
         /// </summary>
         private readonly Keys _resetKey = Keys.R;
 
+        /// <summary>
+        /// Le contrôleur pour clavier
+        /// </summary>
+        private readonly KeyboardInput _keyboardInput;
+
+        /// <summary>
+        /// Le contrôleur pour souris
+        /// </summary>
+        private readonly MouseInput _mouseInput;
+
         #endregion
 
         #region Constructeur
@@ -47,6 +57,8 @@ namespace Retard.Core.ViewModels.Controllers
         public OrthographicCameraController(OrthographicCamera camera)
         {
             this.Camera = camera;
+            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
+            this._mouseInput = InputManager.GetScheme<MouseInput>();
         }
 
         /// <summary>
@@ -69,14 +81,14 @@ namespace Retard.Core.ViewModels.Controllers
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void Update(GameTime gameTime)
         {
-            if (KeyboardInput.IsKeyPressed(this._resetKey))
+            if (this._keyboardInput.IsKeyPressed(this._resetKey))
             {
                 this.Camera.Position = Vector2.Zero;
             }
 
-            if (MouseInput.LeftMouseHeld())
+            if (this._mouseInput.LeftMouseHeld())
             {
-                this.Camera.Move(-MouseInput.MousePosDelta);
+                this.Camera.Move(-this._mouseInput.MousePosDelta);
             }
         }
 
