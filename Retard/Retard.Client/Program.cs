@@ -1,4 +1,7 @@
-﻿namespace Retard.Client
+﻿using Retard.Core.Models;
+using Retard.Core.ViewModels.JSON;
+
+namespace Retard.Client
 {
     /// <summary>
     /// Lance le jeu
@@ -7,8 +10,14 @@
     {
         private static void Main(string[] args)
         {
-            using App game = new();
-            game.Run();
+            string defaultPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_INPUT_CONFIG_PATH}";
+            string customPath = $"{Constants.GAME_DIR_PATH}/{Constants.CUSTOM_INPUT_CONFIG_PATH}";
+            string json = JsonUtilities.SerializeObject(Constants.DEFAULT_INPUT_CONFIG);
+            JsonUtilities.WriteToFile(json, defaultPath);
+            JsonUtilities.WriteToFile(json, customPath);
+
+            //using App game = new();
+            //game.Run();
         }
     }
 }

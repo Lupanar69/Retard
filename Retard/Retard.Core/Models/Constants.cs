@@ -1,4 +1,7 @@
 ﻿using System;
+using Microsoft.Xna.Framework.Input;
+using Retard.Core.Models.Assets.Input;
+using Retard.Core.Models.DTOs.Input;
 
 namespace Retard.Core.Models
 {
@@ -39,6 +42,44 @@ namespace Retard.Core.Models
         public const string TEXTURES_DIR_PATH_DEBUG = "Resources/Textures/Test/";
 
 #endif
+
+        #endregion
+
+        #region Input
+
+        /// <summary>
+        /// Configuration par défaut pour les entrées du joueur
+        /// </summary>
+        public static readonly InputConfigDTO DEFAULT_INPUT_CONFIG = new InputConfigDTO
+            (
+                new InputContextDTO
+                    (
+                        "Camera",
+                         new InputActionDTO
+                            (
+                                "Move",
+                                InputActionReturnValueType.Axis2D,
+                                InputActionTriggerType.Performed,
+                                new InputBindingDTO(MouseKey.Mouse0),
+                                new InputBindingDTO(Keys.Left, Keys.Right, Keys.Up, Keys.Down),
+                                new InputBindingDTO(Keys.Q, Keys.D, Keys.Z, Keys.S),
+                                new InputBindingDTO(Buttons.LeftStick, InputBindingAxisType.Both, 0.24f)
+                            )
+                    )
+#if TESTS
+                , new InputContextDTO
+                    (
+                        "Test",
+                         new InputActionDTO
+                            (
+                                "CreateSprites",
+                                InputActionReturnValueType.ButtonState,
+                                InputActionTriggerType.Started,
+                                new InputBindingDTO(Keys.Space)
+                            )
+                    )
+#endif
+            );
 
         #endregion
 

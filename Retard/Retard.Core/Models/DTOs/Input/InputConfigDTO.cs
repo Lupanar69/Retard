@@ -18,5 +18,17 @@
         }
 
         #endregion
+
+        #region Constructeur
+
+        /// <summary>
+        /// Constructeru
+        /// </summary>
+        /// <param name="contexts">Les contextes des inputs</param>
+        public InputConfigDTO(params InputContextDTO[] contexts)
+        {
+            this.Contexts = contexts;
+        }
+        #endregion
     }
 }

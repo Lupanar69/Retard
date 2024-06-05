@@ -28,5 +28,31 @@ namespace Retard.Core.Models.DTOs.Input
         }
 
         #endregion
+
+        #region Constructeur
+
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        /// <param name="name">ID du contexte</param>
+        /// <param name="actions">Les actions possibles dans ce contexte</param>
+        public InputContextDTO(NativeString name, params InputActionDTO[] actions)
+        {
+            this.Name = name;
+            this.Actions = actions;
+        }
+
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        /// <param name="name">ID du contexte</param>
+        /// <param name="actions">Les actions possibles dans ce contexte</param>
+        public InputContextDTO(string name, params InputActionDTO[] actions)
+        {
+            this.Name = new NativeString(name);
+            this.Actions = actions;
+        }
+
+        #endregion
     }
 }
