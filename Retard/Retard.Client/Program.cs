@@ -7,15 +7,10 @@
     {
         private static void Main(string[] args)
         {
-            //string defaultPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_INPUT_CONFIG_PATH}";
-            //string customPath = $"{Constants.GAME_DIR_PATH}/{Constants.CUSTOM_INPUT_CONFIG_PATH}";
-            //string json = JsonUtilities.SerializeObject(Constants.DEFAULT_INPUT_CONFIG);
-            //JsonUtilities.WriteToFile(json, defaultPath);
-            //JsonUtilities.WriteToFile(json, customPath);
-            //json = JsonUtilities.ReadFile(customPath);
+            // Lance le jeu
 
-            //using App game = new();
-            //game.Run();
+            using App game = new();
+            game.Run();
         }
     }
 }

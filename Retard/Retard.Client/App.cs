@@ -3,7 +3,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using Retard.Core.Models;
 using Retard.Core.ViewModels.Input;
+using Retard.Core.ViewModels.JSON;
 using Retard.Core.ViewModels.Scenes;
 using Retard.Core.ViewModels.Scenes.Tests;
 
@@ -70,6 +72,12 @@ namespace Retard.Client
         /// </summary>
         protected override void Initialize()
         {
+            // Crée les fichiers de config par défaut
+
+            this.CreateDefaultConfigFiles();
+
+            // Initialise les components
+
             this._spriteBatch = new SpriteBatch(this.GraphicsDevice);
             this._camera = new OrthographicCamera(this.GraphicsDevice);
             this._world = World.Create();
@@ -83,7 +91,6 @@ namespace Retard.Client
             // Initialise les scènes
 
             SceneManager.Initialize(this.Content, this._world, this._spriteBatch);
-            SceneManager.AddScene(new DefaultScene());
 
 #if TESTS
             SceneManager.AddScene(new SpriteDrawTestScene(this._camera));
@@ -162,6 +169,20 @@ namespace Retard.Client
             this._graphicsDeviceManager.PreferredBackBufferHeight = resolutionY;
             this._graphicsDeviceManager.IsFullScreen = fullScreen;
             this._graphicsDeviceManager.ApplyChanges();
+        }
+
+        /// <summary>
+        /// Crée les fichiers de config par défaut
+        /// </summary>
+        private void CreateDefaultConfigFiles()
+        {
+            // Crée le fichier de config des entrées par défaut
+
+            string defaultInputConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_INPUT_CONFIG_PATH}";
+
+            string defaultInputConfigJson = JsonUtilities.SerializeObject(Constants.DEFAULT_INPUT_CONFIG);
+
+            JsonUtilities.WriteToFile(defaultInputConfigJson, defaultInputConfigPath);
         }
 
         #endregion
