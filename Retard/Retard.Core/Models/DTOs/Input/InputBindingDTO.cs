@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
 using Retard.Core.Models.Assets.Input;
 
 namespace Retard.Core.Models.DTOs.Input
@@ -68,6 +69,7 @@ namespace Retard.Core.Models.DTOs.Input
         /// <param name="gamePadKey">L'entrée manette s'il y en a une</param>
         /// <param name="axisType">Le type d'axe s'il y en a un</param>
         /// <param name="deadZone">La zone morte de l'entrée si c'est un axe</param>
+        [JsonConstructor]
         public InputBindingDTO(MouseKey mouseKey, Keys[] keyboardKey, Buttons gamePadKey, InputBindingAxisType axisType, float deadZone)
         {
             this.MouseKey = mouseKey;

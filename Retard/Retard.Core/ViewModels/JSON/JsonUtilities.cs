@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
 namespace Retard.Core.ViewModels.JSON
@@ -11,6 +12,29 @@ namespace Retard.Core.ViewModels.JSON
     /// </summary>
     public static class JsonUtilities
     {
+        #region Variables statiques
+
+        /// <summary>
+        /// Paramètres de conversion en Json
+        /// </summary>
+        private static readonly JsonSerializerSettings _jsonSerializerSettings;
+
+        #endregion
+
+        #region Constructeur
+
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        static JsonUtilities()
+        {
+            JsonUtilities._jsonSerializerSettings = new();
+            JsonUtilities._jsonSerializerSettings.Converters.Add(new StringEnumConverter());
+            JsonUtilities._jsonSerializerSettings.Formatting = Formatting.Indented;
+        }
+
+        #endregion
+
         #region Méthodes publiques
 
         /// <summary>
@@ -74,7 +98,7 @@ namespace Retard.Core.ViewModels.JSON
         /// <param name="data">La donnée à écrire</param>
         public static string SerializeObject(object data)
         {
-            return JsonConvert.SerializeObject(data);
+            return JsonConvert.SerializeObject(data, JsonUtilities._jsonSerializerSettings);
         }
 
         /// <summary>
@@ -83,7 +107,18 @@ namespace Retard.Core.ViewModels.JSON
         /// <param name="json">Le contenu Json à convertir</param>
         public static T DeserializeObject<T>(string json)
         {
-            return JsonConvert.DeserializeObject<T>(json);
+            T obj;
+
+            try
+            {
+                obj = JsonConvert.DeserializeObject<T>(json);
+            }
+            catch (JsonException ex)
+            {
+                throw ex;
+            }
+
+            return obj;
         }
 
         /// <summary>

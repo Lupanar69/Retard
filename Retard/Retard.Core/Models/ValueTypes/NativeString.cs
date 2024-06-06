@@ -6,9 +6,14 @@ namespace Retard.Core.Models.ValueTypes
     /// <summary>
     /// Version blittable de System.String
     /// </summary>
-    public struct NativeString : IDisposable
+    public readonly struct NativeString : IDisposable
     {
         #region Propriétés
+
+        /// <summary>
+        /// Retourne la valeur sous forme de string
+        /// </summary>
+        public string Value => this.ToString();
 
         /// <summary>
         /// Longueur de la string
@@ -23,11 +28,26 @@ namespace Retard.Core.Models.ValueTypes
         /// Le tableau contenant chaque caractère de la string.
         /// Nécessaire d'être non-géré pour garder la struct blittable.
         /// </summary>
-        private UnsafeArray<char> _arr;
+        private readonly UnsafeArray<char> _arr;
 
         #endregion
 
         #region Constructeur
+
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        /// <param name="str">La string à convertir en NativeString</param>
+        public NativeString(NativeString str)
+        {
+            this.Length = str.Length;
+            this._arr = new UnsafeArray<char>(this.Length);
+
+            for (int i = 0; i < this.Length; i++)
+            {
+                this._arr[i] = str[i];
+            }
+        }
 
         /// <summary>
         /// Constructeur

@@ -1,6 +1,4 @@
-﻿using Retard.Core.Models.ValueTypes;
-
-namespace Retard.Core.Models.DTOs.Input
+﻿namespace Retard.Core.Models.DTOs.Input
 {
     /// <summary>
     /// Représente les données d'un InputAction
@@ -12,7 +10,7 @@ namespace Retard.Core.Models.DTOs.Input
         /// <summary>
         /// L'ID de cette action
         /// </summary>
-        public NativeString Name
+        public string Name
         {
             get;
             private set;
@@ -56,24 +54,9 @@ namespace Retard.Core.Models.DTOs.Input
         /// <param name="valueType">Le type de valeur retournée par l'action</param>
         /// <param name="triggerType">Le moment durant lequel la valeur doit être évlauée</param>
         /// <param name="bindings">Les entrées liées à cette action</param>
-        public InputActionDTO(NativeString name, InputActionReturnValueType valueType, InputActionTriggerType triggerType, params InputBindingDTO[] bindings)
-        {
-            this.Name = name;
-            this.ValueType = valueType;
-            this.TriggerType = triggerType;
-            this.Bindings = bindings;
-        }
-
-        /// <summary>
-        /// Constructeur
-        /// </summary>
-        /// <param name="name">L'ID de l'action</param>
-        /// <param name="valueType">Le type de valeur retournée par l'action</param>
-        /// <param name="triggerType">Le moment durant lequel la valeur doit être évlauée</param>
-        /// <param name="bindings">Les entrées liées à cette action</param>
         public InputActionDTO(string name, InputActionReturnValueType valueType, InputActionTriggerType triggerType, params InputBindingDTO[] bindings)
         {
-            this.Name = new NativeString(name);
+            this.Name = name;
             this.ValueType = valueType;
             this.TriggerType = triggerType;
             this.Bindings = bindings;

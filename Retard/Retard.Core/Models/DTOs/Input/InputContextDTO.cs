@@ -1,6 +1,4 @@
-﻿using Retard.Core.Models.ValueTypes;
-
-namespace Retard.Core.Models.DTOs.Input
+﻿namespace Retard.Core.Models.DTOs.Input
 {
     /// <summary>
     /// Représente les données d'un InputContext
@@ -12,7 +10,7 @@ namespace Retard.Core.Models.DTOs.Input
         /// <summary>
         /// L'ID de ce contexte
         /// </summary>
-        public NativeString Name
+        public string Name
         {
             get;
             private set;
@@ -36,20 +34,9 @@ namespace Retard.Core.Models.DTOs.Input
         /// </summary>
         /// <param name="name">ID du contexte</param>
         /// <param name="actions">Les actions possibles dans ce contexte</param>
-        public InputContextDTO(NativeString name, params InputActionDTO[] actions)
-        {
-            this.Name = name;
-            this.Actions = actions;
-        }
-
-        /// <summary>
-        /// Constructeur
-        /// </summary>
-        /// <param name="name">ID du contexte</param>
-        /// <param name="actions">Les actions possibles dans ce contexte</param>
         public InputContextDTO(string name, params InputActionDTO[] actions)
         {
-            this.Name = new NativeString(name);
+            this.Name = name;
             this.Actions = actions;
         }
 
