@@ -17,6 +17,13 @@ namespace Retard.Core.Models.Assets.Scene
         /// </summary>
         public bool ConsumeInput { get; init; }
 
+        /// <summary>
+        /// <see langword="true"/> si la scène doit bloquer le rendu 
+        /// pour les scènes qui suivent
+        /// (ex: une scène de pause superposée à la scène de jeu)
+        /// </summary>
+        public bool ConsumeDraw { get; init; }
+
         #endregion
 
         #region Méthodes publiques

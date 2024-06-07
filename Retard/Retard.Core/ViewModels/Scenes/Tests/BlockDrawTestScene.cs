@@ -11,7 +11,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
     /// Scène de test pour vérifier qu'elle bloque bien les entrées
     /// pour les scènes la suivant dans la liste
     /// </summary>
-    public sealed class BlockInputTestScene : IScene
+    public sealed class BlockDrawTestScene : IScene
     {
         #region Properties
 
@@ -23,7 +23,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         public bool ConsumeInput { get; init; }
 
         /// <summary>
-        /// <see langword="true"/> si la scène doit bloquer le rendu
+        /// <see langword="true"/> si la scène doit bloquer le rendu 
         /// pour les scènes qui suivent
         /// (ex: une scène de pause superposée à la scène de jeu)
         /// </summary>
@@ -50,9 +50,9 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <summary>
         /// Constructeur
         /// </summary>
-        public BlockInputTestScene() : base()
+        public BlockDrawTestScene() : base()
         {
-            this.ConsumeInput = true;
+            this.ConsumeDraw = true;
             this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
         }
 
@@ -83,7 +83,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void UpdateInput(GameTime gameTime)
         {
-            if (this._keyboardInput.IsKeyPressed(Keys.Space))
+            if (this._keyboardInput.IsKeyPressed(Keys.Enter))
             {
                 SceneManager.RemoveLastScene();
             }

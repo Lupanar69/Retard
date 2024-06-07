@@ -94,6 +94,7 @@ namespace Retard.Client
 
 #if TESTS
             SceneManager.AddScene(new SpriteDrawTestScene(this._camera));
+            //SceneManager.AddScene(new BlockDrawTestScene());
             //SceneManager.AddScene(new BlockInputTestScene());
 #endif
             base.Initialize();
