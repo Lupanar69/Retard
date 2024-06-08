@@ -78,6 +78,14 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         }
 
         /// <summary>
+        /// Appelée à chaque fois que la scène devient active
+        /// </summary>
+        public void Start()
+        {
+
+        }
+
+        /// <summary>
         /// Récupère les inputs nécessaires au fonctionnement des systèmes
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
@@ -85,7 +93,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         {
             if (this._keyboardInput.IsKeyPressed(Keys.Space))
             {
-                SceneManager.RemoveLastScene();
+                SceneManager.RemoveLastActiveScene();
             }
         }
 

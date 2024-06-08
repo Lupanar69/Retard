@@ -39,6 +39,11 @@ namespace Retard.Core.Models.Assets.Scene
         public abstract void LoadContent();
 
         /// <summary>
+        /// Appelée à chaque fois que la scène devient active
+        /// </summary>
+        public abstract void Start();
+
+        /// <summary>
         /// Màj à chaque frame
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>

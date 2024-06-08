@@ -74,7 +74,7 @@ namespace Retard.Client
         {
             // Crée les fichiers de config par défaut
 
-            this.CreateDefaultConfigFiles();
+            CreateDefaultConfigFiles();
 
             // Initialise les components
 
@@ -90,13 +90,8 @@ namespace Retard.Client
 
             // Initialise les scènes
 
-            SceneManager.Initialize(this.Content, this._world, this._spriteBatch);
+            this.InitializeSceneManager();
 
-#if TESTS
-            SceneManager.AddScene(new SpriteDrawTestScene(this._camera));
-            //SceneManager.AddScene(new BlockDrawTestScene());
-            //SceneManager.AddScene(new BlockInputTestScene());
-#endif
             base.Initialize();
         }
 
@@ -118,7 +113,7 @@ namespace Retard.Client
 
             InputManager.Update();
 
-            if (this._gamePadInput.IsButtonPressed(0, Buttons.Back) || this._keyboardInput.IsKeyPressed(Keys.Escape))
+            if (this._gamePadInput.IsButtonPressed(0, Buttons.Back) || this._keyboardInput.IsKeyPressed(Keys.Escape) || SceneManager.IsEmpty)
             {
                 Exit();
             }
@@ -173,9 +168,32 @@ namespace Retard.Client
         }
 
         /// <summary>
+        /// Crée toutes les scènes utilisées par le jeu
+        /// </summary>
+        private void InitializeSceneManager()
+        {
+            SceneManager.Initialize(1, this.Content, this._world, this._spriteBatch);
+
+#if TESTS
+            //SceneManager.AddSceneToPool(new TestScene1());
+            //SceneManager.AddSceneToPool(new TestScene2());
+            //SceneManager.AddSceneToPool(new TestScene3());
+            //SceneManager.SetSceneAsActive<TestScene1>();
+            SceneManager.AddSceneToPool(new SpriteDrawTestScene(this._camera));
+            //SceneManager.AddSceneToPool(new BlockDrawTestScene());
+            //SceneManager.AddSceneToPool(new BlockInputTestScene());
+            SceneManager.SetSceneAsActive<SpriteDrawTestScene>();
+#endif
+        }
+
+        #endregion
+
+        #region Fonctions statiques privées
+
+        /// <summary>
         /// Crée les fichiers de config par défaut
         /// </summary>
-        private void CreateDefaultConfigFiles()
+        private static void CreateDefaultConfigFiles()
         {
             // Crée le fichier de config des entrées par défaut
 
