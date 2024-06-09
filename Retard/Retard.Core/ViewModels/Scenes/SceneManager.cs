@@ -191,15 +191,19 @@ namespace Retard.Core.ViewModels.Scenes
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public static void Draw(GameTime gameTime)
         {
-            for (int i = SceneManager._activeScenes.Count - 1; i >= 0; i--)
-            {
-                IScene scene = SceneManager._activeScenes[i];
-                scene.Draw(gameTime);
+            int startDrawIndex = 0;
 
-                if (scene.ConsumeDraw)
+            for (int i = 0; i < SceneManager._activeScenes.Count; i++)
+            {
+                if (SceneManager._activeScenes[i].ConsumeDraw)
                 {
-                    break;
+                    startDrawIndex = i;
                 }
+            }
+
+            for (int i = startDrawIndex; i < SceneManager._activeScenes.Count; i++)
+            {
+                SceneManager._activeScenes[i].Draw(gameTime);
             }
         }
 

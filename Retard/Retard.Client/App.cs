@@ -183,6 +183,7 @@ namespace Retard.Client
             //SceneManager.AddSceneToPool(new BlockDrawTestScene());
             //SceneManager.AddSceneToPool(new BlockInputTestScene());
             SceneManager.SetSceneAsActive<SpriteDrawTestScene>();
+            //SceneManager.SetSceneAsActive<BlockDrawTestScene>();
 #endif
         }
 
