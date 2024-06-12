@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Retard.Core.Models;
+using Retard.Core.Models.DTOs.Input;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.JSON;
 using Retard.Core.ViewModels.Scenes;
@@ -200,9 +201,14 @@ namespace Retard.Client
 
             string defaultInputConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_INPUT_CONFIG_PATH}";
 
+            JsonUtilities.CreatPathIfNotExists(defaultInputConfigPath);
+
             string defaultInputConfigJson = JsonUtilities.SerializeObject(Constants.DEFAULT_INPUT_CONFIG);
 
             JsonUtilities.WriteToFile(defaultInputConfigJson, defaultInputConfigPath);
+
+            string json = JsonUtilities.ReadFile(defaultInputConfigPath);
+            var config = JsonUtilities.DeserializeObject<InputConfigDTO>(json);
         }
 
         #endregion

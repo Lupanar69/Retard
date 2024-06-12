@@ -23,6 +23,7 @@ namespace Retard.Core.Models.DTOs.Input
         /// <summary>
         /// Le bouton du clavier à évaluer (ou LES boutons, si c'est un axe)
         /// </summary>
+        [JsonProperty]
         public Keys[] KeyboardKeys
         {
             get;

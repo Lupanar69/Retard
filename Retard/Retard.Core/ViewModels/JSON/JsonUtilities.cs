@@ -31,6 +31,7 @@ namespace Retard.Core.ViewModels.JSON
             JsonUtilities._jsonSerializerSettings = new();
             JsonUtilities._jsonSerializerSettings.Converters.Add(new StringEnumConverter());
             JsonUtilities._jsonSerializerSettings.Formatting = Formatting.Indented;
+            JsonUtilities._jsonSerializerSettings.DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate;
         }
 
         #endregion
@@ -111,7 +112,7 @@ namespace Retard.Core.ViewModels.JSON
 
             try
             {
-                obj = JsonConvert.DeserializeObject<T>(json);
+                obj = JsonConvert.DeserializeObject<T>(json, JsonUtilities._jsonSerializerSettings);
             }
             catch (JsonException ex)
             {

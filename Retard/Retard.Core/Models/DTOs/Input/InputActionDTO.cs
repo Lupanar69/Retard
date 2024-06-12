@@ -1,4 +1,6 @@
-﻿namespace Retard.Core.Models.DTOs.Input
+﻿using Newtonsoft.Json;
+
+namespace Retard.Core.Models.DTOs.Input
 {
     /// <summary>
     /// Représente les données d'un InputAction
@@ -19,6 +21,7 @@
         /// <summary>
         /// Le type de valeur retournée par une InputAciton
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
         public InputActionReturnValueType ValueType
         {
             get;
@@ -28,6 +31,7 @@
         /// <summary>
         /// Le type d'action à effectuer lorsqu'on évalue une InputAction donnée
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
         public InputActionTriggerType TriggerType
         {
             get;
