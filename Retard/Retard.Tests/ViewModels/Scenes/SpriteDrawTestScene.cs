@@ -13,6 +13,7 @@ using Retard.Core.Models.Assets.Sprites;
 using Retard.Core.Systems.Sprite;
 using Retard.Core.ViewModels.Controllers;
 using Retard.Core.ViewModels.Input;
+using Retard.Core.ViewModels.Scenes;
 
 namespace Retard.Tests.ViewModels.Scenes
 {

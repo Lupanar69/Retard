@@ -8,4 +8,4 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Retard.Tests
-build_property.ProjectDir = C:\Users\Clément\Documents\GitHub\a\Raging-Expansion---Tame-A-Ravenous-Dungeon\Retard\Retard.Tests\
+build_property.ProjectDir = C:\Users\Clément\Documents\GitHub\a\Retard\Retard\Retard.Tests\

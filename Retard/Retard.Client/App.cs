@@ -8,7 +8,7 @@ using Retard.Core.Models.DTOs.Input;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.JSON;
 using Retard.Core.ViewModels.Scenes;
-using Retard.Core.ViewModels.Scenes.Tests;
+using Retard.Tests.ViewModels.Scenes;
 
 namespace Retard.Client
 {

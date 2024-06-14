@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8ccoLMhDdP+i1xJ01IgXexplxAGrSo99QWTpOaz6Onxa/k84Cl7cBwAIMfODSvTijfv9VK6Er0At2FUnlLzI6A==",
+  "dgSpecHash": "XGWMhQFrX/hAXQjHGt90cCW7gbCGVlMN6tEVx6MUMXHO0Pga4ZOb1YO3n74QByvGvemvBgxY4DUxxmYjHiNsaQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\Retard\\Retard.Tests\\Retard.Tests.csproj",
+  "projectFilePath": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Retard\\Retard\\Retard.Tests\\Retard.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Clément\\.nuget\\packages\\arch\\1.2.8\\arch.1.2.8.nupkg.sha512",
     "C:\\Users\\Clément\\.nuget\\packages\\arch.aot.sourcegenerator\\1.0.1\\arch.aot.sourcegenerator.1.0.1.nupkg.sha512",

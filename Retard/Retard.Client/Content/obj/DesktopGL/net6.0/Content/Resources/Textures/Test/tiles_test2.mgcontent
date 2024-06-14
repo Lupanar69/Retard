@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/Clément/Documents/GitHub/a/Raging-Expansion---Tame-A-Ravenous-Dungeon/Retard/Retard.Client/Content/Resources/Textures/Test/tiles_test2.png</SourceFile>
+  <SourceFile>C:/Users/Clément/Documents/GitHub/a/Retard/Retard/Retard.Client/Content/Resources/Textures/Test/tiles_test2.png</SourceFile>
   <SourceTime>2024-05-08T17:08:11.8669404+02:00</SourceTime>
-  <DestFile>C:/Users/Clément/Documents/GitHub/a/Raging-Expansion---Tame-A-Ravenous-Dungeon/Retard/Retard.Client/Content/bin/DesktopGL/Content/Resources/Textures/Test/tiles_test2.xnb</DestFile>
-  <DestTime>2024-05-08T17:10:28.3710223+02:00</DestTime>
+  <DestFile>C:/Users/Clément/Documents/GitHub/a/Retard/Retard/Retard.Client/Content/bin/DesktopGL/Content/Resources/Textures/Test/tiles_test2.xnb</DestFile>
+  <DestTime>2024-06-14T17:55:52.1490982+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T13:44:56+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

@@ -10,3 +10,15 @@ C:\Users\Clément\Documents\GitHub\a\Raging-Expansion---Tame-A-Ravenous-Dungeon\
 C:\Users\Clément\Documents\GitHub\a\Raging-Expansion---Tame-A-Ravenous-Dungeon\RETARD\Retard.Core\obj\Debug\net6.0\refint\Retard.Core.dll
 C:\Users\Clément\Documents\GitHub\a\Raging-Expansion---Tame-A-Ravenous-Dungeon\RETARD\Retard.Core\obj\Debug\net6.0\Retard.Core.pdb
 C:\Users\Clément\Documents\GitHub\a\Raging-Expansion---Tame-A-Ravenous-Dungeon\RETARD\Retard.Core\obj\Debug\net6.0\ref\Retard.Core.dll
+C:\Users\Clément\Documents\GitHub\a\Retard\Retard\Retard.Core\bin\Debug\net6.0\Retard.Core.deps.json
+C:\Users\Clément\Documents\GitHub\a\Retard\Retard\Retard.Core\bin\Debug\net6.0\Retard.Core.dll
+C:\Users\Clément\Documents\GitHub\a\Retard\Retard\Retard.Core\bin\Debug\net6.0\Retard.Core.pdb
+C:\Users\Clément\Documents\GitHub\a\Retard\Retard\Retard.Core\obj\Debug\net6.0\Retard.Core.csproj.AssemblyReference.cache
+C:\Users\Clément\Documents\GitHub\a\Retard\Retard\Retard.Core\obj\Debug\net6.0\Retard.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Clément\Documents\GitHub\a\Retard\Retard\Retard.Core\obj\Debug\net6.0\Retard.Core.AssemblyInfoInputs.cache
+C:\Users\Clément\Documents\GitHub\a\Retard\Retard\Retard.Core\obj\Debug\net6.0\Retard.Core.AssemblyInfo.cs
+C:\Users\Clément\Documents\GitHub\a\Retard\Retard\Retard.Core\obj\Debug\net6.0\Retard.Core.csproj.CoreCompileInputs.cache
+C:\Users\Clément\Documents\GitHub\a\Retard\Retard\Retard.Core\obj\Debug\net6.0\Retard.Core.dll
+C:\Users\Clément\Documents\GitHub\a\Retard\Retard\Retard.Core\obj\Debug\net6.0\refint\Retard.Core.dll
+C:\Users\Clément\Documents\GitHub\a\Retard\Retard\Retard.Core\obj\Debug\net6.0\Retard.Core.pdb
+C:\Users\Clément\Documents\GitHub\a\Retard\Retard\Retard.Core\obj\Debug\net6.0\ref\Retard.Core.dll

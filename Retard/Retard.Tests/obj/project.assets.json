@@ -6552,11 +6552,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\Retard\\Retard.Tests\\Retard.Tests.csproj",
+      "projectUniqueName": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Retard\\Retard\\Retard.Tests\\Retard.Tests.csproj",
       "projectName": "Retard.Tests",
-      "projectPath": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\Retard\\Retard.Tests\\Retard.Tests.csproj",
+      "projectPath": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Retard\\Retard\\Retard.Tests\\Retard.Tests.csproj",
       "packagesPath": "C:\\Users\\Clément\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\Retard\\Retard.Tests\\obj\\",
+      "outputPath": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Retard\\Retard\\Retard.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -6578,8 +6578,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\Retard\\Retard.Core\\Retard.Core.csproj": {
-              "projectPath": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Raging-Expansion---Tame-A-Ravenous-Dungeon\\Retard\\Retard.Core\\Retard.Core.csproj"
+            "C:\\Users\\Clément\\Documents\\GitHub\\a\\Retard\\Retard\\Retard.Core\\Retard.Core.csproj": {
+              "projectPath": "C:\\Users\\Clément\\Documents\\GitHub\\a\\Retard\\Retard\\Retard.Core\\Retard.Core.csproj"
             }
           }
         }

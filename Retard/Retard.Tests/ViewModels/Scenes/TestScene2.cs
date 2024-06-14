@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.ViewModels.Input;
+using Retard.Core.ViewModels.Scenes;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -124,6 +125,5 @@ namespace Retard.Tests.ViewModels.Scenes
         }
 
         #endregion
-
     }
 }

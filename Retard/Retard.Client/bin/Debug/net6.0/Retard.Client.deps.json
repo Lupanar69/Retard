@@ -11,7 +11,7 @@
           "Arch": "1.2.8",
           "Arch.AOT.SourceGenerator": "1.0.1",
           "Arch.EventBus": "1.0.2",
-          "Arch.LowLevel": "1.1.0",
+          "Arch.LowLevel": "1.1.1",
           "Arch.Persistence": "1.0.4",
           "Arch.Relationships": "1.0.1",
           "Arch.System": "1.0.5",
@@ -30,7 +30,7 @@
       },
       "Arch/1.2.8": {
         "dependencies": {
-          "Arch.LowLevel": "1.1.0",
+          "Arch.LowLevel": "1.1.1",
           "Collections.Pooled": "2.0.0-preview.27",
           "CommunityToolkit.HighPerformance": "7.1.2",
           "Microsoft.Extensions.ObjectPool": "7.0.0",
@@ -63,14 +63,14 @@
           }
         }
       },
-      "Arch.LowLevel/1.1.0": {
+      "Arch.LowLevel/1.1.1": {
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "runtime": {
           "lib/net6.0/Arch.LowLevel.dll": {
-            "assemblyVersion": "1.1.0.0",
-            "fileVersion": "1.1.0.0"
+            "assemblyVersion": "1.1.1.0",
+            "fileVersion": "1.1.1.0"
           }
         }
       },
@@ -1310,7 +1310,7 @@
           "Arch": "1.2.8",
           "Arch.AOT.SourceGenerator": "1.0.1",
           "Arch.EventBus": "1.0.2",
-          "Arch.LowLevel": "1.1.0",
+          "Arch.LowLevel": "1.1.1",
           "Arch.Persistence": "1.0.4",
           "Arch.Relationships": "1.0.1",
           "Arch.System": "1.0.5",
@@ -1327,6 +1327,7 @@
       "Retard.Tests/1.0.0": {
         "dependencies": {
           "Arch": "1.2.8",
+          "Arch.LowLevel": "1.1.1",
           "MonoGame.Extended": "3.9.0-prerelease.4",
           "MonoGame.Framework.DesktopGL": "3.8.1.303",
           "Retard.Core": "1.0.0"
@@ -1364,12 +1365,12 @@
       "path": "arch.eventbus/1.0.2",
       "hashPath": "arch.eventbus.1.0.2.nupkg.sha512"
     },
-    "Arch.LowLevel/1.1.0": {
+    "Arch.LowLevel/1.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-K4wtjKy3ue4Qu1kx+VI2K5qwJ4CuZnNzb/OWAze89wgF3cM7dV3Z4QXH36Q7fv+VcGXeZqxL/bhPKYiRZQfwQg==",
-      "path": "arch.lowlevel/1.1.0",
-      "hashPath": "arch.lowlevel.1.1.0.nupkg.sha512"
+      "sha512": "sha512-Dg4z6qpE3wWGjZBLpUdQ21w52ZKOWNn2XedF1PH54LtTp0S525dRrG1xt2QDGgprtnLi4FnsQHTzaGh1TRovBA==",
+      "path": "arch.lowlevel/1.1.1",
+      "hashPath": "arch.lowlevel.1.1.1.nupkg.sha512"
     },
     "Arch.Persistence/1.0.4": {
       "type": "package",
