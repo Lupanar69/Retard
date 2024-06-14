@@ -174,6 +174,7 @@ namespace Retard.Client
         private void InitializeSceneManager()
         {
             SceneManager.Initialize(1, this.Content, this._world, this._spriteBatch);
+            SceneManager.AddSceneToPool(new OrthographicCameraScene(this._camera));
 
 #if TESTS
             //SceneManager.AddSceneToPool(new TestScene1());
@@ -186,6 +187,8 @@ namespace Retard.Client
             SceneManager.SetSceneAsActive<SpriteDrawTestScene>();
             //SceneManager.SetSceneAsActive<BlockDrawTestScene>();
 #endif
+
+            SceneManager.SetSceneAsActive<OrthographicCameraScene>();
         }
 
         #endregion

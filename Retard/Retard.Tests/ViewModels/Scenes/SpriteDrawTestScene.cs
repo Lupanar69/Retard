@@ -11,7 +11,6 @@ using Retard.Core.Models;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.Models.Assets.Sprites;
 using Retard.Core.Systems.Sprite;
-using Retard.Core.ViewModels.Controllers;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
 
@@ -46,11 +45,6 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <see langword="true"/> si l'on a appelé Dispose()
         /// </summary>
         private bool _disposedValue;
-
-        /// <summary>
-        /// Le contrôleur de la caméra du jeu
-        /// </summary>
-        private readonly OrthographicCameraController _cameraController;
 
         /// <summary>
         /// La caméra du jeu
@@ -103,7 +97,6 @@ namespace Retard.Tests.ViewModels.Scenes
         public SpriteDrawTestScene(OrthographicCamera camera)
         {
             this._camera = camera;
-            this._cameraController = new OrthographicCameraController(this._camera);
             this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
             this._size = new Point(60);
             SceneManager.World.Reserve(_spriteArchetype, _size.X * _size.Y);
@@ -163,8 +156,6 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void UpdateInput(GameTime gameTime)
         {
-            this._cameraController.Update(gameTime);
-
             if (this._keyboardInput.IsKeyPressed(Keys.Space))
             {
                 this.CreateSpriteEntities();
@@ -213,7 +204,6 @@ namespace Retard.Tests.ViewModels.Scenes
             {
                 if (disposingManaged)
                 {
-                    this._cameraController.Dispose();
                     this._updateSystems.Dispose();
                     this._drawSystems.Dispose();
                 }
