@@ -14,7 +14,7 @@ using Retard.Core.Systems.Sprite;
 using Retard.Core.ViewModels.Controllers;
 using Retard.Core.ViewModels.Input;
 
-namespace Retard.Core.ViewModels.Scenes.Tests
+namespace Retard.Tests.ViewModels.Scenes
 {
     /// <summary>
     /// Scène de test

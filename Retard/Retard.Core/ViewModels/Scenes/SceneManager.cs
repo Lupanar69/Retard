@@ -23,17 +23,17 @@ namespace Retard.Core.ViewModels.Scenes
         /// <summary>
         /// Pour afficher les sprites à l'écran
         /// </summary>
-        internal static SpriteBatch SpriteBatch { get; private set; }
+        public static SpriteBatch SpriteBatch { get; private set; }
 
         /// <summary>
         /// Le monde contenant les entités
         /// </summary>
-        internal static World World { get; private set; }
+        public static World World { get; private set; }
 
         /// <summary>
         /// Les assets du jeu
         /// </summary
-        internal static ContentManager Content { get; private set; }
+        public static ContentManager Content { get; private set; }
 
         #endregion
 

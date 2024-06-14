@@ -109,3 +109,5 @@ C:\Users\Clément\Documents\GitHub\a\Raging-Expansion---Tame-A-Ravenous-Dungeon\
 C:\Users\Clément\Documents\GitHub\a\Raging-Expansion---Tame-A-Ravenous-Dungeon\Retard\Retard.Client\bin\Debug\net6.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\Clément\Documents\GitHub\a\Raging-Expansion---Tame-A-Ravenous-Dungeon\Retard\Retard.Client\bin\Debug\net6.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\Clément\Documents\GitHub\a\Raging-Expansion---Tame-A-Ravenous-Dungeon\Retard\Retard.Client\bin\Debug\net6.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\Clément\Documents\GitHub\a\Raging-Expansion---Tame-A-Ravenous-Dungeon\Retard\Retard.Client\bin\Debug\net6.0\Retard.Tests.dll
+C:\Users\Clément\Documents\GitHub\a\Raging-Expansion---Tame-A-Ravenous-Dungeon\Retard\Retard.Client\bin\Debug\net6.0\Retard.Tests.pdb

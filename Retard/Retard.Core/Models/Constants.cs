@@ -88,7 +88,7 @@ namespace Retard.Core.Models
         /// <summary>
         /// La taille d'un sprite en pixels
         /// </summary>
-        internal static readonly int SPRITE_SIZE_PIXELS = 32;
+        public static readonly int SPRITE_SIZE_PIXELS = 32;
 
         #endregion
 

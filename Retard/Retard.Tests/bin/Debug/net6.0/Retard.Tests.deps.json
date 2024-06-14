@@ -6,31 +6,21 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "Retard.Client/1.0.0": {
+      "Retard.Tests/1.0.0": {
         "dependencies": {
           "Arch": "1.2.8",
-          "Arch.AOT.SourceGenerator": "1.0.1",
-          "Arch.EventBus": "1.0.2",
-          "Arch.LowLevel": "1.1.0",
-          "Arch.Persistence": "1.0.4",
-          "Arch.Relationships": "1.0.1",
-          "Arch.System": "1.0.5",
-          "Arch.System.SourceGenerator": "1.2.1",
-          "MonoGame.Content.Builder.Task": "3.8.1.303",
+          "Arch.LowLevel": "1.1.1",
           "MonoGame.Extended": "3.9.0-prerelease.4",
-          "MonoGame.Extended.Input": "3.8.0",
           "MonoGame.Framework.DesktopGL": "3.8.1.303",
-          "Newtonsoft.Json": "13.0.3",
-          "Retard.Core": "1.0.0",
-          "Retard.Tests": "1.0.0"
+          "Retard.Core": "1.0.0"
         },
         "runtime": {
-          "Retard.Client.dll": {}
+          "Retard.Tests.dll": {}
         }
       },
       "Arch/1.2.8": {
         "dependencies": {
-          "Arch.LowLevel": "1.1.0",
+          "Arch.LowLevel": "1.1.1",
           "Collections.Pooled": "2.0.0-preview.27",
           "CommunityToolkit.HighPerformance": "7.1.2",
           "Microsoft.Extensions.ObjectPool": "7.0.0",
@@ -63,14 +53,14 @@
           }
         }
       },
-      "Arch.LowLevel/1.1.0": {
+      "Arch.LowLevel/1.1.1": {
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "runtime": {
           "lib/net6.0/Arch.LowLevel.dll": {
-            "assemblyVersion": "1.1.0.0",
-            "fileVersion": "1.1.0.0"
+            "assemblyVersion": "1.1.1.0",
+            "fileVersion": "1.1.1.0"
           }
         }
       },
@@ -424,7 +414,6 @@
           "System.Runtime": "4.3.0"
         }
       },
-      "MonoGame.Content.Builder.Task/3.8.1.303": {},
       "MonoGame.Extended/3.9.0-prerelease.4": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.3"
@@ -1310,7 +1299,7 @@
           "Arch": "1.2.8",
           "Arch.AOT.SourceGenerator": "1.0.1",
           "Arch.EventBus": "1.0.2",
-          "Arch.LowLevel": "1.1.0",
+          "Arch.LowLevel": "1.1.1",
           "Arch.Persistence": "1.0.4",
           "Arch.Relationships": "1.0.1",
           "Arch.System": "1.0.5",
@@ -1323,22 +1312,11 @@
         "runtime": {
           "Retard.Core.dll": {}
         }
-      },
-      "Retard.Tests/1.0.0": {
-        "dependencies": {
-          "Arch": "1.2.8",
-          "MonoGame.Extended": "3.9.0-prerelease.4",
-          "MonoGame.Framework.DesktopGL": "3.8.1.303",
-          "Retard.Core": "1.0.0"
-        },
-        "runtime": {
-          "Retard.Tests.dll": {}
-        }
       }
     }
   },
   "libraries": {
-    "Retard.Client/1.0.0": {
+    "Retard.Tests/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -1364,12 +1342,12 @@
       "path": "arch.eventbus/1.0.2",
       "hashPath": "arch.eventbus.1.0.2.nupkg.sha512"
     },
-    "Arch.LowLevel/1.1.0": {
+    "Arch.LowLevel/1.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-K4wtjKy3ue4Qu1kx+VI2K5qwJ4CuZnNzb/OWAze89wgF3cM7dV3Z4QXH36Q7fv+VcGXeZqxL/bhPKYiRZQfwQg==",
-      "path": "arch.lowlevel/1.1.0",
-      "hashPath": "arch.lowlevel.1.1.0.nupkg.sha512"
+      "sha512": "sha512-Dg4z6qpE3wWGjZBLpUdQ21w52ZKOWNn2XedF1PH54LtTp0S525dRrG1xt2QDGgprtnLi4FnsQHTzaGh1TRovBA==",
+      "path": "arch.lowlevel/1.1.1",
+      "hashPath": "arch.lowlevel.1.1.1.nupkg.sha512"
     },
     "Arch.Persistence/1.0.4": {
       "type": "package",
@@ -1510,13 +1488,6 @@
       "sha512": "sha512-9ZQKCWxH7Ijp9BfahvL2Zyf1cJIk8XYLF6Yjzr2yi0b2cOut/HQ31qf1ThHAgCc3WiZMdnWcfJCgN82/0UunxA==",
       "path": "microsoft.win32.primitives/4.3.0",
       "hashPath": "microsoft.win32.primitives.4.3.0.nupkg.sha512"
-    },
-    "MonoGame.Content.Builder.Task/3.8.1.303": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-9Ilzzje62LhWElbPNEl7vh7XsRSbze+lvCJdZtTZUGu48FRgvYN6THURwIB9PN98EI33/Wnf6iuShNUtD7hL4Q==",
-      "path": "monogame.content.builder.task/3.8.1.303",
-      "hashPath": "monogame.content.builder.task.3.8.1.303.nupkg.sha512"
     },
     "MonoGame.Extended/3.9.0-prerelease.4": {
       "type": "package",
@@ -2142,11 +2113,6 @@
       "hashPath": "zeroallocjobscheduler.1.1.2.nupkg.sha512"
     },
     "Retard.Core/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Retard.Tests/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

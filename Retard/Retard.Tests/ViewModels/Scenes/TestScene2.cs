@@ -5,13 +5,13 @@ using Retard.Core.Models;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.ViewModels.Input;
 
-namespace Retard.Core.ViewModels.Scenes.Tests
+namespace Retard.Tests.ViewModels.Scenes
 {
     /// <summary>
     /// Scène de test pour vérifier qu'elle bloque bien les entrées
     /// pour les scènes la suivant dans la liste
     /// </summary>
-    public sealed class TestScene1 : IScene
+    public sealed class TestScene2 : IScene
     {
         #region Properties
 
@@ -50,7 +50,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <summary>
         /// Constructeur
         /// </summary>
-        public TestScene1() : base()
+        public TestScene2() : base()
         {
             this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
         }
@@ -90,14 +90,14 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void UpdateInput(GameTime gameTime)
         {
-            if (this._keyboardInput.IsKeyPressed(Keys.NumPad7))
+            if (this._keyboardInput.IsKeyPressed(Keys.NumPad8))
             {
                 SceneManager.RemoveActiveAndOverlaidScenes(this);
             }
 
-            if (this._keyboardInput.IsKeyPressed(Keys.NumPad1))
+            if (this._keyboardInput.IsKeyPressed(Keys.NumPad2))
             {
-                SceneManager.SetSceneAsActive<TestScene2>();
+                SceneManager.SetSceneAsActive<TestScene3>();
             }
         }
 
@@ -118,7 +118,7 @@ namespace Retard.Core.ViewModels.Scenes.Tests
         {
             SceneManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
 
-            SceneManager.SpriteBatch.Draw(this._debugTex, Vector2.Zero, Color.White);
+            SceneManager.SpriteBatch.Draw(this._debugTex, new Vector2(this._debugTex.Width + 32, 0), Color.White);
 
             SceneManager.SpriteBatch.End();
         }

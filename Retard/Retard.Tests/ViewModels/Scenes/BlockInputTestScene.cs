@@ -5,7 +5,7 @@ using Retard.Core.Models;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.ViewModels.Input;
 
-namespace Retard.Core.ViewModels.Scenes.Tests
+namespace Retard.Tests.ViewModels.Scenes
 {
     /// <summary>
     /// Scène de test pour vérifier qu'elle bloque bien les entrées

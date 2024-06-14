@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Retard.Core\Retard.Core.csproj" />
+    <ProjectReference Include="..\Retard.Tests\Retard.Tests.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Content\Resources\Textures\Test\tiles_test2.png">
