@@ -64,7 +64,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Chargement du contenu
         /// </summary>
-        public void Initialize()
+        public void OnInitialize()
         {
 
         }
@@ -73,7 +73,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// Màj à chaque frame
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public void LoadContent()
+        public void OnLoadContent()
         {
             this._debugTex = SceneManager.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
         }
@@ -82,7 +82,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// Récupère les inputs nécessaires au fonctionnement des systèmes
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public void UpdateInput(GameTime gameTime)
+        public void OnUpdateInput(GameTime gameTime)
         {
             if (this._keyboardInput.IsKeyPressed(Keys.Enter))
             {
@@ -93,7 +93,16 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Appelée à chaque fois que la scène devient active
         /// </summary>
-        public void Start()
+        public void OnSetActive()
+        {
+
+        }
+
+        /// <summary>
+        /// Màj à chaque frame
+        /// </summary>
+        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        public void OnUpdate(GameTime gameTime)
         {
 
         }
@@ -102,16 +111,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// Pour afficher des éléments à l'écran
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public void Update(GameTime gameTime)
-        {
-
-        }
-
-        /// <summary>
-        /// Pour afficher des éléments à l'écran
-        /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public void Draw(GameTime gameTime)
+        public void OnDraw(GameTime gameTime)
         {
             SceneManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
 

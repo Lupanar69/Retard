@@ -1,5 +1,4 @@
-﻿using System;
-using Arch.Core;
+﻿using Arch.Core;
 using Arch.LowLevel;
 using Arch.System;
 using Microsoft.Xna.Framework;
@@ -19,7 +18,7 @@ namespace Retard.Tests.ViewModels.Scenes
     /// <summary>
     /// Scène de test
     /// </summary>
-    public sealed class SpriteDrawTestScene : IScene, IDisposable
+    public sealed class SpriteDrawTestScene : IScene
     {
         #region Properties
 
@@ -40,11 +39,6 @@ namespace Retard.Tests.ViewModels.Scenes
         #endregion
 
         #region Variables d'instance
-
-        /// <summary>
-        /// <see langword="true"/> si l'on a appelé Dispose()
-        /// </summary>
-        private bool _disposedValue;
 
         /// <summary>
         /// La caméra du jeu
@@ -102,16 +96,6 @@ namespace Retard.Tests.ViewModels.Scenes
             SceneManager.World.Reserve(_spriteArchetype, _size.X * _size.Y);
         }
 
-        /// <summary>
-        /// Nettoie l'objet
-        /// </summary>
-        //// TODO: override finalizer only if 'Dispose(bool disposingManaged)' has code to free unmanaged resources
-        //~SpriteDrawTestScene()
-        //{
-        //    // Do not change this code. Put cleanup code in 'Dispose(bool disposingManaged)' method
-        //    Dispose(disposingManaged: false);
-        //}
-
         #endregion
 
         #region Méthodes publiques
@@ -119,7 +103,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Chargement du contenu
         /// </summary>
-        public void Initialize()
+        public void OnInitialize()
         {
             this._updateSystems = new Group<float>("Update Systems");
             this._drawSystems = new Group<byte>("Draw Systems");
@@ -128,7 +112,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
-        public void LoadContent()
+        public void OnLoadContent()
         {
             Texture2D debugTex = SceneManager.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
             this._spriteAtlas = new(debugTex, 4, 4);
@@ -145,7 +129,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Appelée à chaque fois que la scène devient active
         /// </summary>
-        public void Start()
+        public void OnSetActive()
         {
 
         }
@@ -154,7 +138,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// Récupère les inputs nécessaires au fonctionnement des systèmes
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public void UpdateInput(GameTime gameTime)
+        public void OnUpdateInput(GameTime gameTime)
         {
             if (this._keyboardInput.IsKeyPressed(Keys.Space))
             {
@@ -163,10 +147,10 @@ namespace Retard.Tests.ViewModels.Scenes
         }
 
         /// <summary>
-        /// Pour afficher des éléments à l'écran
+        /// Màj à chaque frame
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public void Update(GameTime gameTime)
+        public void OnUpdate(GameTime gameTime)
         {
             this._updateSystems.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
         }
@@ -175,42 +159,14 @@ namespace Retard.Tests.ViewModels.Scenes
         /// Pour afficher des éléments à l'écran
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public void Draw(GameTime gameTime)
+        public void OnDraw(GameTime gameTime)
         {
             this._drawSystems.Update(0);
-        }
-
-        /// <summary>
-        /// Nettoie l'objet
-        /// </summary>
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            this.Dispose(disposingManaged: true);
-            GC.SuppressFinalize(this);
         }
 
         #endregion
 
         #region Méthodes privées
-
-        /// <summary>
-        /// Nettoie l'objet
-        /// </summary>
-        /// <param name="disposingManaged"><see langword="true"/> si on doit nettoyer des objets</param>
-        private void Dispose(bool disposingManaged)
-        {
-            if (!this._disposedValue)
-            {
-                if (disposingManaged)
-                {
-                    this._updateSystems.Dispose();
-                    this._drawSystems.Dispose();
-                }
-
-                this._disposedValue = true;
-            }
-        }
 
         /// <summary>
         /// Crée les entités des sprites

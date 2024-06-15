@@ -31,35 +31,35 @@ namespace Retard.Core.Models.Assets.Scene
         /// <summary>
         /// Init
         /// </summary
-        public abstract void Initialize();
+        public abstract void OnInitialize();
 
         /// <summary>
         /// Chargement du contenu
         /// </summary>
-        public abstract void LoadContent();
+        public abstract void OnLoadContent();
 
         /// <summary>
         /// Appelée à chaque fois que la scène devient active
         /// </summary>
-        public abstract void Start();
+        public abstract void OnSetActive();
 
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public abstract void UpdateInput(GameTime gameTime);
+        public abstract void OnUpdateInput(GameTime gameTime);
 
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public abstract void Update(GameTime gameTime);
+        public abstract void OnUpdate(GameTime gameTime);
 
         /// <summary>
         /// Pour afficher des éléments à l'écran
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public abstract void Draw(GameTime gameTime);
+        public abstract void OnDraw(GameTime gameTime);
 
         #endregion
     }

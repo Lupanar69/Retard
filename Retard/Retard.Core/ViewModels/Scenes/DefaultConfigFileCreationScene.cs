@@ -1,18 +1,16 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+﻿using System.IO;
+using Microsoft.Xna.Framework;
 using Retard.Core.Models;
 using Retard.Core.Models.Assets.Scene;
-using Retard.Core.ViewModels.Input;
-using Retard.Core.ViewModels.Scenes;
+using Retard.Core.ViewModels.JSON;
 
-namespace Retard.Tests.ViewModels.Scenes
+namespace Retard.Core.ViewModels.Scenes
 {
     /// <summary>
-    /// Scène de test pour vérifier qu'elle bloque bien les entrées
-    /// pour les scènes la suivant dans la liste
+    /// Crée les fichiers de configuration par défaut (paramètres, input, etc.)
+    /// avant de se désactiver
     /// </summary>
-    public sealed class TestScene3 : IScene
+    public sealed class DefaultConfigFileCreationScene : IScene
     {
         #region Properties
 
@@ -32,28 +30,14 @@ namespace Retard.Tests.ViewModels.Scenes
 
         #endregion
 
-        #region Variables d'instance
-
-        /// <summary>
-        /// Texture de test
-        /// </summary>
-        private Texture2D _debugTex;
-
-        /// <summary>
-        /// Le contrôleur pour clavier
-        /// </summary>
-        private readonly KeyboardInput _keyboardInput;
-
-        #endregion
-
         #region Constructeur
 
         /// <summary>
         /// Constructeur
         /// </summary>
-        public TestScene3() : base()
+        public DefaultConfigFileCreationScene()
         {
-            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
+
         }
 
         #endregion
@@ -71,10 +55,9 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void OnLoadContent()
         {
-            this._debugTex = SceneManager.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
+
         }
 
         /// <summary>
@@ -82,7 +65,11 @@ namespace Retard.Tests.ViewModels.Scenes
         /// </summary>
         public void OnSetActive()
         {
+            // Crée les fichiers de config par défaut
+            // et retire la scène
 
+            DefaultConfigFileCreationScene.CreateDefaultConfigFiles();
+            SceneManager.RemoveActiveScene(this);
         }
 
         /// <summary>
@@ -91,10 +78,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void OnUpdateInput(GameTime gameTime)
         {
-            if (this._keyboardInput.IsKeyPressed(Keys.NumPad9))
-            {
-                SceneManager.RemoveActiveAndOverlaidScenes(this);
-            }
+
         }
 
         /// <summary>
@@ -112,11 +96,44 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void OnDraw(GameTime gameTime)
         {
-            SceneManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
 
-            SceneManager.SpriteBatch.Draw(this._debugTex, new Vector2((this._debugTex.Width + 32) * 2, 0), Color.White);
+        }
 
-            SceneManager.SpriteBatch.End();
+        #endregion
+
+        #region Méthodes statiques privées
+
+        /// <summary>
+        /// Crée les fichiers de config par défaut
+        /// </summary>
+        private static void CreateDefaultConfigFiles()
+        {
+            // Crée les fichiers de config des entrées par défaut.
+            // On les réécrit à chaque lancement du jeu au cas où le joueur
+            // les aurait modifié.
+
+            string defaultInputConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_INPUT_CONFIG_PATH}";
+
+            JsonUtilities.CreatPathIfNotExists(defaultInputConfigPath);
+
+            string defaultInputConfigJson = JsonUtilities.SerializeObject(Constants.DEFAULT_INPUT_CONFIG);
+
+            JsonUtilities.WriteToFile(defaultInputConfigJson, defaultInputConfigPath);
+
+            // Crée les fichiers personnalisés uniquement s'il n'existent pas,
+            // pour éviter d'effacer les préférences du joueur
+
+            string customInputConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.CUSTOM_INPUT_CONFIG_PATH}";
+
+            if (!File.Exists(customInputConfigPath))
+            {
+                JsonUtilities.CreatPathIfNotExists(customInputConfigPath);
+
+                JsonUtilities.WriteToFile(defaultInputConfigJson, customInputConfigPath);
+
+                //string json = JsonUtilities.ReadFile(customInputConfigPath);
+                //var config = JsonUtilities.DeserializeObject<InputConfigDTO>(json);
+            }
         }
 
         #endregion

@@ -3,10 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using Retard.Core.Models;
-using Retard.Core.Models.DTOs.Input;
 using Retard.Core.ViewModels.Input;
-using Retard.Core.ViewModels.JSON;
 using Retard.Core.ViewModels.Scenes;
 using Retard.Tests.ViewModels.Scenes;
 
@@ -73,10 +70,6 @@ namespace Retard.Client
         /// </summary>
         protected override void Initialize()
         {
-            // Crée les fichiers de config par défaut
-
-            CreateDefaultConfigFiles();
-
             // Initialise les components
 
             this._spriteBatch = new SpriteBatch(this.GraphicsDevice);
@@ -173,7 +166,8 @@ namespace Retard.Client
         /// </summary>
         private void InitializeSceneManager()
         {
-            SceneManager.Initialize(1, this.Content, this._world, this._spriteBatch);
+            SceneManager.Initialize(3, this.Content, this._world, this._spriteBatch);
+            SceneManager.AddSceneToPool(new DefaultConfigFileCreationScene());
             SceneManager.AddSceneToPool(new OrthographicCameraScene(this._camera));
 
 #if TESTS
@@ -189,29 +183,7 @@ namespace Retard.Client
 #endif
 
             SceneManager.SetSceneAsActive<OrthographicCameraScene>();
-        }
-
-        #endregion
-
-        #region Fonctions statiques privées
-
-        /// <summary>
-        /// Crée les fichiers de config par défaut
-        /// </summary>
-        private static void CreateDefaultConfigFiles()
-        {
-            // Crée le fichier de config des entrées par défaut
-
-            string defaultInputConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_INPUT_CONFIG_PATH}";
-
-            JsonUtilities.CreatPathIfNotExists(defaultInputConfigPath);
-
-            string defaultInputConfigJson = JsonUtilities.SerializeObject(Constants.DEFAULT_INPUT_CONFIG);
-
-            JsonUtilities.WriteToFile(defaultInputConfigJson, defaultInputConfigPath);
-
-            string json = JsonUtilities.ReadFile(defaultInputConfigPath);
-            var config = JsonUtilities.DeserializeObject<InputConfigDTO>(json);
+            SceneManager.SetSceneAsActive<DefaultConfigFileCreationScene>();
         }
 
         #endregion
