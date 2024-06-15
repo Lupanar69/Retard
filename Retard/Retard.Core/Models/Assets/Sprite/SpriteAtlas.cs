@@ -50,11 +50,12 @@ namespace Retard.Core.Models.Assets.Sprites
         /// Calcule les dimensions du sprite
         /// </summary>
         /// <param name="frame">L'id du sprite dans l'atlas à afficher</param>
+        /// <param name="spriteSize">La taille du sprite à récupérer (1x1, 2x2, etc.)</param>
         /// <returns>Les dimensions du sprite</returns>
-        public Rectangle GetSpriteRect(int frame)
+        public Rectangle GetSpriteRect(int frame, int spriteSize = 1)
         {
-            int width = this.Texture.Width / this.Columns;
-            int height = this.Texture.Height / this.Rows;
+            int width = this.Texture.Width / this.Columns * spriteSize;
+            int height = this.Texture.Height / this.Rows * spriteSize;
             int row = frame / this.Columns;
             int column = frame % this.Columns;
 
