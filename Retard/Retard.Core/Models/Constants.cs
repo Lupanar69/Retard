@@ -22,7 +22,7 @@ namespace Retard.Core.Models
         public static readonly WindowSettings DEFAULT_WIDNDOW_SETTINGS = new()
         {
             WindowSize = new Point(800, 600),
-            FullScreen = true,
+            FullScreen = false,
             MouseVisible = true,
             AllowUserResizing = true,
         };
