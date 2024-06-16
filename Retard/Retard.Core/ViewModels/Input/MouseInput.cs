@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models.Assets.Input;
+using Retard.Core.ViewModels.App;
 
 namespace Retard.Core.ViewModels.Input
 {
@@ -31,15 +32,6 @@ namespace Retard.Core.ViewModels.Input
         }
 
         /// <summary>
-        /// Les dimensions de la fenêtre
-        /// </summary>
-        public Vector2 WindowSize
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// <see langword="true"/> si le curseur de la souris est dans la fenêtre
         /// </summary>
         public bool IsCursorInsideWindow
@@ -64,27 +56,6 @@ namespace Retard.Core.ViewModels.Input
 
         #endregion
 
-        #region Constructeur
-
-        /// <summary>
-        /// Constructeur
-        /// </summary>
-        public MouseInput()
-        {
-
-        }
-
-        /// <summary>
-        /// Constructeur
-        /// </summary>
-        /// <param name="windowSize">Les dimensions de la fenêtre</param>
-        public MouseInput(Vector2 windowSize)
-        {
-            this.WindowSize = windowSize;
-        }
-
-        #endregion
-
         #region Méthodes publiques
 
         /// <summary>
@@ -98,7 +69,7 @@ namespace Retard.Core.ViewModels.Input
             Point mouseDelta = this._curState.Position - this._previousState.Position;
             this.MousePosDelta = new Vector2(mouseDelta.X, mouseDelta.Y);
             this.MousePos = new Vector2(curMousePos.X, curMousePos.Y);
-            this.IsCursorInsideWindow = this.MousePos.X > 0 && this.MousePos.X < this.WindowSize.X && this.MousePos.Y > 0 && this.MousePos.Y < this.WindowSize.Y;
+            this.IsCursorInsideWindow = this.MousePos.X > 0 && this.MousePos.X < AppViewport.WindowResolution.X && this.MousePos.Y > 0 && this.MousePos.Y < AppViewport.WindowResolution.Y;
         }
 
         /// <summary>

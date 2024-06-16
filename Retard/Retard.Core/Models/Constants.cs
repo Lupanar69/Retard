@@ -1,5 +1,7 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Retard.Core.Models.App;
 using Retard.Core.Models.Assets.Input;
 using Retard.Core.Models.DTOs.Input;
 
@@ -11,6 +13,31 @@ namespace Retard.Core.Models
     public static class Constants
     {
         #region Constants
+
+        #region App
+
+        /// <summary>
+        /// La taille par défaut de la fenêtre
+        /// </summary>
+        public static readonly WindowSettings DEFAULT_WIDNDOW_SETTINGS = new()
+        {
+            WindowSize = new Point(800, 600),
+            FullScreen = false,
+            MouseVisible = true,
+            AllowUserResizing = true,
+        };
+
+        /// <summary>
+        /// Le framerate par défaut de l'appli si active
+        /// </summary>
+        public static readonly int DEFAULT_FOCUSED_FRAMERATE = 60;
+
+        /// <summary>
+        /// Le framerate par défaut de l'appli si active
+        /// </summary>
+        public static readonly int DEFAULT_UNFOCUSED_FRAMERATE = 30;
+
+        #endregion
 
         #region Content
 
@@ -83,7 +110,7 @@ namespace Retard.Core.Models
 
         #endregion
 
-        #region Rendering
+        #region Draw
 
         /// <summary>
         /// La taille d'un sprite en pixels

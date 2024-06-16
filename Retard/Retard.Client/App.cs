@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Retard.Core.Models;
+using Retard.Core.ViewModels.App;
 using Retard.Core.ViewModels.Controllers;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
@@ -58,10 +59,9 @@ namespace Retard.Client
         /// </summary>
         public App()
         {
-            this._graphicsDeviceManager = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
-
-            this.SetupGameWindow(800, 600, false);
+            AppViewport.Initialize(this);
+            AppPerformance.Initialize(this);
         }
 
         #endregion
@@ -75,8 +75,7 @@ namespace Retard.Client
         {
             // Initialise les inputs
 
-            Vector2 windowSize = new(this._graphicsDeviceManager.PreferredBackBufferWidth, this._graphicsDeviceManager.PreferredBackBufferHeight);
-            InputManager.Initialize(new KeyboardInput(), new MouseInput(windowSize), new GamePadInput());
+            InputManager.Initialize(new KeyboardInput(), new MouseInput(), new GamePadInput());
             this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
             this._gamePadInput = InputManager.GetScheme<GamePadInput>();
 
@@ -169,25 +168,6 @@ namespace Retard.Client
         #endregion
 
         #region Fonctions privées
-
-        /// <summary>
-        /// Initialise la fenêtre de jeu
-        /// </summary>
-        /// <param name="resolutionX">La résolution en X de la fenêtre</param>
-        /// <param name="resolutionY">La résolution en Y de la fenêtre</param>
-        /// <param name="fullScreen"><see langword="true"/> pour passer la fenêtre en plein écran</param>
-        /// <param name="mouseVisible"><see langword="true"/> si la souris doit rester visible</param>
-        /// <param name="allowUserResizing"><see langword="true"/> si le joueur peut redimensionner la fenêtre</param>
-        private void SetupGameWindow(int resolutionX, int resolutionY, bool fullScreen = true, bool mouseVisible = true, bool allowUserResizing = true)
-        {
-            this.IsMouseVisible = mouseVisible;
-            this.Window.AllowUserResizing = allowUserResizing;
-
-            this._graphicsDeviceManager.PreferredBackBufferWidth = resolutionX;
-            this._graphicsDeviceManager.PreferredBackBufferHeight = resolutionY;
-            this._graphicsDeviceManager.IsFullScreen = fullScreen;
-            this._graphicsDeviceManager.ApplyChanges();
-        }
 
         /// <summary>
         /// Crée toutes les scènes utilisées par le jeu
