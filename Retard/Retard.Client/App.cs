@@ -148,7 +148,7 @@ namespace Retard.Client
         /// <param name="args">vide</param>
         protected override void OnActivated(object sender, EventArgs args)
         {
-            GameState.GameIsActivated = true;
+            GameState.GameHasFocus = true;
 
             base.OnActivated(sender, args);
         }
@@ -160,7 +160,7 @@ namespace Retard.Client
         /// <param name="args">vide</param>
         protected override void OnDeactivated(object sender, EventArgs args)
         {
-            GameState.GameIsActivated = false;
+            GameState.GameHasFocus = false;
 
             base.OnActivated(sender, args);
         }

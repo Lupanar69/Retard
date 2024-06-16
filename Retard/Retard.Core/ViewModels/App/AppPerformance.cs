@@ -9,15 +9,6 @@ namespace Retard.Core.ViewModels.App
     /// </summary>
     public static class AppPerformance
     {
-        #region Propriétés
-
-        /// <summary>
-        /// <see langword="true"/> si la fenêtre a le focus
-        /// </summary>
-        public static bool WindowHasFocus { get; private set; }
-
-        #endregion
-
         #region Variables statiques
 
         /// <summary>
@@ -36,6 +27,11 @@ namespace Retard.Core.ViewModels.App
         /// each time the game window is set in the background
         /// </summary>
         private static int _userDefinedUnfocusedFrameRate = Constants.DEFAULT_UNFOCUSED_FRAMERATE;
+
+        /// <summary>
+        /// <see langword="true"/> si la fenêtre a le focus
+        /// </summary>
+        private static bool _windowHasFocus;
 
         #endregion
 
@@ -58,7 +54,7 @@ namespace Retard.Core.ViewModels.App
         /// <param name="framerate">The new framerate to reach</param>
         public static void SetFocusedFramerate(int framerate)
         {
-            if (AppPerformance.WindowHasFocus)
+            if (AppPerformance._windowHasFocus)
             {
                 AppPerformance._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)framerate);
             }
@@ -72,7 +68,7 @@ namespace Retard.Core.ViewModels.App
         /// <param name="framerate">The new framerate to reach</param>
         public static void SetUnfocusedFramerate(int framerate)
         {
-            if (!AppPerformance.WindowHasFocus)
+            if (!AppPerformance._windowHasFocus)
             {
                 AppPerformance._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)framerate);
             }
@@ -100,7 +96,7 @@ namespace Retard.Core.ViewModels.App
         /// <param name="e">vide</param>
         private static void OnActivatedCallback(object sender, EventArgs e)
         {
-            AppPerformance.WindowHasFocus = true;
+            AppPerformance._windowHasFocus = true;
             AppPerformance._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)AppPerformance._userDefinedFocusedFrameRate);
         }
 
@@ -111,7 +107,7 @@ namespace Retard.Core.ViewModels.App
         /// <param name="e">vide</param>
         private static void OnDeactivatedCallback(object sender, EventArgs e)
         {
-            AppPerformance.WindowHasFocus = false;
+            AppPerformance._windowHasFocus = false;
             AppPerformance._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)AppPerformance._userDefinedUnfocusedFrameRate);
         }
 

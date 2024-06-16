@@ -11,7 +11,7 @@
         /// <summary>
         /// <see langword="true"/> si la fenêtre a le focus
         /// </summary>
-        public static bool GameIsActivated { get; set; }
+        public static bool GameHasFocus { get; set; }
 
         #endregion
     }

@@ -70,7 +70,7 @@ namespace Retard.Core.ViewModels.Controllers
                 this.Camera.Position = Vector2.Zero;
             }
 
-            if (GameState.GameIsActivated && this._mouseInput.IsCursorInsideWindow && this._mouseInput.LeftMouseHeld())
+            if (GameState.GameHasFocus && this._mouseInput.IsCursorInsideWindow && this._mouseInput.LeftMouseHeld())
             {
                 this.Camera.Move(-this._mouseInput.MousePosDelta);
             }
