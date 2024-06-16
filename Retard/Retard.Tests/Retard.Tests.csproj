@@ -2,8 +2,19 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Arch" Version="1.2.8" />
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DefineConstants>$(DefineConstants);ENABLE_LOGS;TESTS</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DefineConstants>$(DefineConstants);ENABLE_LOGS;TESTS</DefineConstants>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<Using Include="Retard.Core.ViewModels.Tests.log" Static="True" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Arch" Version="1.2.8" />
     <PackageReference Include="Arch.LowLevel" Version="1.1.1" />
     <PackageReference Include="MonoGame.Extended" Version="3.9.0-prerelease.4" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />

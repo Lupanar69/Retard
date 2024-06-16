@@ -1,4 +1,5 @@
-﻿using Arch.Core;
+﻿using System.Runtime.CompilerServices;
+using Arch.Core;
 using Arch.LowLevel;
 using Arch.System;
 using Microsoft.Xna.Framework;
@@ -6,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Retard.Core.Components.Sprites;
+using Retard.Core.Entities;
 using Retard.Core.Models;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.Models.Assets.Sprites;
@@ -88,12 +90,12 @@ namespace Retard.Tests.ViewModels.Scenes
         /// Constructeur
         /// </summary>
         /// <param name="camera">La caméra du jeu</param>
-        public SpriteDrawTestScene(OrthographicCamera camera)
+        /// <param name="size">La taille de la carte à dessiner</param>
+        public SpriteDrawTestScene(OrthographicCamera camera, Point size)
         {
             this._camera = camera;
             this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
-            this._size = new Point(60);
-            SceneManager.World.Reserve(_spriteArchetype, _size.X * _size.Y);
+            this._size = size;
         }
 
         #endregion
@@ -105,6 +107,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// </summary>
         public void OnInitialize()
         {
+            SceneManager.World.Reserve(_spriteArchetype, _size.X * _size.Y);
             this._updateSystems = new Group<float>("Update Systems");
             this._drawSystems = new Group<byte>("Draw Systems");
         }
@@ -172,51 +175,76 @@ namespace Retard.Tests.ViewModels.Scenes
         /// Crée les entités des sprites
         /// pour tester les systèmes d'affihage
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void CreateSpriteEntities()
         {
-            using UnsafeArray<Entity> es = new(this._size.X * this._size.Y);
+            using UnsafeArray<Rectangle> rects = this.GetSpritesRects();
+            using UnsafeArray<Vector2> positions = this.GetSpritesPositions();
+
+            // Crée tous les sprites en un seul appel
+
+            EntityFactory.CreateSpriteEntities(SceneManager.World, positions, rects);
+        }
+
+        /// <summary>
+        /// Calcule les dimensions de chaque sprite sur la grille
+        /// </summary>
+        /// <returns>Les dimensions des sprites</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private UnsafeArray<Rectangle> GetSpritesRects()
+        {
+            UnsafeArray<Rectangle> rects = new(this._size.X * this._size.Y);
             int count = 0;
 
-            for (int y = 0; y < this._size.Y; y++)
+            for (int i = 0; i < this._size.X; ++i)
             {
-                for (int x = 0; x < this._size.X; x++)
+                rects[i] = this._spriteAtlas.GetSpriteRect(0);
+            }
+
+            count += _size.X;
+
+            for (int y = 1; y < this._size.Y - 1; ++y)
+            {
+                rects[count] = this._spriteAtlas.GetSpriteRect(0);
+
+                for (int x = 1; x < this._size.X - 1; ++x)
                 {
-                    Entity e = es[x + count] = SceneManager.World.Create(this._spriteArchetype);
-                    SceneManager.World.Set(e, new SpritePositionCD(new Vector2(x, y) * Constants.SPRITE_SIZE_PIXELS));
+                    rects[x + count] = this._spriteAtlas.GetSpriteRect(1);
+                }
+
+                rects[count + this._size.X - 1] = this._spriteAtlas.GetSpriteRect(0);
+                count += _size.X;
+            }
+
+            for (int i = count; i < count + this._size.X; ++i)
+            {
+                rects[i] = this._spriteAtlas.GetSpriteRect(0);
+            }
+
+            return rects;
+        }
+
+        /// <summary>
+        /// Calcule les positions de chaque sprite sur la grille
+        /// </summary>
+        /// <returns>Les positions des sprites</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private UnsafeArray<Vector2> GetSpritesPositions()
+        {
+            UnsafeArray<Vector2> positions = new(this._size.X * this._size.Y);
+            int count = 0;
+
+            for (int y = 0; y < this._size.Y; ++y)
+            {
+                for (int x = 0; x < this._size.X; ++x)
+                {
+                    positions[x + count] = new Vector2(x, y) * Constants.SPRITE_SIZE_PIXELS;
                 }
 
                 count += this._size.X;
             }
 
-            SceneManager.World.Set(in this._spriteDesc, new SpriteColorCD(Color.White));
-            count = 0;
-
-            for (int i = 0; i < this._size.X; i++)
-            {
-                SceneManager.World.Set(es[i], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(0) });
-            }
-
-            count += _size.X;
-
-
-            for (int y = 1; y < this._size.Y - 1; y++)
-            {
-                SceneManager.World.Set(es[count], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(0) });
-
-                for (int x = 1; x < this._size.X - 1; x++)
-                {
-                    SceneManager.World.Set(es[x + count], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(1) });
-                }
-
-                SceneManager.World.Set(es[count + this._size.X - 1], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(0) });
-
-                count += _size.X;
-            }
-
-            for (int i = count; i < count + this._size.X; i++)
-            {
-                SceneManager.World.Set(es[i], new SpriteRectCD() { Value = this._spriteAtlas.GetSpriteRect(0) });
-            }
+            return positions;
         }
 
         #endregion

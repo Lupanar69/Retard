@@ -8,7 +8,7 @@ namespace Retard.Core.ViewModels.Input
     /// <summary>
     /// Utilitaire pour gérer les entrées manette
     /// </summary>
-    public class GamePadInput : IInputScheme
+    public sealed class GamePadInput : IInputScheme
     {
         #region Variables statiques privées
 

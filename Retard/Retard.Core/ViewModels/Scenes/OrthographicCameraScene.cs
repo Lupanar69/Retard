@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using MonoGame.Extended;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.ViewModels.Controllers;
 
@@ -36,11 +35,6 @@ namespace Retard.Core.ViewModels.Scenes
         /// </summary>
         private readonly OrthographicCameraController _cameraController;
 
-        /// <summary>
-        /// La caméra du jeu
-        /// </summary>
-        private readonly OrthographicCamera _camera;
-
         #endregion
 
         #region Constructeur
@@ -48,11 +42,10 @@ namespace Retard.Core.ViewModels.Scenes
         /// <summary>
         /// Constructeur
         /// </summary>
-        /// <param name="camera">La caméra du jeu</param>
-        public OrthographicCameraScene(OrthographicCamera camera)
+        /// <param name="cameraController">Le contrôleur de la caméra du jeu</param>
+        public OrthographicCameraScene(OrthographicCameraController cameraController)
         {
-            this._camera = camera;
-            this._cameraController = new OrthographicCameraController(this._camera);
+            this._cameraController = cameraController;
         }
 
         #endregion
@@ -89,7 +82,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void OnUpdateInput(GameTime gameTime)
         {
-            this._cameraController.Update(gameTime);
+            this._cameraController.Update();
         }
 
         /// <summary>

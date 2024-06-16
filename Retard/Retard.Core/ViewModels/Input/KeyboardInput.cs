@@ -6,7 +6,7 @@ namespace Retard.Core.ViewModels.Input
     /// <summary>
     /// Utilitaire pour gérer les entrées clavier
     /// </summary>
-    public class KeyboardInput : IInputScheme
+    public sealed class KeyboardInput : IInputScheme
     {
         #region Variables statiques privées
 

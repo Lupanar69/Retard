@@ -1,8 +1,11 @@
-﻿using Arch.Core;
+﻿using System;
+using Arch.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using Retard.Core.Models;
+using Retard.Core.ViewModels.Controllers;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
 using Retard.Tests.ViewModels.Scenes;
@@ -29,7 +32,7 @@ namespace Retard.Client
         /// <summary>
         /// La caméra du jeu
         /// </summary>
-        private OrthographicCamera _camera;
+        private OrthographicCameraController _cameraController;
 
         /// <summary>
         /// Le monde contenant les entités
@@ -70,17 +73,18 @@ namespace Retard.Client
         /// </summary>
         protected override void Initialize()
         {
+            // Initialise les inputs
+
+            Vector2 windowSize = new(this._graphicsDeviceManager.PreferredBackBufferWidth, this._graphicsDeviceManager.PreferredBackBufferHeight);
+            InputManager.Initialize(new KeyboardInput(), new MouseInput(windowSize), new GamePadInput());
+            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
+            this._gamePadInput = InputManager.GetScheme<GamePadInput>();
+
             // Initialise les components
 
             this._spriteBatch = new SpriteBatch(this.GraphicsDevice);
-            this._camera = new OrthographicCamera(this.GraphicsDevice);
+            this._cameraController = new OrthographicCameraController(new OrthographicCamera(this.GraphicsDevice));
             this._world = World.Create();
-
-            // Initialise les inputs
-
-            InputManager.Initialize(new KeyboardInput(), new MouseInput(), new GamePadInput());
-            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
-            this._gamePadInput = InputManager.GetScheme<GamePadInput>();
 
             // Initialise les scènes
 
@@ -138,6 +142,30 @@ namespace Retard.Client
             base.Draw(gameTime);
         }
 
+        /// <summary>
+        /// Quand la fenêtre gagne le focus
+        /// </summary>
+        /// <param name="sender">l'app</param>
+        /// <param name="args">vide</param>
+        protected override void OnActivated(object sender, EventArgs args)
+        {
+            GameState.GameIsActivated = true;
+
+            base.OnActivated(sender, args);
+        }
+
+        /// <summary>
+        /// Quand la fenêtre gagne le focus
+        /// </summary>
+        /// <param name="sender">l'app</param>
+        /// <param name="args">vide</param>
+        protected override void OnDeactivated(object sender, EventArgs args)
+        {
+            GameState.GameIsActivated = false;
+
+            base.OnActivated(sender, args);
+        }
+
         #endregion
 
         #region Fonctions privées
@@ -168,14 +196,14 @@ namespace Retard.Client
         {
             SceneManager.Initialize(3, this.Content, this._world, this._spriteBatch);
             SceneManager.AddSceneToPool(new DefaultConfigFileCreationScene());
-            SceneManager.AddSceneToPool(new OrthographicCameraScene(this._camera));
+            SceneManager.AddSceneToPool(new OrthographicCameraScene(this._cameraController));
 
 #if TESTS
             //SceneManager.AddSceneToPool(new TestScene1());
             //SceneManager.AddSceneToPool(new TestScene2());
             //SceneManager.AddSceneToPool(new TestScene3());
             //SceneManager.SetSceneAsActive<TestScene1>();
-            SceneManager.AddSceneToPool(new SpriteDrawTestScene(this._camera));
+            SceneManager.AddSceneToPool(new SpriteDrawTestScene(this._cameraController.Camera, new Point(100)));
             //SceneManager.AddSceneToPool(new BlockDrawTestScene());
             //SceneManager.AddSceneToPool(new BlockInputTestScene());
             SceneManager.SetSceneAsActive<SpriteDrawTestScene>();

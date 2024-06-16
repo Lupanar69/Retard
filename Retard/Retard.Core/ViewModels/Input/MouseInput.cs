@@ -7,7 +7,7 @@ namespace Retard.Core.ViewModels.Input
     /// <summary>
     /// Utilitaire pour gérer les entrées souris
     /// </summary>
-    public class MouseInput : IInputScheme
+    public sealed class MouseInput : IInputScheme
     {
         #region Propriétés
 
@@ -30,6 +30,24 @@ namespace Retard.Core.ViewModels.Input
             private set;
         }
 
+        /// <summary>
+        /// Les dimensions de la fenêtre
+        /// </summary>
+        public Vector2 WindowSize
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> si le curseur de la souris est dans la fenêtre
+        /// </summary>
+        public bool IsCursorInsideWindow
+        {
+            get;
+            private set;
+        }
+
         #endregion
 
         #region Variables statiques privées
@@ -46,7 +64,28 @@ namespace Retard.Core.ViewModels.Input
 
         #endregion
 
-        #region Méthodes statiques publiques
+        #region Constructeur
+
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        public MouseInput()
+        {
+
+        }
+
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        /// <param name="windowSize">Les dimensions de la fenêtre</param>
+        public MouseInput(Vector2 windowSize)
+        {
+            this.WindowSize = windowSize;
+        }
+
+        #endregion
+
+        #region Méthodes publiques
 
         /// <summary>
         /// Màj le MouseState actuel
@@ -59,6 +98,7 @@ namespace Retard.Core.ViewModels.Input
             Point mouseDelta = this._curState.Position - this._previousState.Position;
             this.MousePosDelta = new Vector2(mouseDelta.X, mouseDelta.Y);
             this.MousePos = new Vector2(curMousePos.X, curMousePos.Y);
+            this.IsCursorInsideWindow = this.MousePos.X > 0 && this.MousePos.X < this.WindowSize.X && this.MousePos.Y > 0 && this.MousePos.Y < this.WindowSize.Y;
         }
 
         /// <summary>

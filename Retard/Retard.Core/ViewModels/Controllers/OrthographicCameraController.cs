@@ -1,7 +1,7 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using Retard.Core.Models;
 using Retard.Core.ViewModels.Input;
 
 namespace Retard.Core.ViewModels.Controllers
@@ -9,7 +9,7 @@ namespace Retard.Core.ViewModels.Controllers
     /// <summary>
     /// Permet de déplacer la caméra dans la scène
     /// </summary>
-    public sealed class OrthographicCameraController : IDisposable
+    public sealed class OrthographicCameraController
     {
         #region Propriétés
 
@@ -25,11 +25,6 @@ namespace Retard.Core.ViewModels.Controllers
         #endregion
 
         #region Variables d'instance
-
-        /// <summary>
-        /// <see langword="true"/> si l'on a appelé Dispose()
-        /// </summary>
-        private bool _disposedValue;
 
         /// <summary>
         /// La touche pour replacer la caméra à sa position d'origine 
@@ -61,16 +56,6 @@ namespace Retard.Core.ViewModels.Controllers
             this._mouseInput = InputManager.GetScheme<MouseInput>();
         }
 
-        /// <summary>
-        /// Nettoie l'objet
-        /// </summary>
-        //// TODO: override finalizer only if 'Dispose(bool disposingManaged)' has code to free unmanaged resources
-        //~OrthographicCameraController()
-        //{
-        //    // Do not change this code. Put cleanup code in 'Dispose(bool disposingManaged)' method
-        //    Dispose(disposingManaged: false);
-        //}
-
         #endregion
 
         #region Méthodes publiques
@@ -78,48 +63,16 @@ namespace Retard.Core.ViewModels.Controllers
         /// <summary>
         /// Màj les commandes de la caméra
         /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public void Update(GameTime gameTime)
+        public void Update()
         {
             if (this._keyboardInput.IsKeyPressed(this._resetKey))
             {
                 this.Camera.Position = Vector2.Zero;
             }
 
-            if (this._mouseInput.LeftMouseHeld())
+            if (GameState.GameIsActivated && this._mouseInput.IsCursorInsideWindow && this._mouseInput.LeftMouseHeld())
             {
                 this.Camera.Move(-this._mouseInput.MousePosDelta);
-            }
-        }
-
-        /// <summary>
-        /// Nettoie l'objet
-        /// </summary>
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            this.Dispose(disposingManaged: true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
-
-        #region Méthodes privées
-
-        /// <summary>
-        /// Nettoie l'objet
-        /// </summary>
-        /// <param name="disposingManaged"><see langword="true"/> si on doit nettoyer des objets</param>
-        private void Dispose(bool disposingManaged)
-        {
-            if (!this._disposedValue)
-            {
-                if (disposingManaged)
-                {
-
-                }
-
-                this._disposedValue = true;
             }
         }
 
