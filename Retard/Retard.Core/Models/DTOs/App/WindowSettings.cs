@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 
-namespace Retard.Core.Models.App
+namespace Retard.Core.Models.DTOs.App
 {
     /// <summary>
     /// Paramètres de la fenêtre
@@ -12,21 +13,25 @@ namespace Retard.Core.Models.App
         /// <summary>
         /// La résolution de la fenêtre
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
         public Point WindowSize;
 
         /// <summary>
         /// La résolution de la fenêtre
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
         public bool FullScreen;
 
         /// <summary>
         /// La résolution de la fenêtre
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
         public bool MouseVisible;
 
         /// <summary>
         /// La résolution de la fenêtre
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
         public bool AllowUserResizing;
 
         #endregion

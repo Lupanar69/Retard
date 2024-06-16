@@ -1,7 +1,8 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Retard.Core.Models;
-using Retard.Core.Models.App;
+using Retard.Core.Models.DTOs.App;
+using Retard.Core.ViewModels.JSON;
 
 namespace Retard.Core.ViewModels.App
 {
@@ -61,7 +62,12 @@ namespace Retard.Core.ViewModels.App
         {
             AppViewport._game = game;
             AppViewport._graphicsDeviceManager = new GraphicsDeviceManager(game);
-            WindowSettings ws = Constants.DEFAULT_WIDNDOW_SETTINGS;
+
+            string customAppSettingsConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.CUSTOM_APP_SETTINGS_CONFIG_PATH}";
+            string json = JsonUtilities.ReadFile(customAppSettingsConfigPath);
+            var config = JsonUtilities.DeserializeObject<AppSettingsDTO>(json);
+            WindowSettings ws = config.WindowSettings;
+
             AppViewport.SetViewportResolution(ws.WindowSize, ws.FullScreen);
             AppViewport.SetGameProperties(ws.MouseVisible, ws.AllowUserResizing);
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Retard.Core.Models.App;
 using Retard.Core.Models.Assets.Input;
+using Retard.Core.Models.DTOs.App;
 using Retard.Core.Models.DTOs.Input;
 
 namespace Retard.Core.Models
@@ -17,17 +17,6 @@ namespace Retard.Core.Models
         #region App
 
         /// <summary>
-        /// La taille par défaut de la fenêtre
-        /// </summary>
-        public static readonly WindowSettings DEFAULT_WIDNDOW_SETTINGS = new()
-        {
-            WindowSize = new Point(800, 600),
-            FullScreen = false,
-            MouseVisible = true,
-            AllowUserResizing = true,
-        };
-
-        /// <summary>
         /// Le framerate par défaut de l'appli si active
         /// </summary>
         public static readonly int DEFAULT_FOCUSED_FRAMERATE = 60;
@@ -39,7 +28,7 @@ namespace Retard.Core.Models
 
         #endregion
 
-        #region Content
+        #region Paths
 
         /// <summary>
         /// Le chemin d'accès au dossier contenant l'exécutable du jeu
@@ -57,6 +46,18 @@ namespace Retard.Core.Models
         public const string CUSTOM_INPUT_CONFIG_PATH = "input/input.json";
 
         /// <summary>
+        /// Le chemin d'accès au fichier de configuration 
+        /// des paramètres de l'app par défaut
+        /// </summary>
+        public const string DEFAULT_APP_SETTINGS_CONFIG_PATH = "settings/default.json";
+
+        /// <summary>
+        /// Le chemin d'accès au fichier de configuration 
+        /// des paramètres de l'app définis par le joueur
+        /// </summary>
+        public const string CUSTOM_APP_SETTINGS_CONFIG_PATH = "settings/settings.json";
+
+        /// <summary>
         /// Le chemin d'accès aux textures du projet
         /// </summary>
         public const string TEXTURES_DIR_PATH = "Resources/Textures/";
@@ -72,12 +73,26 @@ namespace Retard.Core.Models
 
         #endregion
 
-        #region Input
+        #region Config
+
+        /// <summary>
+        /// Configuration par défaut des paramètres de l'application
+        /// </summary>
+        public static readonly AppSettingsDTO DEFAULT_APP_SETTINGS = new
+            (
+                new WindowSettings
+                {
+                    WindowSize = new Point(800, 600),
+                    FullScreen = false,
+                    MouseVisible = true,
+                    AllowUserResizing = true
+                }
+            );
 
         /// <summary>
         /// Configuration par défaut pour les entrées du joueur
         /// </summary>
-        public static readonly InputConfigDTO DEFAULT_INPUT_CONFIG = new InputConfigDTO
+        public static readonly InputConfigDTO DEFAULT_INPUT_CONFIG = new
             (
                 new InputContextDTO
                     (
@@ -91,6 +106,13 @@ namespace Retard.Core.Models
                                 new InputBindingDTO(Keys.Left, Keys.Right, Keys.Up, Keys.Down),
                                 new InputBindingDTO(Keys.Q, Keys.D, Keys.Z, Keys.S),
                                 new InputBindingDTO(Buttons.LeftStick, InputBindingAxisType.Both, 0.24f)
+                            ),
+                         new InputActionDTO
+                            (
+                                "Reset",
+                                InputActionReturnValueType.ButtonState,
+                                InputActionTriggerType.Started,
+                                new InputBindingDTO(Keys.R)
                             )
                     )
 #if TESTS

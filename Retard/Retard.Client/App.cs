@@ -60,6 +60,7 @@ namespace Retard.Client
         public App()
         {
             this.Content.RootDirectory = "Content";
+            AppConfigFileCreation.Initialize();
             AppViewport.Initialize(this);
             AppPerformance.Initialize(this);
         }
@@ -174,8 +175,7 @@ namespace Retard.Client
         /// </summary>
         private void InitializeSceneManager()
         {
-            SceneManager.Initialize(3, this.Content, this._world, this._spriteBatch);
-            SceneManager.AddSceneToPool(new DefaultConfigFileCreationScene());
+            SceneManager.Initialize(2, this.Content, this._world, this._spriteBatch);
             SceneManager.AddSceneToPool(new OrthographicCameraScene(this._cameraController));
 
 #if TESTS
@@ -191,7 +191,6 @@ namespace Retard.Client
 #endif
 
             SceneManager.SetSceneAsActive<OrthographicCameraScene>();
-            SceneManager.SetSceneAsActive<DefaultConfigFileCreationScene>();
         }
 
         #endregion
