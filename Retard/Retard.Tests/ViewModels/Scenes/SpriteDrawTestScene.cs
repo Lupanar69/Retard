@@ -55,12 +55,12 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Les systèmes du monde à màj dans Update()
         /// </summary>
-        private Group<float> _updateSystems;
+        private readonly Group<float> _updateSystems;
 
         /// <summary>
         /// Les systèmes du monde à màj dans Draw()
         /// </summary>
-        private Group<byte> _drawSystems;
+        private readonly Group<byte> _drawSystems;
 
         /// <summary>
         /// La texture des sprites
@@ -96,6 +96,8 @@ namespace Retard.Tests.ViewModels.Scenes
             this._camera = camera;
             this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
             this._size = size;
+            this._updateSystems = new Group<float>("Update Systems");
+            this._drawSystems = new Group<byte>("Draw Systems");
         }
 
         #endregion
@@ -108,8 +110,6 @@ namespace Retard.Tests.ViewModels.Scenes
         public void OnInitialize()
         {
             SceneManager.World.Reserve(_spriteArchetype, _size.X * _size.Y);
-            this._updateSystems = new Group<float>("Update Systems");
-            this._drawSystems = new Group<byte>("Draw Systems");
         }
 
         /// <summary>
