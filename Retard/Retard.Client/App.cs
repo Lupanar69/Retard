@@ -175,7 +175,8 @@ namespace Retard.Client
         /// </summary>
         private void InitializeSceneManager()
         {
-            SceneManager.Initialize(2, this.Content, this._world, this._spriteBatch);
+            SceneManager.Initialize(3, this.Content, this._world, this._spriteBatch);
+            SceneManager.AddSceneToPool(new InputProcessingScene());
             SceneManager.AddSceneToPool(new OrthographicCameraScene(this._cameraController));
 
 #if TESTS
@@ -191,6 +192,7 @@ namespace Retard.Client
 #endif
 
             SceneManager.SetSceneAsActive<OrthographicCameraScene>();
+            SceneManager.SetSceneAsActive<InputProcessingScene>();
         }
 
         #endregion

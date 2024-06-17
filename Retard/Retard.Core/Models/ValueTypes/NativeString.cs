@@ -11,11 +11,6 @@ namespace Retard.Core.Models.ValueTypes
         #region Propriétés
 
         /// <summary>
-        /// Retourne la valeur sous forme de string
-        /// </summary>
-        public string Value => this.ToString();
-
-        /// <summary>
         /// Longueur de la string
         /// </summary>
         public int Length { get; init; }
@@ -184,6 +179,24 @@ namespace Retard.Core.Models.ValueTypes
         public static bool operator !=(NativeString lhs, NativeString rhs)
         {
             return !(lhs == rhs);
+        }
+
+        /// <summary>
+        /// Convertisseur
+        /// </summary>
+        /// <param name="str">La string à convertir</param>
+        public static implicit operator NativeString(string str)
+        {
+            return new NativeString(str);
+        }
+
+        /// <summary>
+        /// Convertisseur
+        /// </summary>
+        /// <param name="str">La string à convertir</param>
+        public static implicit operator string(NativeString str)
+        {
+            return str.ToString();
         }
 
         /// <summary>
