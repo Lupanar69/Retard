@@ -44,8 +44,6 @@ namespace Retard.Core.ViewModels.Scenes
         /// </summary>
         public InputProcessingScene()
         {
-            // TODO : Réserver les entités
-            //SceneManager.World.Reserve(_spriteArchetype, _size.X * _size.Y);
             this._updateSystems = new Group("Update Systems");
         }
 

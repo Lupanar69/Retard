@@ -1,21 +1,22 @@
 ﻿using Arch.AOT.SourceGenerator;
+using Arch.LowLevel;
+using Microsoft.Xna.Framework.Input;
 
 namespace Retard.Core.Components.Input
 {
     /// <summary>
-    /// Indique à quelle manette correspond cette entrée
+    /// Las touches du clavier à évaluer
     /// </summary>
     [Component]
-    public struct InputBindingGamePadNumberCD
+    public struct InputBindingKeyboardKeysBE
     {
         #region Variables d'instance
 
         /// <summary>
-        /// Le n° de la manette
+        /// Las touches du clavier à évaluer
         /// </summary>
-        public int Value;
+        public UnsafeArray<Keys> Value;
 
         #endregion
     }
 }
-

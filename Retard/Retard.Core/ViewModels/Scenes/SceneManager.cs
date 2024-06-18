@@ -18,7 +18,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// <summary>
         /// <see langword="true"/> s'il n'y a aucune scène active
         /// </summary>
-        public static bool IsEmpty => SceneManager._activeScenes.Count == 0;
+        public static bool IsEmpty => _activeScenes.Count == 0;
 
         /// <summary>
         /// Pour afficher les sprites à l'écran
@@ -58,7 +58,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// </summary>
         static SceneManager()
         {
-            SceneManager._activeScenes = new List<IScene>(1);
+            _activeScenes = new List<IScene>(1);
         }
 
         #endregion
@@ -74,10 +74,10 @@ namespace Retard.Core.ViewModels.Scenes
         /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
         public static void Initialize(int scenePoolCapacity, ContentManager content, World world, SpriteBatch spriteBatch)
         {
-            SceneManager._inactiveScenes = new Dictionary<Type, IScene>(scenePoolCapacity);
-            SceneManager.Content = content;
-            SceneManager.World = world;
-            SceneManager.SpriteBatch = spriteBatch;
+            _inactiveScenes = new Dictionary<Type, IScene>(scenePoolCapacity);
+            Content = content;
+            World = world;
+            SpriteBatch = spriteBatch;
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Retard.Core.ViewModels.Scenes
         public static void AddSceneToPool(IScene scene)
         {
             Type t = scene.GetType();
-            SceneManager._inactiveScenes.Add(t, scene);
+            _inactiveScenes.Add(t, scene);
             scene.OnInitialize();
             scene.OnLoadContent();
         }
@@ -100,7 +100,7 @@ namespace Retard.Core.ViewModels.Scenes
         {
             foreach (IScene scene in scenes)
             {
-                SceneManager.AddSceneToPool(scene);
+                AddSceneToPool(scene);
             }
         }
 
@@ -111,8 +111,8 @@ namespace Retard.Core.ViewModels.Scenes
         public static void SetSceneAsActive<T>()
         {
             Type t = typeof(T);
-            SceneManager._inactiveScenes.Remove(t, out IScene scene);
-            SceneManager._activeScenes.Add(scene);
+            _inactiveScenes.Remove(t, out IScene scene);
+            _activeScenes.Add(scene);
             scene.OnSetActive();
         }
 
@@ -121,10 +121,10 @@ namespace Retard.Core.ViewModels.Scenes
         /// </summary>
         public static void RemoveLastActiveScene()
         {
-            IScene scene = SceneManager._activeScenes[^1];
+            IScene scene = _activeScenes[^1];
             Type t = scene.GetType();
-            SceneManager._activeScenes.Remove(scene);
-            SceneManager._inactiveScenes.Add(t, scene);
+            _activeScenes.Remove(scene);
+            _inactiveScenes.Add(t, scene);
         }
 
         /// <summary>
@@ -134,8 +134,8 @@ namespace Retard.Core.ViewModels.Scenes
         public static void RemoveActiveScene(IScene scene)
         {
             Type t = scene.GetType();
-            SceneManager._activeScenes.Remove(scene);
-            SceneManager._inactiveScenes.Add(t, scene);
+            _activeScenes.Remove(scene);
+            _inactiveScenes.Add(t, scene);
         }
 
         /// <summary>
@@ -144,14 +144,14 @@ namespace Retard.Core.ViewModels.Scenes
         /// <param name="scene">La scène à supprimer</param>
         public static void RemoveActiveAndOverlaidScenes(IScene scene)
         {
-            int index = SceneManager._activeScenes.IndexOf(scene);
+            int index = _activeScenes.IndexOf(scene);
 
-            for (int i = SceneManager._activeScenes.Count - 1; i >= index; i--)
+            for (int i = _activeScenes.Count - 1; i >= index; i--)
             {
-                IScene s = SceneManager._activeScenes[i];
+                IScene s = _activeScenes[i];
                 Type t = s.GetType();
-                SceneManager._activeScenes.RemoveAt(i);
-                SceneManager._inactiveScenes.Add(t, s);
+                _activeScenes.RemoveAt(i);
+                _inactiveScenes.Add(t, s);
             }
         }
 
@@ -161,9 +161,9 @@ namespace Retard.Core.ViewModels.Scenes
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public static void UpdateInput(GameTime gameTime)
         {
-            for (int i = SceneManager._activeScenes.Count - 1; i >= 0; i--)
+            for (int i = _activeScenes.Count - 1; i >= 0; i--)
             {
-                IScene scene = SceneManager._activeScenes[i];
+                IScene scene = _activeScenes[i];
                 scene.OnUpdateInput(gameTime);
 
                 if (scene.ConsumeInput)
@@ -179,7 +179,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public static void Update(GameTime gameTime)
         {
-            foreach (IScene scene in SceneManager._activeScenes)
+            foreach (IScene scene in _activeScenes)
             {
                 scene.OnUpdate(gameTime);
             }
@@ -193,17 +193,17 @@ namespace Retard.Core.ViewModels.Scenes
         {
             int startDrawIndex = 0;
 
-            for (int i = 0; i < SceneManager._activeScenes.Count; i++)
+            for (int i = 0; i < _activeScenes.Count; i++)
             {
-                if (SceneManager._activeScenes[i].ConsumeDraw)
+                if (_activeScenes[i].ConsumeDraw)
                 {
                     startDrawIndex = i;
                 }
             }
 
-            for (int i = startDrawIndex; i < SceneManager._activeScenes.Count; i++)
+            for (int i = startDrawIndex; i < _activeScenes.Count; i++)
             {
-                SceneManager._activeScenes[i].OnDraw(gameTime);
+                _activeScenes[i].OnDraw(gameTime);
             }
         }
 

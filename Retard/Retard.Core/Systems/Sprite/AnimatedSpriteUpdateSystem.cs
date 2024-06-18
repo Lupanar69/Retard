@@ -38,7 +38,7 @@ namespace Retard.Core.Systems.Sprite
         /// </summary>
         public void Update()
         {
-            Queries.UpdateSpriteAnimationQuery(this.World);
+            Queries.UpdateAnimatedSpriteFrameQuery(this.World);
         }
 
         /// <summary>

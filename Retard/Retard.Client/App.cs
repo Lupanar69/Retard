@@ -21,11 +21,6 @@ namespace Retard.Client
         #region Variables d'instance
 
         /// <summary>
-        /// Permet de modifier les paramètres de la fenêtre
-        /// </summary>
-        private readonly GraphicsDeviceManager _graphicsDeviceManager;
-
-        /// <summary>
         /// Pour afficher les sprites à l'écran
         /// </summary>
         private SpriteBatch _spriteBatch;

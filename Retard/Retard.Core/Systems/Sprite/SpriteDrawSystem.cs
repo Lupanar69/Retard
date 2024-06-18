@@ -1,9 +1,8 @@
-﻿using System.Runtime.CompilerServices;
-using Arch.Core;
-using Microsoft.Xna.Framework;
+﻿using Arch.Core;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Retard.Core.Components.Sprites;
+using Retard.Core.Entities;
 using Retard.Core.Models.Arch;
 using Retard.Core.Models.Assets.Sprites;
 
@@ -80,17 +79,11 @@ namespace Retard.Core.Systems.Sprite
         {
             var local = this;
 
-            this.World.Query(in this._animatedSpriteDesc, (ref SpriteFrameCD frame, ref SpriteRectCD rect) =>
-            {
-                rect.Value = local._spriteAtlas.GetSpriteRect(frame.Value);
-            });
+            Queries.UpdateAnimatedSpriteRectQuery(this.World, in this._spriteAtlas);
 
             this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this._camera.GetViewMatrix());
 
-            this.World.Query(in this._spriteDesc, (ref SpritePositionCD pos, ref SpriteRectCD rect, ref SpriteColorCD color) =>
-            {
-                local.Draw(local._spriteAtlas, local._spriteBatch, rect.Value, pos.Value, color.Value);
-            });
+            Queries.DrawSpritesQuery(this.World, in this._spriteAtlas, in this._spriteBatch);
 
             _spriteBatch.End();
         }
@@ -101,26 +94,6 @@ namespace Retard.Core.Systems.Sprite
         public void Dispose()
         {
 
-        }
-
-        #endregion
-
-        #region Méthodes privées
-
-        /// <summary>
-        /// Affiche le sprite à l'écran.
-        /// </summary>
-        /// <param name="atlas">Le sprite source</param>
-        /// <param name="spriteBatch">Gère le rendu du sprite à l'écran</param>
-        /// <param name="screenPos">La position en pixels</param>
-        /// <param name="color">La couleur du sprite</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void Draw(SpriteAtlas atlas, SpriteBatch spriteBatch, Rectangle rect, Vector2 screenPos, Color color)
-        {
-            Rectangle destinationRectangle =
-                new((int)screenPos.X, (int)screenPos.Y, rect.Width, rect.Height);
-
-            spriteBatch.Draw(atlas.Texture, destinationRectangle, rect, color);
         }
 
         #endregion

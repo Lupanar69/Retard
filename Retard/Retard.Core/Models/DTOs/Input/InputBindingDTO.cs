@@ -66,15 +66,15 @@ namespace Retard.Core.Models.DTOs.Input
         /// Constructeur
         /// </summary>
         /// <param name="mouseKey">L'entrée souris s'il y en a une</param>
-        /// <param name="keyboardKey">L'entrée clavier s'il y en a une (ou LES entrées, si c'est un axe)</param>
+        /// <param name="keyboardKeys">L'entrée clavier s'il y en a une (ou LES entrées, si c'est un axe)</param>
         /// <param name="gamePadKey">L'entrée manette s'il y en a une</param>
         /// <param name="axisType">Le type d'axe s'il y en a un</param>
         /// <param name="deadZone">La zone morte de l'entrée si c'est un axe</param>
         [JsonConstructor]
-        public InputBindingDTO(MouseKey mouseKey, Keys[] keyboardKey, Buttons gamePadKey, InputBindingAxisType axisType, float deadZone)
+        public InputBindingDTO(MouseKey mouseKey, Keys[] keyboardKeys, Buttons gamePadKey, InputBindingAxisType axisType, float deadZone)
         {
             this.MouseKey = mouseKey;
-            this.KeyboardKeys = keyboardKey;
+            this.KeyboardKeys = keyboardKeys;
             this.GamePadKey = gamePadKey;
             this.AxisType = axisType;
             this.DeadZone = deadZone;
