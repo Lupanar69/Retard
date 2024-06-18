@@ -1,21 +1,33 @@
 ﻿using Arch.Core;
-using Arch.System;
 using Retard.Core.Entities;
+using Retard.Core.Models.Arch;
 
 namespace Retard.Core.Systems.Sprite
 {
     /// <summary>
     /// Màj les frames des des sprites animés
     /// </summary>
-    public sealed partial class AnimatedSpriteUpdateSystem : BaseSystem<World, float>
+    public struct AnimatedSpriteUpdateSystem : ISystemWorld
     {
+        #region Propriétés
+
+        /// <summary>
+        /// Le monde contenant les entités
+        /// </summary>
+        public World World { get; set; }
+
+        #endregion
+
         #region Constructeur
 
         /// <summary>
         /// Constructeur
         /// </summary>
         /// <param name="world">Le monde contenant les entités des sprites</param>
-        public AnimatedSpriteUpdateSystem(World world) : base(world) { }
+        public AnimatedSpriteUpdateSystem(World world)
+        {
+            this.World = world;
+        }
 
         #endregion
 
@@ -24,9 +36,17 @@ namespace Retard.Core.Systems.Sprite
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
-        public override void Update(in float _)
+        public void Update()
         {
-            Queries.UpdateSpriteAnimationQuery(World);
+            Queries.UpdateSpriteAnimationQuery(this.World);
+        }
+
+        /// <summary>
+        /// Libère les allocations
+        /// </summary>
+        public void Dispose()
+        {
+
         }
 
         #endregion

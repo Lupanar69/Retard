@@ -1,5 +1,5 @@
-﻿using Arch.System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Retard.Core.Models.Arch;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.Systems.Input;
 
@@ -33,7 +33,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// <summary>
         /// Les systèmes du monde à màj dans Update()
         /// </summary>
-        private readonly Group<float> _updateSystems;
+        private readonly Group _updateSystems;
 
         #endregion
 
@@ -46,7 +46,7 @@ namespace Retard.Core.ViewModels.Scenes
         {
             // TODO : Réserver les entités
             //SceneManager.World.Reserve(_spriteArchetype, _size.X * _size.Y);
-            this._updateSystems = new Group<float>("Update Systems");
+            this._updateSystems = new Group("Update Systems");
         }
 
         #endregion
@@ -93,7 +93,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void OnUpdate(GameTime gameTime)
         {
-            this._updateSystems.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            this._updateSystems.Update();
         }
 
         /// <summary>

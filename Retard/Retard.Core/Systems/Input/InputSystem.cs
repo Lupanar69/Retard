@@ -1,22 +1,31 @@
 ﻿using Arch.Core;
-using Arch.System;
+using Retard.Core.Models.Arch;
 
 namespace Retard.Core.Systems.Input
 {
     /// <summary>
     /// Affiche les sprites à l'écran
     /// </summary>
-    public sealed class InputSystem : BaseSystem<World, float>
+    public struct InputSystem : ISystemWorld
     {
+        #region Propriétés
+
+        /// <summary>
+        /// Le monde contenant les entités
+        /// </summary>
+        public World World { get; set; }
+
+        #endregion
+
         #region Constructeur
 
         /// <summary>
         /// Constructeur
         /// </summary>
         /// <param name="world">Le monde contenant les entités des sprites</param>
-        public InputSystem(World world) : base(world)
+        public InputSystem(World world)
         {
-
+            this.World = world;
         }
 
         #endregion
@@ -26,7 +35,15 @@ namespace Retard.Core.Systems.Input
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
-        public override void Update(in float _)
+        public void Update()
+        {
+
+        }
+
+        /// <summary>
+        /// Libère les allocations
+        /// </summary>
+        public void Dispose()
         {
 
         }

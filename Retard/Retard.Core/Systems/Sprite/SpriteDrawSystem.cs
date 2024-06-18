@@ -1,10 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 using Arch.Core;
-using Arch.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Retard.Core.Components.Sprites;
+using Retard.Core.Models.Arch;
 using Retard.Core.Models.Assets.Sprites;
 
 namespace Retard.Core.Systems.Sprite
@@ -12,24 +12,33 @@ namespace Retard.Core.Systems.Sprite
     /// <summary>
     /// Affiche les sprites à l'écran
     /// </summary>
-    public sealed class SpriteDrawSystem : BaseSystem<World, byte>
+    public struct SpriteDrawSystem : ISystemWorld
     {
+        #region Propriétés
+
+        /// <summary>
+        /// Le monde contenant les entités
+        /// </summary>
+        public World World { get; set; }
+
+        #endregion
+
         #region Variables d'instance
 
         /// <summary>
         /// L'atlas des sprites à afficher
         /// </summary>
-        private SpriteAtlas _spriteAtlas;
+        private readonly SpriteAtlas _spriteAtlas;
 
         /// <summary>
         /// Pour afficher les sprites à l'écran
         /// </summary>
-        private SpriteBatch _spriteBatch;
+        private readonly SpriteBatch _spriteBatch;
 
         /// <summary>
         /// La caméra du jeu
         /// </summary>
-        private OrthographicCamera _camera;
+        private readonly OrthographicCamera _camera;
 
         /// <summary>
         /// Retrouve les components d'un sprite
@@ -52,11 +61,12 @@ namespace Retard.Core.Systems.Sprite
         /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
         /// <param name="spriteAtlas">L'atlas des sprites à afficher</param>
         /// <param name="camera">La caméra du jeu</param>
-        public SpriteDrawSystem(World world, SpriteBatch spriteBatch, SpriteAtlas spriteAtlas, OrthographicCamera camera) : base(world)
+        public SpriteDrawSystem(World world, SpriteBatch spriteBatch, SpriteAtlas spriteAtlas, OrthographicCamera camera)
         {
-            _spriteBatch = spriteBatch;
-            _spriteAtlas = spriteAtlas;
-            _camera = camera;
+            this._spriteBatch = spriteBatch;
+            this._spriteAtlas = spriteAtlas;
+            this._camera = camera;
+            this.World = world;
         }
 
         #endregion
@@ -66,21 +76,31 @@ namespace Retard.Core.Systems.Sprite
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
-        public override void Update(in byte _)
+        public void Update()
         {
-            World.Query(in _animatedSpriteDesc, (ref SpriteFrameCD frame, ref SpriteRectCD rect) =>
+            var local = this;
+
+            this.World.Query(in this._animatedSpriteDesc, (ref SpriteFrameCD frame, ref SpriteRectCD rect) =>
             {
-                rect.Value = _spriteAtlas.GetSpriteRect(frame.Value);
+                rect.Value = local._spriteAtlas.GetSpriteRect(frame.Value);
             });
 
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, _camera.GetViewMatrix());
+            this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this._camera.GetViewMatrix());
 
-            World.Query(in _spriteDesc, (ref SpritePositionCD pos, ref SpriteRectCD rect, ref SpriteColorCD color) =>
+            this.World.Query(in this._spriteDesc, (ref SpritePositionCD pos, ref SpriteRectCD rect, ref SpriteColorCD color) =>
             {
-                Draw(_spriteAtlas, _spriteBatch, rect.Value, pos.Value, color.Value);
+                local.Draw(local._spriteAtlas, local._spriteBatch, rect.Value, pos.Value, color.Value);
             });
 
             _spriteBatch.End();
+        }
+
+        /// <summary>
+        /// Libère les allocations
+        /// </summary>
+        public void Dispose()
+        {
+
         }
 
         #endregion

@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.LowLevel;
-using Arch.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -9,6 +8,7 @@ using MonoGame.Extended;
 using Retard.Core.Components.Sprites;
 using Retard.Core.Entities;
 using Retard.Core.Models;
+using Retard.Core.Models.Arch;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.Models.Assets.Sprites;
 using Retard.Core.Systems.Sprite;
@@ -55,12 +55,12 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Les systèmes du monde à màj dans Update()
         /// </summary>
-        private readonly Group<float> _updateSystems;
+        private readonly Group _updateSystems;
 
         /// <summary>
         /// Les systèmes du monde à màj dans Draw()
         /// </summary>
-        private readonly Group<byte> _drawSystems;
+        private readonly Group _drawSystems;
 
         /// <summary>
         /// La texture des sprites
@@ -96,8 +96,8 @@ namespace Retard.Tests.ViewModels.Scenes
             this._camera = camera;
             this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
             this._size = size;
-            this._updateSystems = new Group<float>("Update Systems");
-            this._drawSystems = new Group<byte>("Draw Systems");
+            this._updateSystems = new Group("Update Systems");
+            this._drawSystems = new Group("Draw Systems");
         }
 
         #endregion
@@ -118,7 +118,7 @@ namespace Retard.Tests.ViewModels.Scenes
         public void OnLoadContent()
         {
             Texture2D debugTex = SceneManager.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
-            this._spriteAtlas = new(debugTex, 4, 4);
+            this._spriteAtlas = new SpriteAtlas(debugTex, 4, 4);
 
             // Créé ici car on a besoin de récupérer les textures
 
@@ -155,7 +155,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void OnUpdate(GameTime gameTime)
         {
-            this._updateSystems.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            this._updateSystems.Update();
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void OnDraw(GameTime gameTime)
         {
-            this._drawSystems.Update(0);
+            this._drawSystems.Update();
         }
 
         #endregion
