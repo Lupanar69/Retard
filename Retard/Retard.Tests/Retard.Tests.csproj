@@ -20,6 +20,6 @@
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Retard.Core\Retard.Core.csproj" />
+    <ProjectReference Include="..\Retard.Core\Retard.Engine.csproj" />
   </ItemGroup>
 </Project>

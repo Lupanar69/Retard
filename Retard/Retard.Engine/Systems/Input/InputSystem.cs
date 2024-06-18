@@ -87,7 +87,7 @@ namespace Retard.Core.Systems.Input
                         Entity bindingE = EntityFactory.CreateInputBindingEntities
                             (world, binding.MouseKey, binding.KeyboardKeys, binding.GamePadKey, binding.AxisType, binding.DeadZone);
 
-                        // Si un binding est null, on se contente de l'ignorer
+                        // Si un binding est null (aucune touche renseignée), on se contente de l'ignorer
 
                         if (bindingE == Entity.Null)
                         {

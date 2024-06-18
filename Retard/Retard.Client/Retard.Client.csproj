@@ -46,7 +46,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Retard.Core\Retard.Core.csproj" />
+    <ProjectReference Include="..\Retard.Core\Retard.Engine.csproj" />
     <ProjectReference Include="..\Retard.Tests\Retard.Tests.csproj" />
   </ItemGroup>
   <ItemGroup>

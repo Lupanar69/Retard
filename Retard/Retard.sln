@@ -5,9 +5,9 @@ VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Retard.Client", "Retard.Client\Retard.Client.csproj", "{46770093-8CC5-4E57-A367-B97BC60CFCD4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Retard.Core", "Retard.Core\Retard.Core.csproj", "{4D5390FF-C921-4647-8BC0-E1E2BCC75456}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Retard.Engine", "Retard.Core\Retard.Engine.csproj", "{4D5390FF-C921-4647-8BC0-E1E2BCC75456}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retard.Tests", "Retard.Tests\Retard.Tests.csproj", "{353BD9C4-0F04-486B-A9E2-D93C64B48D6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Retard.Tests", "Retard.Tests\Retard.Tests.csproj", "{353BD9C4-0F04-486B-A9E2-D93C64B48D6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
