@@ -118,7 +118,13 @@ namespace Retard.Core.Entities
                     validStates[i] = element.ValidState;
                 }
 
-                return world.Create(new InputBindingKeySequenceBU { KeyTypes = keyTypes, Keys = keys, ValidStates = validStates });
+
+                return world.Create
+                    (
+                    new InputBindingKeySequenceTypeBU { KeyTypes = keyTypes },
+                    new InputBindingKeySequenceIDsBU { Keys = keys },
+                    new InputBindingKeySequenceStatesBU { ValidStates = validStates }
+                    );
             }
 
             return Entity.Null;
