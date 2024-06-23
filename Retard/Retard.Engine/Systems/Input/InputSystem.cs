@@ -96,7 +96,7 @@ namespace Retard.Core.Systems.Input
                         continue;
                     }
 
-                    actionE.AddRelationship<InputActionOf>(bindingE);
+                    world.AddRelationship<InputActionOf>(actionE, bindingE);
                 }
             }
         }
