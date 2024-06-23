@@ -1,4 +1,4 @@
-﻿namespace Retard.Core.Models.DTOs.Input
+﻿namespace Retard.Engine.Models.DTOs.Input
 {
     /// <summary>
     /// Représente les données du fichier de configuration 
@@ -9,9 +9,9 @@
         #region Propriétés
 
         /// <summary>
-        /// La liste des contextes de ce fichier
+        /// La liste des actions de ce contexte
         /// </summary>
-        public InputContextDTO[] Contexts
+        public InputActionDTO[] Actions
         {
             get;
             private set;
@@ -22,12 +22,12 @@
         #region Constructeur
 
         /// <summary>
-        /// Constructeru
+        /// Constructeur
         /// </summary>
-        /// <param name="contexts">Les contextes des inputs</param>
-        public InputConfigDTO(params InputContextDTO[] contexts)
+        /// <param name="actions">Les actions possibles dans ce contexte</param>
+        public InputConfigDTO(params InputActionDTO[] actions)
         {
-            this.Contexts = contexts;
+            this.Actions = actions;
         }
 
         #endregion

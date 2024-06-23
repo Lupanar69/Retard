@@ -4,8 +4,8 @@ using Retard.Core.Components.Input;
 using Retard.Core.Entities;
 using Retard.Core.Models;
 using Retard.Core.Models.Arch;
-using Retard.Core.Models.DTOs.Input;
 using Retard.Core.ViewModels.JSON;
+using Retard.Engine.Models.DTOs.Input;
 
 namespace Retard.Core.Systems.Input
 {
@@ -37,7 +37,8 @@ namespace Retard.Core.Systems.Input
             string json = JsonUtilities.ReadFile(customInputConfigPath);
             var config = JsonUtilities.DeserializeObject<InputConfigDTO>(json);
 
-            CreateInputEntities(this.World, config);
+            InputSystem.CreateInputEntities(this.World, config);
+            InputSystem.CreateInputActionEvents(this.World);
         }
 
         #endregion
@@ -67,39 +68,69 @@ namespace Retard.Core.Systems.Input
         /// <summary>
         /// Crée les entités des inputs à partir des données de config
         /// </summary>
-        /// <param name="config">Le monde contenant les entités</param>
+        /// <param name="world">Le monde contenant les entités</param>
         /// <param name="config">Les données de config</param>
         private static void CreateInputEntities(World world, InputConfigDTO config)
         {
-            for (int i = 0; i < config.Contexts.Length; ++i)
+            for (int i = 0; i < config.Actions.Length; ++i)
             {
-                InputContextDTO context = config.Contexts[i];
-                Entity contextE = EntityFactory.CreateInputContextEntities(world, context.Name);
+                InputActionDTO action = config.Actions[i];
 
-                for (int j = 0; j < context.Actions.Length; ++j)
+                if (action.Bindings == null ^ action.Bindings.Length == 0)
                 {
-                    InputActionDTO action = context.Actions[j];
-                    Entity actionE = EntityFactory.CreateInputActionEntities(world, action.Name, action.ValueType, action.TriggerType);
+                    continue;
+                }
 
-                    for (int k = 0; k < action.Bindings.Length; ++k)
+                Entity actionE = EntityFactory.CreateInputActionEntities(world, action.Name, action.ValueType);
+
+                for (int k = 0; k < action.Bindings.Length; ++k)
+                {
+                    InputBindingDTO binding = action.Bindings[k];
+                    Entity bindingE = EntityFactory.CreateInputBindingEntities
+                        (world, binding.KeySequence, binding.Joystick, binding.JoystickAxis, binding.DeadZone);
+
+                    // Si un binding est null (aucune touche renseignée), on se contente de l'ignorer
+
+                    if (bindingE == Entity.Null)
                     {
-                        InputBindingDTO binding = action.Bindings[k];
-                        Entity bindingE = EntityFactory.CreateInputBindingEntities
-                            (world, binding.MouseKey, binding.KeyboardKeys, binding.GamePadKey, binding.AxisType, binding.DeadZone);
-
-                        // Si un binding est null (aucune touche renseignée), on se contente de l'ignorer
-
-                        if (bindingE == Entity.Null)
-                        {
-                            continue;
-                        }
-
-                        actionE.AddRelationship<InputActionOf>(bindingE);
+                        continue;
                     }
 
-                    contextE.AddRelationship<InputContextOf>(actionE);
+                    actionE.AddRelationship<InputActionOf>(bindingE);
                 }
             }
+        }
+
+        /// <summary>
+        /// Pour chaque InputAction, crée ses events
+        /// et les passe à l'InputManager
+        /// </summary>
+        /// <param name="world">Le monde contenant les entités</param>
+        private static void CreateInputActionEvents(World world)
+        {
+            //var query = new QueryDescription().WithAll<InputActionIDCD>();
+            //world.Query(in query, (Entity e, ref InputActionIDCD contextID) =>
+            //{
+            //    ref var actionOfRel = ref e.GetRelationships<InputActionOf>();
+
+            //    foreach (KeyValuePair<Entity, InputActionOf> pair in actionOfRel)
+            //    {
+            //        NativeString eventID = $"{contextID}/{world.Get<InputActionIDCD>(pair.Key).Value}";
+
+            //        if (world.Has<InputActionPerformedCD>(pair.Key))
+            //        {
+            //            var handlesRefs = world.Get<InputActionStartedCD, InputActionFinishedCD, InputActionPerformedCD>(pair.Key);
+            //        }
+            //        else if (world.Has<InputActionPerformed1DAxisCD>(pair.Key))
+            //        {
+            //            var handlesRefs = world.Get<InputActionStartedCD, InputActionFinishedCD, InputActionPerformed1DAxisCD>(pair.Key);
+            //        }
+            //        else if (world.Has<InputActionPerformed2DAxisCD>(pair.Key))
+            //        {
+            //            var handlesRefs = world.Get<InputActionStartedCD, InputActionFinishedCD, InputActionPerformed2DAxisCD>(pair.Key);
+            //        }
+            //    }
+            //});
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Retard.Engine.Models.App;
 
-namespace Retard.Core.Models.DTOs.App
+namespace Retard.Engine.Models.DTOs.App
 {
     /// <summary>
     /// Représente les données des paramètres de l'application
@@ -25,7 +26,7 @@ namespace Retard.Core.Models.DTOs.App
         /// <param name="windowSettings">Les paramètres de la fenêtre</param>
         public AppSettingsDTO(WindowSettings windowSettings)
         {
-            this.WindowSettings = windowSettings;
+            WindowSettings = windowSettings;
         }
 
         #endregion

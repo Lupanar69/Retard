@@ -1,21 +1,20 @@
 ﻿using Arch.AOT.SourceGenerator;
-using Microsoft.Xna.Framework;
+using Retard.Engine.Models.Input;
 
 namespace Retard.Core.Components.Input
 {
     /// <summary>
-    /// La valeur d'un joystick
+    /// Tag indiquant qu'on évalue l'axe Y d'un joystick
     /// </summary>
     [Component]
-    public struct InputAction2DAxisCD
+    public struct InputBindingJoystickYAxisCD
     {
         #region Variables d'instance
 
         /// <summary>
-        /// <summary>
-        /// La valeur d'un joystick
+        /// Le joystick utilisé
         /// </summary>
-        public Vector2 Value;
+        public JoystickType Value;
 
         #endregion
     }

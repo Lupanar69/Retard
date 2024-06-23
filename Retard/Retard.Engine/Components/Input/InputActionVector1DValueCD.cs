@@ -6,7 +6,7 @@ namespace Retard.Core.Components.Input
     /// La valeur de l'InputAction pressée
     /// </summary>
     [Component]
-    public struct InputAction1DAxisCD
+    public struct InputActionVector1DValueCD
     {
         #region Variables d'instance
 

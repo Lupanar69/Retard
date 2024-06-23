@@ -53,13 +53,13 @@ namespace Retard.Core.ViewModels.App
             // pour éviter d'effacer les préférences du joueur.
             // (On fait un if pour chaque si l'un d'entre eux est supprimé mais les autres existent toujours)
 
-            if (!File.Exists(customInputConfigPath))
+            if (!File.Exists(customInputConfigPath) || Constants.OVERRIDE_DEFAULT_AND_CUSTOM_FILES)
             {
                 JsonUtilities.CreatPathIfNotExists(customInputConfigPath);
                 JsonUtilities.WriteToFile(defaultInputConfigJson, customInputConfigPath);
             }
 
-            if (!File.Exists(customAppSettingsConfigPath))
+            if (!File.Exists(customAppSettingsConfigPath) || Constants.OVERRIDE_DEFAULT_AND_CUSTOM_FILES)
             {
                 JsonUtilities.CreatPathIfNotExists(customAppSettingsConfigPath);
                 JsonUtilities.WriteToFile(defaultAppSettingsConfigJson, customAppSettingsConfigPath);

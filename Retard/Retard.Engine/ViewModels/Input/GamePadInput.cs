@@ -112,6 +112,16 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <param name="playerIndex">L'ID de la manette</param>
         /// <returns>La valeur de l'axe du joystick gauche de la manette</returns>
+        public bool IsPlayerConnected(int playerIndex)
+        {
+            return this._curStates[playerIndex].IsConnected;
+        }
+
+        /// <summary>
+        /// Obtient l'axe du joystick gauche de la manette sélectionnée
+        /// </summary>
+        /// <param name="playerIndex">L'ID de la manette</param>
+        /// <returns>La valeur de l'axe du joystick gauche de la manette</returns>
         public Vector2 GetLeftThumbstickAxis(int playerIndex)
         {
             return this._leftThumbsticksAxes[playerIndex];

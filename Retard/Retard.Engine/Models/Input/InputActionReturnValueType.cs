@@ -1,4 +1,4 @@
-﻿namespace Retard.Core.Models.DTOs.Input
+﻿namespace Retard.Engine.Models.Input
 {
     /// <summary>
     /// Le type de valeur retournée par une InputAciton
@@ -6,7 +6,7 @@
     public enum InputActionReturnValueType
     {
         ButtonState,
-        Axis1D,
-        Axis2D,
+        Vector1D,
+        Vector2D,
     }
 }

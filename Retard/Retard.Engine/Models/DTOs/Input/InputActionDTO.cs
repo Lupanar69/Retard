@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Retard.Engine.Models.Input;
 
-namespace Retard.Core.Models.DTOs.Input
+namespace Retard.Engine.Models.DTOs.Input
 {
     /// <summary>
     /// Représente les données d'un InputAction
@@ -29,16 +30,6 @@ namespace Retard.Core.Models.DTOs.Input
         }
 
         /// <summary>
-        /// Le type d'action à effectuer lorsqu'on évalue une InputAction donnée
-        /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
-        public InputActionTriggerType TriggerType
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
         /// La liste des bindings de cette action
         /// </summary>
         public InputBindingDTO[] Bindings
@@ -56,14 +47,12 @@ namespace Retard.Core.Models.DTOs.Input
         /// </summary>
         /// <param name="name">L'ID de l'action</param>
         /// <param name="valueType">Le type de valeur retournée par l'action</param>
-        /// <param name="triggerType">Le moment durant lequel la valeur doit être évlauée</param>
         /// <param name="bindings">Les entrées liées à cette action</param>
-        public InputActionDTO(string name, InputActionReturnValueType valueType, InputActionTriggerType triggerType, params InputBindingDTO[] bindings)
+        public InputActionDTO(string name, InputActionReturnValueType valueType, params InputBindingDTO[] bindings)
         {
-            this.Name = name;
-            this.ValueType = valueType;
-            this.TriggerType = triggerType;
-            this.Bindings = bindings;
+            Name = name;
+            ValueType = valueType;
+            Bindings = bindings;
         }
 
         #endregion

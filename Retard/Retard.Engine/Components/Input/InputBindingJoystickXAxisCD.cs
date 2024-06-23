@@ -1,20 +1,20 @@
 ﻿using Arch.AOT.SourceGenerator;
-using Retard.Core.Models.Assets.Input;
+using Retard.Engine.Models.Input;
 
 namespace Retard.Core.Components.Input
 {
     /// <summary>
-    /// L'état du bouton lié à une InptuAction
+    /// Tag indiquant qu'on évalue l'axe X d'un joystick
     /// </summary>
     [Component]
-    public struct InputActionButtonStateCD
+    public struct InputBindingJoystickXAxisCD
     {
         #region Variables d'instance
 
         /// <summary>
-        /// L'état du bouton lié à une InputAction
+        /// Le joystick utilisé
         /// </summary>
-        public InputActionButtonState Value;
+        public JoystickType Value;
 
         #endregion
     }

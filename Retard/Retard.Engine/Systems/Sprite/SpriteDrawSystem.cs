@@ -77,8 +77,6 @@ namespace Retard.Core.Systems.Sprite
         /// </summary>
         public void Update()
         {
-            var local = this;
-
             Queries.UpdateAnimatedSpriteRectQuery(this.World, in this._spriteAtlas);
 
             this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this._camera.GetViewMatrix());

@@ -1,21 +1,20 @@
 ﻿using Arch.AOT.SourceGenerator;
-using Arch.LowLevel;
-using Microsoft.Xna.Framework.Input;
+using Retard.Core.Models.Assets.Input;
 
 namespace Retard.Core.Components.Input
 {
     /// <summary>
-    /// Las touches du clavier à évaluer
+    /// L'état du bouton lié à une InputAction
     /// </summary>
     [Component]
-    public struct InputBindingKeyboardKeysBE
+    public struct InputActionButtonStateValueCD
     {
         #region Variables d'instance
 
         /// <summary>
-        /// Las touches du clavier à évaluer
+        /// L'état du bouton lié à une InputAction
         /// </summary>
-        public UnsafeArray<Keys> Value;
+        public InputActionButtonState Value;
 
         #endregion
     }

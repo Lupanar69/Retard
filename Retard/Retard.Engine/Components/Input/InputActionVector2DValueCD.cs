@@ -1,20 +1,21 @@
 ﻿using Arch.AOT.SourceGenerator;
-using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
 
 namespace Retard.Core.Components.Input
 {
     /// <summary>
-    /// Le bouton de la manette à évaluer
+    /// La valeur d'un joystick
     /// </summary>
     [Component]
-    public struct InputBindingGamePadKeyCD
+    public struct InputActionVector2DValueCD
     {
         #region Variables d'instance
 
         /// <summary>
-        /// Le bouton de la manette à évaluer
+        /// <summary>
+        /// La valeur d'un joystick
         /// </summary>
-        public Buttons Value;
+        public Vector2 Value;
 
         #endregion
     }

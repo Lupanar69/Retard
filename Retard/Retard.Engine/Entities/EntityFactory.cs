@@ -6,7 +6,8 @@ using Microsoft.Xna.Framework.Input;
 using Retard.Core.Components.Input;
 using Retard.Core.Components.Sprites;
 using Retard.Core.Models.Assets.Input;
-using Retard.Core.Models.DTOs.Input;
+using Retard.Engine.Components.Input;
+using Retard.Engine.Models.Input;
 
 namespace Retard.Core.Entities
 {
@@ -25,59 +26,26 @@ namespace Retard.Core.Entities
         #region Input
 
         /// <summary>
-        /// Crée les entités des contextes des entrées
-        /// </summary>
-        /// <param name="world">Le monde contenant ces entités</param>
-        /// <param name="name">L'ID du contexte</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputContextEntities(World world, string name)
-        {
-            return world.Create(new InputContextIDCD { Value = name });
-        }
-
-        /// <summary>
         /// Crée les entités des actions des entrées
         /// </summary>
         /// <param name="world">Le monde contenant ces entités</param>
         /// <param name="name">L'ID du contexte</param>
         /// <param name="valueType">La valeur retournée par l'action</param>
-        /// <param name="triggerType">Le type de l'action</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputActionEntities(World world, string name, InputActionReturnValueType valueType, InputActionTriggerType triggerType)
+        public static Entity CreateInputActionEntities(World world, string name, InputActionReturnValueType valueType)
         {
             Entity e = world.Create(new InputActionIDCD { Value = name });
 
             switch (valueType)
             {
                 case InputActionReturnValueType.ButtonState:
-                    world.Add<InputActionButtonStateCD>(e);
+                    world.Add<InputActionButtonStateValueCD>(e);
                     break;
-                case InputActionReturnValueType.Axis1D:
-                    world.Add<InputAction1DAxisCD>(e);
+                case InputActionReturnValueType.Vector1D:
+                    world.Add<InputActionVector1DValueCD>(e);
                     break;
-                case InputActionReturnValueType.Axis2D:
-                    world.Add<InputAction2DAxisCD>(e);
-                    break;
-            }
-
-            switch (triggerType)
-            {
-                case InputActionTriggerType.Started:
-                    world.Add<InputActionStartedCD>(e);
-                    break;
-                case InputActionTriggerType.Performed:
-                    switch (valueType)
-                    {
-                        case InputActionReturnValueType.ButtonState:
-                            world.Add<InputActionPerformedCD>(e);
-                            break;
-                        default:
-                            world.Add<InputActionPerformedFloatCD>(e);
-                            break;
-                    }
-                    break;
-                case InputActionTriggerType.Finished:
-                    world.Add<InputActionFinishedCD>(e);
+                case InputActionReturnValueType.Vector2D:
+                    world.Add<InputActionVector2DValueCD>(e);
                     break;
             }
 
@@ -88,37 +56,69 @@ namespace Retard.Core.Entities
         /// Crée les entités des entrées
         /// </summary>
         /// <param name="world">Le monde contenant ces entités</param>
-        /// <param name="name">L'ID du contexte</param>
+        /// <param name="keySequence">La séquence d'entrées à réaliser pour exécuter l'action (ex: Ctrl+Z)</param>
+        /// <param name="joystick">Le joystick à utiliser</param>
+        /// <param name="joystickAxis">L'axe du joystick à évaluer</param>
+        /// <param name="deadZone"> La valeur en dessous de laquelle le joystick est considéré comme inerte</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputBindingEntities(World world, MouseKey mouseKey, Keys[] keyboardKeys, Buttons gamePadKey, InputBindingAxisType axisType, float deadZone)
+        internal static Entity CreateInputBindingEntities(World world, InputKeySequenceElement[] keySequence, JoystickType joystick, JoystickAxis joystickAxis, float deadZone)
         {
-            if (mouseKey != MouseKey.None)
+            if (joystick != JoystickType.None)
             {
-                return world.Create(new InputBindingMouseKeyCD { Value = mouseKey });
-            }
+                Entity e = world.Create(new InputBindingDeadZoneCD { Value = deadZone });
 
-            if (gamePadKey != Buttons.None)
-            {
-                Entity e = world.Create(new InputBindingGamePadKeyCD { Value = gamePadKey });
-
-                if (axisType != InputBindingAxisType.None)
+                switch (joystickAxis)
                 {
-                    world.Add(e, new InputBindingDeadZoneCD { Value = deadZone });
+                    case JoystickAxis.Both:
+                        world.Add(e, new InputBindingJoystickXAxisCD { Value = joystick });
+                        world.Add(e, new InputBindingJoystickYAxisCD { Value = joystick });
+                        break;
+                    case JoystickAxis.XAxis:
+                        world.Add(e, new InputBindingJoystickXAxisCD { Value = joystick });
+                        break;
+                    case JoystickAxis.YAxis:
+                        world.Add(e, new InputBindingJoystickYAxisCD { Value = joystick });
+                        break;
                 }
 
                 return e;
             }
 
-            if (keyboardKeys != null && keyboardKeys.Length > 0)
+            if (keySequence != null || keySequence.Length >= 0)
             {
-                UnsafeArray<Keys> keys = new(keyboardKeys.Length);
+                UnsafeArray<InputBindingKeyType> keyTypes = new(keySequence.Length);
+                UnsafeArray<int> keys = new(keySequence.Length);
+                UnsafeArray<InputKeySequenceState> validStates = new(keySequence.Length);
 
-                for (int i = 0; i < keyboardKeys.Length; ++i)
+                for (int i = 0; i < keySequence.Length; ++i)
                 {
-                    keys[i] = keyboardKeys[i];
+                    InputKeySequenceElement element = keySequence[i];
+
+                    if (element.MouseKey != MouseKey.None)
+                    {
+                        keyTypes[i] = InputBindingKeyType.MouseKey;
+                        keys[i] = (int)element.MouseKey;
+                    }
+                    else if (element.KeyboardKey != Keys.None)
+                    {
+                        keyTypes[i] = InputBindingKeyType.KeyboardKey;
+                        keys[i] = (int)element.KeyboardKey;
+                    }
+                    else if (element.GamePadKey != Buttons.None)
+                    {
+                        keyTypes[i] = InputBindingKeyType.GamePadKey;
+                        keys[i] = (int)element.GamePadKey;
+                    }
+                    else if (element.JoystickKey != JoystickKey.None)
+                    {
+                        keyTypes[i] = InputBindingKeyType.JoystickKey;
+                        keys[i] = (int)element.JoystickKey;
+                    }
+
+                    validStates[i] = element.ValidState;
                 }
 
-                return world.Create(new InputBindingKeyboardKeysBE { Value = keys });
+                Entity e = world.Create(new InputBindingKeySequenceBU { KeyTypes = keyTypes, Keys = keys, ValidStates = validStates });
             }
 
             return Entity.Null;

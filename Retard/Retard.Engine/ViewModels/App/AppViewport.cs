@@ -1,8 +1,9 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Retard.Core.Models;
-using Retard.Core.Models.DTOs.App;
 using Retard.Core.ViewModels.JSON;
+using Retard.Engine.Models.App;
+using Retard.Engine.Models.DTOs.App;
 
 namespace Retard.Core.ViewModels.App
 {

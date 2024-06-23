@@ -2,8 +2,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models.Assets.Input;
-using Retard.Core.Models.DTOs.App;
-using Retard.Core.Models.DTOs.Input;
+using Retard.Engine.Models.App;
+using Retard.Engine.Models.DTOs.App;
+using Retard.Engine.Models.DTOs.Input;
+using Retard.Engine.Models.Input;
 
 namespace Retard.Core.Models
 {
@@ -76,6 +78,12 @@ namespace Retard.Core.Models
         #region Config
 
         /// <summary>
+        /// <see langword="true"/> si on veut réécrire les fichiers de config
+        /// pour recommencer de zéro
+        /// </summary>
+        public const bool OVERRIDE_DEFAULT_AND_CUSTOM_FILES = true;
+
+        /// <summary>
         /// Configuration par défaut des paramètres de l'application
         /// </summary>
         public static readonly AppSettingsDTO DEFAULT_APP_SETTINGS = new
@@ -94,39 +102,43 @@ namespace Retard.Core.Models
         /// </summary>
         public static readonly InputConfigDTO DEFAULT_INPUT_CONFIG = new
             (
-                new InputContextDTO
-                    (
-                        "Camera",
-                         new InputActionDTO
-                            (
-                                "Move",
-                                InputActionReturnValueType.Axis2D,
-                                InputActionTriggerType.Performed,
-                                new InputBindingDTO(MouseKey.Mouse0),
-                                new InputBindingDTO(Keys.Left, Keys.Right, Keys.Up, Keys.Down),
-                                new InputBindingDTO(Keys.Q, Keys.D, Keys.Z, Keys.S),
-                                new InputBindingDTO(Buttons.LeftStick, InputBindingAxisType.Both, 0.24f)
-                            ),
-                         new InputActionDTO
-                            (
-                                "Reset",
-                                InputActionReturnValueType.ButtonState,
-                                InputActionTriggerType.Started,
-                                new InputBindingDTO(Keys.R)
-                            )
-                    )
+                new InputActionDTO
+                (
+                    "Camera/Move",
+                    InputActionReturnValueType.Vector2D,
+                    new InputBindingDTO(Keys.Left, Keys.Right, Keys.Up, Keys.Down),
+                    new InputBindingDTO(Keys.Q, Keys.D, Keys.Z, Keys.S),
+                    new InputBindingDTO(Buttons.DPadLeft, Buttons.DPadRight, Buttons.DPadUp, Buttons.DPadDown),
+                    new InputBindingDTO(JoystickType.Left, JoystickKey.West, JoystickKey.East, JoystickKey.North, JoystickKey.South),
+                    new InputBindingDTO(JoystickType.Right, JoystickAxis.Both, 0.24f)
+                ),
+                new InputActionDTO
+                (
+                    "Camera/LeftMousePressed",
+                    InputActionReturnValueType.ButtonState,
+                    new InputBindingDTO(new InputKeySequenceElement(MouseKey.Mouse0, InputKeySequenceState.Held))
+                ),
+                new InputActionDTO
+                (
+                    "Camera/Reset",
+                    InputActionReturnValueType.ButtonState,
+                    new InputBindingDTO(
+                        new InputKeySequenceElement(Keys.LeftControl, InputKeySequenceState.Held),
+                        new InputKeySequenceElement(MouseKey.Mouse1, InputKeySequenceState.Pressed)
+                        ),
+                    new InputBindingDTO(
+                        new InputKeySequenceElement(Buttons.RightShoulder, InputKeySequenceState.Held),
+                        new InputKeySequenceElement(Buttons.A, InputKeySequenceState.Pressed)
+                        )
+                )
 #if TESTS
-                , new InputContextDTO
-                    (
-                        "Test",
-                         new InputActionDTO
-                            (
-                                "CreateSprites",
-                                InputActionReturnValueType.ButtonState,
-                                InputActionTriggerType.Started,
-                                new InputBindingDTO(Keys.Space)
-                            )
-                    )
+                , new InputActionDTO
+                  (
+                      "Test/CreateSprites",
+                      InputActionReturnValueType.ButtonState,
+                      new InputBindingDTO(new InputKeySequenceElement(Keys.Space, InputKeySequenceState.Pressed)),
+                      new InputBindingDTO(new InputKeySequenceElement(Buttons.Start, InputKeySequenceState.Pressed))
+                  )
 #endif
             );
 
