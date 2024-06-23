@@ -4,8 +4,8 @@ using Retard.Core.Components.Input;
 using Retard.Core.Entities;
 using Retard.Core.Models;
 using Retard.Core.Models.Arch;
-using Retard.Core.ViewModels.JSON;
 using Retard.Engine.Models.DTOs.Input;
+using Retard.Engine.ViewModels.Utilities;
 
 namespace Retard.Core.Systems.Input
 {

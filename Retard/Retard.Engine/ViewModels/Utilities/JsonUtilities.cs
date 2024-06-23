@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
-namespace Retard.Core.ViewModels.JSON
+namespace Retard.Engine.ViewModels.Utilities
 {
     /// <summary>
     /// Utilisée pour lire et écrire dans des fichiers Json
@@ -28,10 +28,10 @@ namespace Retard.Core.ViewModels.JSON
         /// </summary>
         static JsonUtilities()
         {
-            JsonUtilities._jsonSerializerSettings = new();
-            JsonUtilities._jsonSerializerSettings.Converters.Add(new StringEnumConverter());
-            JsonUtilities._jsonSerializerSettings.Formatting = Formatting.Indented;
-            JsonUtilities._jsonSerializerSettings.DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate;
+            _jsonSerializerSettings = new();
+            _jsonSerializerSettings.Converters.Add(new StringEnumConverter());
+            _jsonSerializerSettings.Formatting = Formatting.Indented;
+            _jsonSerializerSettings.DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate;
         }
 
         #endregion
@@ -99,7 +99,7 @@ namespace Retard.Core.ViewModels.JSON
         /// <param name="data">La donnée à écrire</param>
         public static string SerializeObject(object data)
         {
-            return JsonConvert.SerializeObject(data, JsonUtilities._jsonSerializerSettings);
+            return JsonConvert.SerializeObject(data, _jsonSerializerSettings);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Retard.Core.ViewModels.JSON
 
             try
             {
-                obj = JsonConvert.DeserializeObject<T>(json, JsonUtilities._jsonSerializerSettings);
+                obj = JsonConvert.DeserializeObject<T>(json, _jsonSerializerSettings);
             }
             catch (JsonException ex)
             {
