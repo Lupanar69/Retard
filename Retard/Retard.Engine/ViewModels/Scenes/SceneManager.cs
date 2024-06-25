@@ -146,7 +146,7 @@ namespace Retard.Core.ViewModels.Scenes
         {
             int index = SceneManager._activeScenes.IndexOf(scene);
 
-            for (int i = SceneManager._activeScenes.Count - 1; i >= index; i--)
+            for (int i = SceneManager._activeScenes.Count - 1; i >= index; --i)
             {
                 IScene s = SceneManager._activeScenes[i];
                 Type t = s.GetType();
@@ -161,7 +161,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public static void UpdateInput(GameTime gameTime)
         {
-            for (int i = SceneManager._activeScenes.Count - 1; i >= 0; i--)
+            for (int i = SceneManager._activeScenes.Count - 1; i >= 0; --i)
             {
                 IScene scene = SceneManager._activeScenes[i];
                 scene.OnUpdateInput(gameTime);
@@ -179,9 +179,15 @@ namespace Retard.Core.ViewModels.Scenes
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public static void Update(GameTime gameTime)
         {
-            foreach (IScene scene in _activeScenes)
+            for (int i = SceneManager._activeScenes.Count - 1; i >= 0; --i)
             {
+                IScene scene = SceneManager._activeScenes[i];
                 scene.OnUpdate(gameTime);
+
+                if (scene.ConsumeUpdate)
+                {
+                    break;
+                }
             }
         }
 
@@ -193,7 +199,7 @@ namespace Retard.Core.ViewModels.Scenes
         {
             int startDrawIndex = 0;
 
-            for (int i = 0; i < SceneManager._activeScenes.Count; i++)
+            for (int i = 0; i < SceneManager._activeScenes.Count; ++i)
             {
                 if (SceneManager._activeScenes[i].ConsumeDraw)
                 {
@@ -201,7 +207,7 @@ namespace Retard.Core.ViewModels.Scenes
                 }
             }
 
-            for (int i = startDrawIndex; i < SceneManager._activeScenes.Count; i++)
+            for (int i = startDrawIndex; i < SceneManager._activeScenes.Count; ++i)
             {
                 SceneManager._activeScenes[i].OnDraw(gameTime);
             }

@@ -153,9 +153,9 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="vector2DIDs">La liste des IDs des actions de type Vector2D</param>
         public static void InitializeInputActionEvents(UnsafeList<NativeString> buttonIDs, UnsafeList<NativeString> vector1DIDs, UnsafeList<NativeString> vector2DIDs)
         {
-            InputManager._actionResources = new(buttonIDs.Count * 3);
-            InputManager._actionVector1DResources = new(vector1DIDs.Count * 3);
-            InputManager._actionVector2DResources = new(vector1DIDs.Count * 3);
+            InputManager._actionResources = new(buttonIDs.Count == 0 ? 1 : buttonIDs.Count * 3);
+            InputManager._actionVector1DResources = new(vector1DIDs.Count == 0 ? 1 : vector1DIDs.Count * 3);
+            InputManager._actionVector2DResources = new(vector2DIDs.Count == 0 ? 1 : vector2DIDs.Count * 3);
 
             InputManager._buttonStateEventsIDs = buttonIDs;
             InputManager._vector1DEventsIDs = vector1DIDs;

@@ -9,10 +9,10 @@ using Retard.Core.ViewModels.Scenes;
 namespace Retard.Tests.ViewModels.Scenes
 {
     /// <summary>
-    /// Scène de test pour vérifier qu'elle bloque bien les entrées
+    /// Scène de test pour vérifier qu'elle bloque bien l'Update
     /// pour les scènes la suivant dans la liste
     /// </summary>
-    public sealed class BlockInputTestScene : IScene
+    public sealed class BlockUpdateTestScene : IScene
     {
         #region Properties
 
@@ -31,7 +31,7 @@ namespace Retard.Tests.ViewModels.Scenes
         public bool ConsumeUpdate { get; init; }
 
         /// <summary>
-        /// <see langword="true"/> si la scène doit bloquer le rendu
+        /// <see langword="true"/> si la scène doit bloquer le rendu 
         /// pour les scènes qui suivent
         /// (ex: une scène de pause superposée à la scène de jeu)
         /// </summary>
@@ -58,9 +58,9 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Constructeur
         /// </summary>
-        public BlockInputTestScene() : base()
+        public BlockUpdateTestScene() : base()
         {
-            this.ConsumeInput = true;
+            this.ConsumeUpdate = true;
             this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
         }
 
@@ -86,23 +86,23 @@ namespace Retard.Tests.ViewModels.Scenes
         }
 
         /// <summary>
-        /// Appelée à chaque fois que la scène devient active
-        /// </summary>
-        public void OnSetActive()
-        {
-
-        }
-
-        /// <summary>
         /// Récupère les inputs nécessaires au fonctionnement des systèmes
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         public void OnUpdateInput(GameTime gameTime)
         {
-            if (this._keyboardInput.IsKeyPressed(Keys.Space))
+            if (this._keyboardInput.IsKeyPressed(Keys.Enter))
             {
                 SceneManager.RemoveLastActiveScene();
             }
+        }
+
+        /// <summary>
+        /// Appelée à chaque fois que la scène devient active
+        /// </summary>
+        public void OnSetActive()
+        {
+
         }
 
         /// <summary>
@@ -128,6 +128,5 @@ namespace Retard.Tests.ViewModels.Scenes
         }
 
         #endregion
-
     }
 }

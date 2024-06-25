@@ -175,15 +175,8 @@ namespace Retard.Client
             SceneManager.AddSceneToPool(new OrthographicCameraScene(this._cameraController));
 
 #if TESTS
-            //SceneManager.AddSceneToPool(new TestScene1());
-            //SceneManager.AddSceneToPool(new TestScene2());
-            //SceneManager.AddSceneToPool(new TestScene3());
-            //SceneManager.SetSceneAsActive<TestScene1>();
             SceneManager.AddSceneToPool(new SpriteDrawTestScene(this._cameraController.Camera, new Point(100)));
-            //SceneManager.AddSceneToPool(new BlockDrawTestScene());
-            //SceneManager.AddSceneToPool(new BlockInputTestScene());
             SceneManager.SetSceneAsActive<SpriteDrawTestScene>();
-            //SceneManager.SetSceneAsActive<BlockDrawTestScene>();
 #endif
 
             SceneManager.SetSceneAsActive<OrthographicCameraScene>();
