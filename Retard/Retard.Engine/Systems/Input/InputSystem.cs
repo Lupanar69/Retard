@@ -1,9 +1,12 @@
 ﻿using Arch.Core;
+using Arch.LowLevel;
 using Arch.Relationships;
 using Retard.Core.Components.Input;
 using Retard.Core.Entities;
 using Retard.Core.Models;
 using Retard.Core.Models.Arch;
+using Retard.Core.Models.ValueTypes;
+using Retard.Core.ViewModels.Input;
 using Retard.Engine.Models.DTOs.Input;
 using Retard.Engine.ViewModels.Utilities;
 
@@ -76,7 +79,7 @@ namespace Retard.Core.Systems.Input
             {
                 InputActionDTO action = config.Actions[i];
 
-                if (action.Bindings == null ^ action.Bindings.Length == 0)
+                if (action.Bindings == null || action.Bindings.Length == 0)
                 {
                     continue;
                 }
@@ -103,34 +106,36 @@ namespace Retard.Core.Systems.Input
 
         /// <summary>
         /// Pour chaque InputAction, crée ses events
-        /// et les passe à l'InputManager
+        /// et les enregistre dans l'InputManager
         /// </summary>
         /// <param name="world">Le monde contenant les entités</param>
         private static void CreateInputActionEvents(World world)
         {
-            //var query = new QueryDescription().WithAll<InputActionIDCD>();
-            //world.Query(in query, (Entity e, ref InputActionIDCD contextID) =>
-            //{
-            //    ref var actionOfRel = ref e.GetRelationships<InputActionOf>();
+            var query1 = new QueryDescription().WithAll<InputActionIDCD, InputActionButtonStateValueCD>();
+            var query2 = new QueryDescription().WithAll<InputActionIDCD, InputActionVector1DValueCD>();
+            var query3 = new QueryDescription().WithAll<InputActionIDCD, InputActionVector2DValueCD>();
 
-            //    foreach (KeyValuePair<Entity, InputActionOf> pair in actionOfRel)
-            //    {
-            //        NativeString eventID = $"{contextID}/{world.Get<InputActionIDCD>(pair.Key).Value}";
+            UnsafeList<NativeString> list1 = new(1);
+            UnsafeList<NativeString> list2 = new(1);
+            UnsafeList<NativeString> list3 = new(1);
 
-            //        if (world.Has<InputActionPerformedCD>(pair.Key))
-            //        {
-            //            var handlesRefs = world.Get<InputActionStartedCD, InputActionFinishedCD, InputActionPerformedCD>(pair.Key);
-            //        }
-            //        else if (world.Has<InputActionPerformed1DAxisCD>(pair.Key))
-            //        {
-            //            var handlesRefs = world.Get<InputActionStartedCD, InputActionFinishedCD, InputActionPerformed1DAxisCD>(pair.Key);
-            //        }
-            //        else if (world.Has<InputActionPerformed2DAxisCD>(pair.Key))
-            //        {
-            //            var handlesRefs = world.Get<InputActionStartedCD, InputActionFinishedCD, InputActionPerformed2DAxisCD>(pair.Key);
-            //        }
-            //    }
-            //});
+            world.Query(in query1, (ref InputActionIDCD actionID) =>
+            {
+                list1.Add(actionID.Value);
+            });
+
+            world.Query(in query2, (ref InputActionIDCD actionID) =>
+            {
+                list2.Add(actionID.Value);
+            });
+
+            world.Query(in query3, (ref InputActionIDCD actionID) =>
+            {
+                list3.Add(actionID.Value);
+            });
+
+            InputManager.InitializeInputActionEvents(list1, list2, list3);
+
         }
 
         #endregion

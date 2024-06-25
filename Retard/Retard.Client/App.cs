@@ -71,7 +71,7 @@ namespace Retard.Client
         {
             // Initialise les inputs
 
-            InputManager.Initialize(new KeyboardInput(), new MouseInput(), new GamePadInput(GamePad.MaximumGamePadCount));
+            InputManager.InitializeSchemes(new KeyboardInput(), new MouseInput(), new GamePadInput(GamePad.MaximumGamePadCount));
             this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
             this._gamePadInput = InputManager.GetScheme<GamePadInput>();
 
