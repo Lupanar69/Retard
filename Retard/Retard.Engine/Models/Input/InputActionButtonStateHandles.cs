@@ -8,7 +8,7 @@ namespace Retard.Engine.Models.Input
     /// Les événements pour les inputs de type State
     /// (bouton maintenu)
     /// </summary>
-    public struct InputActionButtonStateEvents
+    public struct InputActionButtonStateHandles
     {
         #region Propriétés
 
@@ -68,7 +68,7 @@ namespace Retard.Engine.Models.Input
         /// <param name="started">Handle de l'action de début de l'event</param>
         /// <param name="performed">Handle de l'action en cours de l'event</param>
         /// <param name="finished">Handle de l'action de fin de l'event</param>
-        public InputActionButtonStateEvents(Handle<Action> started, Handle<Action> performed, Handle<Action> finished)
+        public InputActionButtonStateHandles(Handle<Action> started, Handle<Action> performed, Handle<Action> finished)
         {
             this._started = started;
             this._performed = performed;
