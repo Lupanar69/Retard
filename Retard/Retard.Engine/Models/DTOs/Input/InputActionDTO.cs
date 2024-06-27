@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Retard.Engine.Models.Input;
+using Retard.Engine.Models.Assets.Input;
 
 namespace Retard.Engine.Models.DTOs.Input
 {

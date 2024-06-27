@@ -7,7 +7,7 @@ using Retard.Core.Components.Input;
 using Retard.Core.Components.Sprites;
 using Retard.Core.Models.Assets.Input;
 using Retard.Engine.Components.Input;
-using Retard.Engine.Models.Input;
+using Retard.Engine.Models.Assets.Input;
 
 namespace Retard.Core.Entities
 {

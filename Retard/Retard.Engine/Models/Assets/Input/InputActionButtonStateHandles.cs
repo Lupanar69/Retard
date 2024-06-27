@@ -2,7 +2,7 @@
 using Arch.LowLevel;
 using Retard.Core.ViewModels.Input;
 
-namespace Retard.Engine.Models.Input
+namespace Retard.Engine.Models.Assets.Input
 {
     /// <summary>
     /// Les événements pour les inputs de type State
@@ -17,8 +17,8 @@ namespace Retard.Engine.Models.Input
         /// </summary>
         public Action Started
         {
-            get => InputManager.ActionResources.Get(in this._started);
-            set => InputManager.ActionResources.Get(in this._started) = value;
+            get => InputManager.ActionResources.Get(in _started);
+            set => InputManager.ActionResources.Get(in _started) = value;
         }
 
         /// <summary>
@@ -26,8 +26,8 @@ namespace Retard.Engine.Models.Input
         /// </summary>
         public Action Performed
         {
-            get => InputManager.ActionResources.Get(in this._performed);
-            set => InputManager.ActionResources.Get(in this._performed) = value;
+            get => InputManager.ActionResources.Get(in _performed);
+            set => InputManager.ActionResources.Get(in _performed) = value;
         }
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace Retard.Engine.Models.Input
         /// </summary>
         public Action Finished
         {
-            get => InputManager.ActionResources.Get(in this._finished);
-            set => InputManager.ActionResources.Get(in this._finished) = value;
+            get => InputManager.ActionResources.Get(in _finished);
+            set => InputManager.ActionResources.Get(in _finished) = value;
         }
 
         #endregion
@@ -70,9 +70,9 @@ namespace Retard.Engine.Models.Input
         /// <param name="finished">Handle de l'action de fin de l'event</param>
         public InputActionButtonStateHandles(Handle<Action> started, Handle<Action> performed, Handle<Action> finished)
         {
-            this._started = started;
-            this._performed = performed;
-            this._finished = finished;
+            _started = started;
+            _performed = performed;
+            _finished = finished;
         }
 
         #endregion

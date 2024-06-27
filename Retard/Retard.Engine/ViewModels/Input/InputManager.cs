@@ -4,7 +4,7 @@ using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Retard.Core.Models.Assets.Input;
 using Retard.Core.Models.ValueTypes;
-using Retard.Engine.Models.Input;
+using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.ViewModels.Input;
 
 namespace Retard.Core.ViewModels.Input

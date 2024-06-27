@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models.Assets.Input;
 using Retard.Engine.Models.App;
+using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.Models.DTOs.App;
 using Retard.Engine.Models.DTOs.Input;
-using Retard.Engine.Models.Input;
 
 namespace Retard.Core.Models
 {

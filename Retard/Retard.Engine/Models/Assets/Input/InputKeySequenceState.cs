@@ -1,4 +1,4 @@
-﻿namespace Retard.Engine.Models.Input
+﻿namespace Retard.Engine.Models.Assets.Input
 {
     /// <summary>
     /// L'état que doit avoir un InputKeySequenceElement

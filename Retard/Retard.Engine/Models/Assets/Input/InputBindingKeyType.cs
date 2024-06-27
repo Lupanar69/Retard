@@ -1,4 +1,4 @@
-﻿namespace Retard.Engine.Models.Input
+﻿namespace Retard.Engine.Models.Assets.Input
 {
     /// <summary>
     /// Représente les différents types d'entrées de type bouton

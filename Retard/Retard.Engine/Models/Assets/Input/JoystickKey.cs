@@ -1,4 +1,4 @@
-﻿namespace Retard.Engine.Models.Input
+﻿namespace Retard.Engine.Models.Assets.Input
 {
     /// <summary>
     /// Représente une direction du joystick lorsqu'il est poussé par le joueur. 

@@ -1,5 +1,5 @@
 ﻿using Arch.AOT.SourceGenerator;
-using Retard.Engine.Models.Input;
+using Retard.Engine.Models.Assets.Input;
 
 namespace Retard.Core.Components.Input
 {

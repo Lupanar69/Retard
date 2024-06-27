@@ -1,25 +1,27 @@
 ﻿using System;
 using Arch.LowLevel;
+using Microsoft.Xna.Framework;
 using Retard.Core.ViewModels.Input;
 
-namespace Retard.Engine.Models.Input
+namespace Retard.Engine.Models.Assets.Input
 {
     /// <summary>
     /// Contient l'event retournant la valeur
     /// de l'action
     /// </summary>
-    public struct InputActionVector1DHandles
+    public struct InputActionVector2DHandles
     {
         #region Propriétés
 
         /// <summary>
         /// Appelé quand l'action est en cours
         /// </summary>
-        public Action<float> Performed
+        public Action<Vector2> Performed
         {
-            get => InputManager.ActionVector1DResources.Get(in this._performed);
-            set => InputManager.ActionVector1DResources.Get(in this._performed) = value;
+            get => InputManager.ActionVector2DResources.Get(in _performed);
+            set => InputManager.ActionVector2DResources.Get(in _performed) = value;
         }
+
 
         #endregion
 
@@ -28,7 +30,7 @@ namespace Retard.Engine.Models.Input
         /// <summary>
         /// Appelé quand l'action est en cours
         /// </summary>
-        private Handle<Action<float>> _performed;
+        private Handle<Action<Vector2>> _performed;
 
         #endregion
 
@@ -38,9 +40,9 @@ namespace Retard.Engine.Models.Input
         /// Constructeur
         /// </summary>
         /// <param name="performed">Handle de l'action en cours de l'event</param>
-        public InputActionVector1DHandles(Handle<Action<float>> performed)
+        public InputActionVector2DHandles(Handle<Action<Vector2>> performed)
         {
-            this._performed = performed;
+            _performed = performed;
         }
 
         #endregion

@@ -1,7 +1,7 @@
 ﻿using Arch.LowLevel;
 using Retard.Core.Models.ValueTypes;
 using Retard.Core.ViewModels.Input;
-using Retard.Engine.Models.Input;
+using Retard.Engine.Models.Assets.Input;
 
 namespace Retard.Engine.ViewModels.Input
 {

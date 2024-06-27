@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Retard.Core.Models.Assets.Input;
 
-namespace Retard.Engine.Models.Input
+namespace Retard.Engine.Models.Assets.Input
 {
     /// <summary>
     /// Un élément d'une séquence d'entrées à réaliser 
@@ -73,11 +73,11 @@ namespace Retard.Engine.Models.Input
         [JsonConstructor]
         public InputKeySequenceElement(MouseKey mouseKey, Keys keyboardKey, Buttons gamePadKey, JoystickKey joystickKey, InputKeySequenceState validState)
         {
-            this.MouseKey = mouseKey;
-            this.KeyboardKey = keyboardKey;
-            this.GamePadKey = gamePadKey;
-            this.ValidState = validState;
-            this.JoystickKey = joystickKey;
+            MouseKey = mouseKey;
+            KeyboardKey = keyboardKey;
+            GamePadKey = gamePadKey;
+            ValidState = validState;
+            JoystickKey = joystickKey;
         }
 
         /// <summary>
