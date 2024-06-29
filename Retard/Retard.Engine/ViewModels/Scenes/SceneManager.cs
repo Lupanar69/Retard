@@ -112,6 +112,7 @@ namespace Retard.Core.ViewModels.Scenes
             SceneManager._inactiveScenes.Remove(t, out IScene scene);
             SceneManager._activeScenes.Add(scene);
             scene.OnSetActive();
+            SceneManager.SetScenesControlsActiveState();
         }
 
         /// <summary>
@@ -123,6 +124,7 @@ namespace Retard.Core.ViewModels.Scenes
             Type t = scene.GetType();
             SceneManager._activeScenes.Remove(scene);
             SceneManager._inactiveScenes.Add(t, scene);
+            SceneManager.SetScenesControlsActiveState();
         }
 
         /// <summary>
@@ -134,6 +136,7 @@ namespace Retard.Core.ViewModels.Scenes
             Type t = scene.GetType();
             SceneManager._activeScenes.Remove(scene);
             SceneManager._inactiveScenes.Add(t, scene);
+            SceneManager.SetScenesControlsActiveState();
         }
 
         /// <summary>
@@ -151,6 +154,8 @@ namespace Retard.Core.ViewModels.Scenes
                 SceneManager._activeScenes.RemoveAt(i);
                 SceneManager._inactiveScenes.Add(t, s);
             }
+
+            SceneManager.SetScenesControlsActiveState();
         }
 
         /// <summary>
@@ -208,6 +213,37 @@ namespace Retard.Core.ViewModels.Scenes
             for (int i = startDrawIndex; i < SceneManager._activeScenes.Count; ++i)
             {
                 SceneManager._activeScenes[i].OnDraw(gameTime);
+            }
+        }
+
+        #endregion
+
+        #region Méthodes privées
+
+        /// <summary>
+        /// Active ou désactive les InputControls des scènes
+        /// si l'un d'entre elles a <see cref="IScene.ConsumeInput"/> à <see langword="true"/>
+        /// </summary>
+        private static void SetScenesControlsActiveState()
+        {
+            int endDisableIndex = 0;
+
+            for (int i = 0; i < SceneManager._activeScenes.Count; ++i)
+            {
+                if (SceneManager._activeScenes[i].ConsumeInput)
+                {
+                    endDisableIndex = i;
+                }
+            }
+
+            for (int i = 0; i < endDisableIndex; ++i)
+            {
+                SceneManager._activeScenes[i].DisableControls();
+            }
+
+            for (int i = endDisableIndex; i < SceneManager._activeScenes.Count; ++i)
+            {
+                SceneManager._activeScenes[i].EnableControls();
             }
         }
 

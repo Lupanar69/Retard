@@ -132,9 +132,17 @@ namespace Retard.Core.Models
                         )
                 )
 #if TESTS
-                , new InputActionDTO
+
+            , new InputActionDTO
                   (
                       "Test/CreateSprites",
+                      InputActionReturnValueType.ButtonState,
+                      new InputBindingDTO(new InputKeySequenceElement(Keys.Space, InputKeySequenceState.Pressed)),
+                      new InputBindingDTO(new InputKeySequenceElement(Buttons.Start, InputKeySequenceState.Pressed))
+                  )
+            , new InputActionDTO
+                  (
+                      "Test/DisableBlockInput",
                       InputActionReturnValueType.ButtonState,
                       new InputBindingDTO(new InputKeySequenceElement(Keys.Space, InputKeySequenceState.Pressed)),
                       new InputBindingDTO(new InputKeySequenceElement(Buttons.Start, InputKeySequenceState.Pressed))

@@ -66,7 +66,7 @@ namespace Retard.Tests.ViewModels.Scenes
         {
             if (this._keyboardInput.IsKeyPressed(Keys.Space))
             {
-                SceneManager.RemoveLastActiveScene();
+                SceneManager.RemoveActiveScene(this);
             }
         }
 

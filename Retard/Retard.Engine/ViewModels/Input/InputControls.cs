@@ -10,6 +10,15 @@ namespace Retard.Engine.ViewModels.Input
     /// </summary>
     public sealed class InputControls
     {
+        #region Propriétés
+
+        /// <summary>
+        /// <see langword="true"/> si l'objet est abonné à l'InputManager
+        /// </summary>
+        public bool Enabled => this._enabled;
+
+        #endregion
+
         #region Variables d'instance
 
         /// <summary>
@@ -45,7 +54,7 @@ namespace Retard.Engine.ViewModels.Input
         /// <summary>
         /// <see langword="true"/> si l'objet est abonné à l'InputManager
         /// </summary>
-        private bool _subscribed;
+        private bool _enabled;
 
         #endregion
 
@@ -105,7 +114,7 @@ namespace Retard.Engine.ViewModels.Input
         /// <param name="vector2DIDs">La liste des IDs des actions de type Vector2D</param>
         public InputControls(UnsafeList<NativeString> buttonIDs, UnsafeList<NativeString> vector1DIDs, UnsafeList<NativeString> vector2DIDs)
         {
-            this._subscribed = false;
+            this._enabled = false;
 
             this._buttonStateHandlesIDs = new UnsafeList<NativeString>(buttonIDs.Capacity);
             this._vector1DHandlesIDs = new UnsafeList<NativeString>(vector1DIDs.Capacity);
@@ -156,10 +165,10 @@ namespace Retard.Engine.ViewModels.Input
         /// </summary>
         public void Enable()
         {
-            if (!this._subscribed)
+            if (!this._enabled)
             {
                 InputManager.Handles += this;
-                this._subscribed = true;
+                this._enabled = true;
             }
         }
 
@@ -168,10 +177,10 @@ namespace Retard.Engine.ViewModels.Input
         /// </summary>
         public void Disable()
         {
-            if (this._subscribed)
+            if (this._enabled)
             {
                 InputManager.Handles -= this;
-                this._subscribed = false;
+                this._enabled = false;
             }
         }
 
