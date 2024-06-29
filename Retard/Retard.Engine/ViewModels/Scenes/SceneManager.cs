@@ -88,8 +88,6 @@ namespace Retard.Core.ViewModels.Scenes
         {
             Type t = scene.GetType();
             SceneManager._inactiveScenes.Add(t, scene);
-            scene.OnInitialize();
-            scene.OnLoadContent();
         }
 
         /// <summary>

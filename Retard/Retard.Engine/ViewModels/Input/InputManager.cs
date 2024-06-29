@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Arch.Core;
 using Arch.LowLevel;
 using Microsoft.Xna.Framework;
+using Retard.Core.Models.Arch;
 using Retard.Core.Models.Assets.Input;
 using Retard.Core.Models.ValueTypes;
+using Retard.Core.Systems.Input;
 using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.ViewModels.Input;
 
@@ -20,17 +23,17 @@ namespace Retard.Core.ViewModels.Input
         /// <summary>
         /// Permet d'accéder aux events sans type
         /// </summary>
-        public static Resources<Action> ActionResources => InputManager._actionResources;
+        public static Resources<Action> ActionResources { get; private set; }
 
         /// <summary>
         /// Permet d'accéder aux events de type Vector1D
         /// </summary>
-        public static Resources<Action<float>> ActionVector1DResources => InputManager._actionVector1DResources;
+        public static Resources<Action<float>> ActionVector1DResources { get; private set; }
 
         /// <summary>
         /// Permet d'accéder aux events de type Vector2D
         /// </summary>
-        public static Resources<Action<Vector2>> ActionVector2DResources => InputManager._actionVector2DResources;
+        public static Resources<Action<Vector2>> ActionVector2DResources { get; private set; }
 
         /// <summary>
         /// Regroupe les handles de chaque InputAction
@@ -42,31 +45,33 @@ namespace Retard.Core.ViewModels.Input
         #region Variables d'instance
 
         /// <summary>
+        /// Les systèmes ECS à màj dans Update()
+        /// </summary>
+        private static readonly Group _updateSystems;
+
+        /// <summary>
         /// La liste des types d'entrées autorisées pour ce jeu
         /// (clavier, souris, manette, etc.)
         /// </summary>
         private static Dictionary<Type, IInputScheme> _inputSchemes;
 
-        /// <summary>
-        /// Permet d'accéder aux events sans type
-        /// </summary>
-        private static Resources<Action> _actionResources;
+        #endregion
+
+        #region Constructeur
 
         /// <summary>
-        /// Permet d'accéder aux events de type Vector1D
+        /// Constructeur
         /// </summary>
-        private static Resources<Action<float>> _actionVector1DResources;
-
-        /// <summary>
-        /// Permet d'accéder aux events de type Vector2D
-        /// </summary>
-        private static Resources<Action<Vector2>> _actionVector2DResources;
+        static InputManager()
+        {
+            InputManager._updateSystems = new Group("Update Systems");
+        }
 
         #endregion
 
         #region Méthodes statiques publiques
 
-        #region Schemes
+        #region Init
 
         /// <summary>
         /// Crée les InputSchemes pour chaque type de contrôleur souhaité
@@ -83,15 +88,33 @@ namespace Retard.Core.ViewModels.Input
         }
 
         /// <summary>
-        /// Récupère le contrôleur du type souhaité
+        /// Crée les systèmes ECS gérant les entrées
         /// </summary>
-        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
-        /// <returns>Le contrôleur souhaité</returns>
-        public static T GetScheme<T>() where T : IInputScheme, new()
+        /// <param name="world">Le monde contenant les entités</param>
+        public static void InitializeSystems(World world)
         {
-            Type t = typeof(T);
-            return (T)InputManager._inputSchemes[t];
+            InputManager._updateSystems.Add(new InputSystem(world));
+            InputManager._updateSystems.Initialize();
         }
+
+        /// <summary>
+        /// Crée les InputSchemes pour chaque type de contrôleur souhaité
+        /// </summary>
+        /// <param name="buttonIDs">La liste des IDs des actions de type ButtonState</param>
+        /// <param name="vector1DIDs">La liste des IDs des actions de type Vector1D</param>
+        /// <param name="vector2DIDs">La liste des IDs des actions de type Vector2D</param>
+        public static void InitializeInputActionEvents(UnsafeList<NativeString> buttonIDs, UnsafeList<NativeString> vector1DIDs, UnsafeList<NativeString> vector2DIDs)
+        {
+            InputManager.ActionResources = new(Math.Max(1, buttonIDs.Count * 3));
+            InputManager.ActionVector1DResources = new(Math.Max(1, vector1DIDs.Count));
+            InputManager.ActionVector2DResources = new(Math.Max(1, vector2DIDs.Count));
+
+            InputManager.Handles = new InputControls(buttonIDs, vector1DIDs, vector2DIDs);
+        }
+
+        #endregion
+
+        #region Update
 
         /// <summary>
         /// Capture l'état des inputs lors de la frame actuelle
@@ -102,6 +125,8 @@ namespace Retard.Core.ViewModels.Input
             {
                 pair.Value.Update();
             }
+
+            InputManager._updateSystems.Update();
         }
 
         /// <summary>
@@ -117,24 +142,20 @@ namespace Retard.Core.ViewModels.Input
             }
         }
 
+        /// <summary>
+        /// Récupère le contrôleur du type souhaité
+        /// </summary>
+        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
+        /// <returns>Le contrôleur souhaité</returns>
+        public static T GetScheme<T>() where T : IInputScheme, new()
+        {
+            Type t = typeof(T);
+            return (T)InputManager._inputSchemes[t];
+        }
+
         #endregion
 
         #region InputActions
-
-        /// <summary>
-        /// Crée les InputSchemes pour chaque type de contrôleur souhaité
-        /// </summary>
-        /// <param name="buttonIDs">La liste des IDs des actions de type ButtonState</param>
-        /// <param name="vector1DIDs">La liste des IDs des actions de type Vector1D</param>
-        /// <param name="vector2DIDs">La liste des IDs des actions de type Vector2D</param>
-        public static void InitializeInputActionEvents(UnsafeList<NativeString> buttonIDs, UnsafeList<NativeString> vector1DIDs, UnsafeList<NativeString> vector2DIDs)
-        {
-            InputManager._actionResources = new(Math.Max(1, buttonIDs.Count * 3));
-            InputManager._actionVector1DResources = new(Math.Max(1, vector1DIDs.Count));
-            InputManager._actionVector2DResources = new(Math.Max(1, vector2DIDs.Count));
-
-            InputManager.Handles = new InputControls(buttonIDs, vector1DIDs, vector2DIDs);
-        }
 
         /// <summary>
         /// Récupère les événements liés un InputAction de type ButtonState à partir de son ID.

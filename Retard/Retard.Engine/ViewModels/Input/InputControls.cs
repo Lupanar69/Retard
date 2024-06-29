@@ -8,7 +8,7 @@ namespace Retard.Engine.ViewModels.Input
     /// <summary>
     /// Regroupe les handles de chaque InputAction
     /// </summary>
-    public struct InputControls
+    public sealed class InputControls
     {
         #region Variables d'instance
 
@@ -63,7 +63,7 @@ namespace Retard.Engine.ViewModels.Input
         /// Constructeur
         /// </summary>
         /// <param name="inputControls">Les InputControls à copier</param>
-        public InputControls(InputControls inputControls) :
+        public InputControls(in InputControls inputControls) :
             this(inputControls._buttonStateHandlesIDs, inputControls._vector1DHandlesIDs, inputControls._vector2DHandlesIDs)
         {
             for (int i = 0; i < inputControls._buttonStateHandlesIDs.Count; ++i)
@@ -107,13 +107,13 @@ namespace Retard.Engine.ViewModels.Input
         {
             this._subscribed = false;
 
-            this._buttonStateHandlesIDs = buttonIDs;
-            this._vector1DHandlesIDs = vector1DIDs;
-            this._vector2DHandlesIDs = vector2DIDs;
+            this._buttonStateHandlesIDs = new UnsafeList<NativeString>(buttonIDs.Capacity);
+            this._vector1DHandlesIDs = new UnsafeList<NativeString>(vector1DIDs.Capacity);
+            this._vector2DHandlesIDs = new UnsafeList<NativeString>(vector2DIDs.Capacity);
 
-            this._buttonStateHandles = new UnsafeList<InputActionButtonStateHandles>(buttonIDs.Count);
-            this._vector1DHandles = new UnsafeList<InputActionVector1DHandles>(vector1DIDs.Count);
-            this._vector2DHandles = new UnsafeList<InputActionVector2DHandles>(vector2DIDs.Count);
+            this._buttonStateHandles = new UnsafeList<InputActionButtonStateHandles>(buttonIDs.Capacity);
+            this._vector1DHandles = new UnsafeList<InputActionVector1DHandles>(vector1DIDs.Capacity);
+            this._vector2DHandles = new UnsafeList<InputActionVector2DHandles>(vector2DIDs.Capacity);
 
             for (int i = 0; i < buttonIDs.Count; ++i)
             {
@@ -123,6 +123,8 @@ namespace Retard.Engine.ViewModels.Input
                 { });
                 var finished = InputManager.ActionResources.Add(delegate
                 { });
+
+                this._buttonStateHandlesIDs[i] = buttonIDs[i];
                 this._buttonStateHandles[i] = new InputActionButtonStateHandles(started, performed, finished);
             }
 
@@ -130,6 +132,8 @@ namespace Retard.Engine.ViewModels.Input
             {
                 var performed = InputManager.ActionVector1DResources.Add(delegate
                 { });
+
+                this._vector1DHandlesIDs[i] = vector1DIDs[i];
                 this._vector1DHandles[i] = new InputActionVector1DHandles(performed);
             }
 
@@ -137,6 +141,8 @@ namespace Retard.Engine.ViewModels.Input
             {
                 var performed = InputManager.ActionVector2DResources.Add(delegate
                 { });
+
+                this._vector2DHandlesIDs[i] = vector2DIDs[i];
                 this._vector2DHandles[i] = new InputActionVector2DHandles(performed);
             }
         }
@@ -150,8 +156,11 @@ namespace Retard.Engine.ViewModels.Input
         /// </summary>
         public void Enable()
         {
-            InputManager.Handles += this;
-            this._subscribed = true;
+            if (!this._subscribed)
+            {
+                InputManager.Handles += this;
+                this._subscribed = true;
+            }
         }
 
         /// <summary>

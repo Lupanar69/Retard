@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Retard.Engine.ViewModels.Input;
 
 namespace Retard.Core.Models.Assets.Scene
 {
@@ -31,42 +32,47 @@ namespace Retard.Core.Models.Assets.Scene
         /// </summary>
         public bool ConsumeDraw { get; init; }
 
+        /// <summary>
+        /// Les contrôles de la scène
+        /// </summary>
+        public InputControls Controls { get; init; }
+
         #endregion
 
         #region Méthodes publiques
 
         /// <summary>
-        /// Init
-        /// </summary
-        public abstract void OnInitialize();
-
-        /// <summary>
-        /// Chargement du contenu
-        /// </summary>
-        public abstract void OnLoadContent();
-
-        /// <summary>
         /// Appelée à chaque fois que la scène devient active
         /// </summary>
-        public abstract void OnSetActive();
+        public void OnSetActive() { }
+
+        /// <summary>
+        /// Active les contrôles
+        /// </summary>
+        public void EnableControls() => this.Controls?.Enable();
+
+        /// <summary>
+        /// Désactive les contrôles
+        /// </summary>
+        public void DisableControls() => this.Controls?.Disable();
 
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public abstract void OnUpdateInput(GameTime gameTime);
+        public void OnUpdateInput(GameTime gameTime) { }
 
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public abstract void OnUpdate(GameTime gameTime);
+        public void OnUpdate(GameTime gameTime) { }
 
         /// <summary>
         /// Pour afficher des éléments à l'écran
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
-        public abstract void OnDraw(GameTime gameTime);
+        public void OnDraw(GameTime gameTime) { }
 
         #endregion
     }

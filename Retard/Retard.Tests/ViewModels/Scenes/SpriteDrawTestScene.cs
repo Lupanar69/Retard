@@ -14,6 +14,7 @@ using Retard.Core.Models.Assets.Sprites;
 using Retard.Core.Systems.Sprite;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
+using Retard.Engine.ViewModels.Input;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -24,26 +25,17 @@ namespace Retard.Tests.ViewModels.Scenes
     {
         #region Properties
 
-        /// <summary>
-        /// <see langword="true"/> si la scène doit bloquer les inputs 
-        /// pour les scènes qui suivent
-        /// (ex: une scène de pause superposée à la scène de jeu)
-        /// </summary>
+        /// <inheritdoc/>
         public bool ConsumeInput { get; init; }
 
-        /// <summary>
-        /// <see langword="true"/> si la scène doit bloquer l'Update
-        /// pour les scènes qui suivent
-        /// (ex: une scène de pause superposée à la scène de jeu)
-        /// </summary>
+        /// <inheritdoc/>
         public bool ConsumeUpdate { get; init; }
 
-        /// <summary>
-        /// <see langword="true"/> si la scène doit bloquer le rendu
-        /// pour les scènes qui suivent
-        /// (ex: une scène de pause superposée à la scène de jeu)
-        /// </summary>
+        /// <inheritdoc/>
         public bool ConsumeDraw { get; init; }
+
+        /// <inheritdoc/>
+        public InputControls Controls { get; init; }
 
         #endregion
 
@@ -103,31 +95,17 @@ namespace Retard.Tests.ViewModels.Scenes
             this._camera = camera;
             this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
             this._size = size;
-            this._updateSystems = new Group("Update Systems");
-            this._drawSystems = new Group("Draw Systems");
-        }
 
-        #endregion
+            // Charge les textures
 
-        #region Méthodes publiques
-
-        /// <summary>
-        /// Chargement du contenu
-        /// </summary>
-        public void OnInitialize()
-        {
-            SceneManager.World.Reserve(_spriteArchetype, _size.X * _size.Y);
-        }
-
-        /// <summary>
-        /// Màj à chaque frame
-        /// </summary>
-        public void OnLoadContent()
-        {
             Texture2D debugTex = SceneManager.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
             this._spriteAtlas = new SpriteAtlas(debugTex, 4, 4);
 
-            // Créé ici car on a besoin de récupérer les textures
+            // Initialise les systèmes
+
+            SceneManager.World.Reserve(_spriteArchetype, this._size.X * this._size.Y);
+            this._updateSystems = new Group("Update Systems");
+            this._drawSystems = new Group("Draw Systems");
 
             this._drawSystems.Add(new SpriteDrawSystem(SceneManager.World, SceneManager.SpriteBatch, this._spriteAtlas, this._camera));
             this._updateSystems.Add(new AnimatedSpriteUpdateSystem(SceneManager.World));
@@ -136,18 +114,11 @@ namespace Retard.Tests.ViewModels.Scenes
             this._drawSystems.Initialize();
         }
 
-        /// <summary>
-        /// Appelée à chaque fois que la scène devient active
-        /// </summary>
-        public void OnSetActive()
-        {
+        #endregion
 
-        }
+        #region Méthodes publiques
 
-        /// <summary>
-        /// Récupère les inputs nécessaires au fonctionnement des systèmes
-        /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        /// <inheritdoc/>
         public void OnUpdateInput(GameTime gameTime)
         {
             if (this._keyboardInput.IsKeyPressed(Keys.Space))
@@ -156,19 +127,13 @@ namespace Retard.Tests.ViewModels.Scenes
             }
         }
 
-        /// <summary>
-        /// Màj à chaque frame
-        /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        /// <inheritdoc/>
         public void OnUpdate(GameTime gameTime)
         {
             this._updateSystems.Update();
         }
 
-        /// <summary>
-        /// Pour afficher des éléments à l'écran
-        /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        /// <inheritdoc/>
         public void OnDraw(GameTime gameTime)
         {
             this._drawSystems.Update();

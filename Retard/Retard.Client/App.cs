@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Retard.Core.Models;
 using Retard.Core.ViewModels.App;
-using Retard.Core.ViewModels.Controllers;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
 using Retard.Tests.ViewModels.Scenes;
@@ -28,7 +27,7 @@ namespace Retard.Client
         /// <summary>
         /// La caméra du jeu
         /// </summary>
-        private OrthographicCameraController _cameraController;
+        private OrthographicCamera _camera;
 
         /// <summary>
         /// Le monde contenant les entités
@@ -69,17 +68,18 @@ namespace Retard.Client
         /// </summary>
         protected override void Initialize()
         {
-            // Initialise les inputs
-
-            InputManager.InitializeSchemes(new KeyboardInput(), new MouseInput(), new GamePadInput(GamePad.MaximumGamePadCount));
-            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
-            this._gamePadInput = InputManager.GetScheme<GamePadInput>();
-
             // Initialise les components
 
             this._spriteBatch = new SpriteBatch(this.GraphicsDevice);
-            this._cameraController = new OrthographicCameraController(new OrthographicCamera(this.GraphicsDevice));
+            this._camera = new OrthographicCamera(this.GraphicsDevice);
             this._world = World.Create();
+
+            // Initialise les inputs
+
+            InputManager.InitializeSchemes(new KeyboardInput(), new MouseInput(), new GamePadInput(GamePad.MaximumGamePadCount));
+            InputManager.InitializeSystems(this._world);
+            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
+            this._gamePadInput = InputManager.GetScheme<GamePadInput>();
 
             // Initialise les scènes
 
@@ -170,17 +170,14 @@ namespace Retard.Client
         /// </summary>
         private void InitializeSceneManager()
         {
-            SceneManager.Initialize(3, this.Content, this._world, this._spriteBatch);
-            SceneManager.AddSceneToPool(new InputProcessingScene());
-            SceneManager.AddSceneToPool(new OrthographicCameraScene(this._cameraController));
+            SceneManager.Initialize(2, this.Content, this._world, this._spriteBatch);
+            SceneManager.AddSceneToPool(new OrthographicCameraScene(this._camera));
 
 #if TESTS
-            SceneManager.AddSceneToPool(new SpriteDrawTestScene(this._cameraController.Camera, new Point(100)));
+            SceneManager.AddSceneToPool(new SpriteDrawTestScene(this._camera, new Point(100)));
             SceneManager.SetSceneAsActive<SpriteDrawTestScene>();
 #endif
-
             SceneManager.SetSceneAsActive<OrthographicCameraScene>();
-            SceneManager.SetSceneAsActive<InputProcessingScene>();
         }
 
         #endregion
