@@ -7,9 +7,13 @@
     public enum JoystickKey
     {
         None,
-        North,
-        East,
-        South,
-        West
+        LeftNorth,
+        LeftEast,
+        LeftSouth,
+        LeftWest,
+        RightNorth,
+        RightEast,
+        RightSouth,
+        RightWest
     }
 }

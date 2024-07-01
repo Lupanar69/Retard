@@ -6,8 +6,8 @@ using Retard.Core.ViewModels.Input;
 namespace Retard.Engine.Models.Assets.Input
 {
     /// <summary>
-    /// Contient l'event retournant la valeur
-    /// de l'action
+    /// Contient l'event retournant la valeur de l'action,
+    /// avec le n° du joueur
     /// </summary>
     public struct InputActionVector2DHandles
     {
@@ -16,7 +16,7 @@ namespace Retard.Engine.Models.Assets.Input
         /// <summary>
         /// Appelé quand l'action est en cours
         /// </summary>
-        public Action<Vector2> Performed
+        public Action<int, Vector2> Performed
         {
             get => InputManager.ActionVector2DResources.Get(in _performed);
             set => InputManager.ActionVector2DResources.Get(in _performed) = value;
@@ -30,7 +30,7 @@ namespace Retard.Engine.Models.Assets.Input
         /// <summary>
         /// Appelé quand l'action est en cours
         /// </summary>
-        private Handle<Action<Vector2>> _performed;
+        private Handle<Action<int, Vector2>> _performed;
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace Retard.Engine.Models.Assets.Input
         /// Constructeur
         /// </summary>
         /// <param name="performed">Handle de l'action en cours de l'event</param>
-        public InputActionVector2DHandles(Handle<Action<Vector2>> performed)
+        public InputActionVector2DHandles(Handle<Action<int, Vector2>> performed)
         {
             _performed = performed;
         }

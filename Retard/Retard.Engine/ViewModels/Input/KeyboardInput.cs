@@ -53,16 +53,6 @@ namespace Retard.Core.ViewModels.Input
         }
 
         /// <summary>
-        /// <see langword="true"/> si la touche passe de l'état pressé à l'état relâché
-        /// </summary>
-        /// <param name="key">La touche relâchée</param>
-        /// <returns><see langword="true"/> si la touche passe de l'état pressé à l'état relâché</returns>
-        public bool IsKeyReleased(Keys key)
-        {
-            return this._curState.IsKeyUp(key) && this._previousState.IsKeyDown(key);
-        }
-
-        /// <summary>
         /// <see langword="true"/> si la touche est maintenue enfoncée
         /// </summary>
         /// <param name="key">La touche maintenue enfoncée</param>
@@ -70,6 +60,16 @@ namespace Retard.Core.ViewModels.Input
         public bool IsKeyHeld(Keys key)
         {
             return this._curState.IsKeyDown(key) && this._previousState.IsKeyDown(key);
+        }
+
+        /// <summary>
+        /// <see langword="true"/> si la touche passe de l'état pressé à l'état relâché
+        /// </summary>
+        /// <param name="key">La touche relâchée</param>
+        /// <returns><see langword="true"/> si la touche passe de l'état pressé à l'état relâché</returns>
+        public bool IsKeyReleased(Keys key)
+        {
+            return this._curState.IsKeyUp(key) && this._previousState.IsKeyDown(key);
         }
 
         #endregion

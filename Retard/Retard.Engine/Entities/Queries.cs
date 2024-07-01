@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using Arch.Core;
 using Arch.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,7 +25,7 @@ namespace Retard.Core.Entities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void UpdateAnimatedSpriteRect(
             [Data] in SpriteAtlas spriteAtlas,
-            ref SpriteFrameCD frame,
+            in SpriteFrameCD frame,
             ref SpriteRectCD rect)
         {
             rect.Value = spriteAtlas.GetSpriteRect(frame.Value);
@@ -41,9 +42,9 @@ namespace Retard.Core.Entities
         public static void DrawSprites(
             [Data] in SpriteAtlas spriteAtlas,
             [Data] in SpriteBatch spriteBatch,
-            ref SpritePositionCD pos,
-            ref SpriteRectCD rect,
-            ref SpriteColorCD color)
+            in SpritePositionCD pos,
+            in SpriteRectCD rect,
+            in SpriteColorCD color)
         {
             Rectangle destinationRectangle =
                 new((int)pos.Value.X, (int)pos.Value.Y, rect.Value.Width, rect.Value.Height);
@@ -76,5 +77,6 @@ namespace Retard.Core.Entities
         }
 
         #endregion
+
     }
 }

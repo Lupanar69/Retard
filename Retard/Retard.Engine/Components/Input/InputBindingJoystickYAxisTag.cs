@@ -7,15 +7,8 @@ namespace Retard.Core.Components.Input
     /// Tag indiquant qu'on évalue l'axe Y d'un joystick
     /// </summary>
     [Component]
-    public struct InputBindingJoystickYAxisCD
+    public struct InputBindingJoystickYAxisTag
     {
-        #region Variables d'instance
 
-        /// <summary>
-        /// Le joystick utilisé
-        /// </summary>
-        public JoystickType Value;
-
-        #endregion
     }
 }

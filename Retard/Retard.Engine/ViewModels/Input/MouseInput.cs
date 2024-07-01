@@ -92,21 +92,21 @@ namespace Retard.Core.ViewModels.Input
         }
 
         /// <summary>
-        /// <see langword="true"/> si le bouton gauche de la souris est relâché
-        /// </summary>
-        /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
-        public bool LeftMouseReleased()
-        {
-            return this._curState.LeftButton == ButtonState.Released && this._previousState.LeftButton == ButtonState.Pressed;
-        }
-
-        /// <summary>
         /// <see langword="true"/> si le bouton gauche de la souris est maintenu enfoncé
         /// </summary>
         /// <returns><see langword="true"/> si le bouton est maintenu</returns>
         public bool LeftMouseHeld()
         {
             return this._curState.LeftButton == ButtonState.Pressed && this._previousState.LeftButton == ButtonState.Pressed;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> si le bouton gauche de la souris est relâché
+        /// </summary>
+        /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
+        public bool LeftMouseReleased()
+        {
+            return this._curState.LeftButton == ButtonState.Released && this._previousState.LeftButton == ButtonState.Pressed;
         }
 
         /// <summary>
@@ -119,21 +119,21 @@ namespace Retard.Core.ViewModels.Input
         }
 
         /// <summary>
-        /// <see langword="true"/> si le bouton droit de la souris est relâché
-        /// </summary>
-        /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
-        public bool RightMouseReleased()
-        {
-            return this._curState.RightButton == ButtonState.Released && this._previousState.RightButton == ButtonState.Pressed;
-        }
-
-        /// <summary>
         /// <see langword="true"/> si le bouton droit de la souris est maintenu enfoncé
         /// </summary>
         /// <returns><see langword="true"/> si le bouton est maintenu</returns>
         public bool RightMouseHeld()
         {
             return this._curState.RightButton == ButtonState.Pressed && this._previousState.RightButton == ButtonState.Pressed;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> si le bouton droit de la souris est relâché
+        /// </summary>
+        /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
+        public bool RightMouseReleased()
+        {
+            return this._curState.RightButton == ButtonState.Released && this._previousState.RightButton == ButtonState.Pressed;
         }
 
         /// <summary>
@@ -146,21 +146,21 @@ namespace Retard.Core.ViewModels.Input
         }
 
         /// <summary>
-        /// <see langword="true"/> si le bouton milieu de la souris est relâché
-        /// </summary>
-        /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
-        public bool MiddleMouseReleased()
-        {
-            return this._curState.MiddleButton == ButtonState.Released && this._previousState.MiddleButton == ButtonState.Pressed;
-        }
-
-        /// <summary>
         /// <see langword="true"/> si le bouton milieu de la souris est maintenu enfoncé
         /// </summary>
         /// <returns><see langword="true"/> si le bouton est maintenu</returns>
         public bool MiddleMouseHeld()
         {
             return this._curState.MiddleButton == ButtonState.Pressed && this._previousState.MiddleButton == ButtonState.Pressed;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> si le bouton milieu de la souris est relâché
+        /// </summary>
+        /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
+        public bool MiddleMouseReleased()
+        {
+            return this._curState.MiddleButton == ButtonState.Released && this._previousState.MiddleButton == ButtonState.Pressed;
         }
 
         #endregion

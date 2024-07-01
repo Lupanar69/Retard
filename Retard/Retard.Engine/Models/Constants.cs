@@ -109,7 +109,7 @@ namespace Retard.Core.Models
                     new InputBindingDTO(Keys.Left, Keys.Right, Keys.Up, Keys.Down),
                     new InputBindingDTO(Keys.Q, Keys.D, Keys.Z, Keys.S),
                     new InputBindingDTO(Buttons.DPadLeft, Buttons.DPadRight, Buttons.DPadUp, Buttons.DPadDown),
-                    new InputBindingDTO(JoystickType.Left, JoystickKey.West, JoystickKey.East, JoystickKey.North, JoystickKey.South),
+                    new InputBindingDTO(JoystickKey.LeftWest, JoystickKey.LeftEast, JoystickKey.LeftNorth, JoystickKey.LeftSouth),
                     new InputBindingDTO(JoystickType.Right, JoystickAxis.Both, 0.24f)
                 ),
                 new InputActionDTO

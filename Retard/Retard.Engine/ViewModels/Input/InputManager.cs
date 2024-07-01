@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Arch.Core;
 using Arch.LowLevel;
 using Microsoft.Xna.Framework;
+using Retard.Core.Components.Input;
 using Retard.Core.Models.Arch;
 using Retard.Core.Models.Assets.Input;
 using Retard.Core.Models.ValueTypes;
@@ -23,17 +24,17 @@ namespace Retard.Core.ViewModels.Input
         /// <summary>
         /// Permet d'accéder aux events sans type
         /// </summary>
-        public static Resources<Action> ActionResources { get; private set; }
+        public static Resources<Action<int>> ActionResources { get; private set; }
 
         /// <summary>
         /// Permet d'accéder aux events de type Vector1D
         /// </summary>
-        public static Resources<Action<float>> ActionVector1DResources { get; private set; }
+        public static Resources<Action<int, float>> ActionVector1DResources { get; private set; }
 
         /// <summary>
         /// Permet d'accéder aux events de type Vector2D
         /// </summary>
-        public static Resources<Action<Vector2>> ActionVector2DResources { get; private set; }
+        public static Resources<Action<int, Vector2>> ActionVector2DResources { get; private set; }
 
         /// <summary>
         /// Regroupe les handles de chaque InputAction
@@ -142,6 +143,10 @@ namespace Retard.Core.ViewModels.Input
             }
         }
 
+        #endregion
+
+        #region Schemes
+
         /// <summary>
         /// Récupère le contrôleur du type souhaité
         /// </summary>
@@ -149,8 +154,17 @@ namespace Retard.Core.ViewModels.Input
         /// <returns>Le contrôleur souhaité</returns>
         public static T GetScheme<T>() where T : IInputScheme, new()
         {
-            Type t = typeof(T);
-            return (T)InputManager._inputSchemes[t];
+            return (T)InputManager._inputSchemes[typeof(T)];
+        }
+
+        /// <summary>
+        /// Indique si le type d'entrée est disponible pour cette application
+        /// </summary>
+        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
+        /// <returns><see langword="true"/> si le contrôleur souhaité existe</returns>
+        public static bool HasScheme<T>() where T : IInputScheme, new()
+        {
+            return InputManager._inputSchemes.ContainsKey(typeof(T));
         }
 
         #endregion
@@ -185,6 +199,46 @@ namespace Retard.Core.ViewModels.Input
         public static ref InputActionVector2DHandles GetVector2DEvent(NativeString key)
         {
             return ref InputManager.Handles.GetVector2DEvent(key);
+        }
+
+        /// <summary>
+        /// Calcule la valeur ButtonState de l'InputAction à partir de l'InputBinding renseigné
+        /// </summary>
+        /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="bindingE">L'entité de l'InputBinding</param>
+        /// <param name="returnValue">La valeur retournée par l'action</param>
+        internal static void SetButtonStateReturnValue(World w, Entity bindingE, ref InputActionButtonStateValueCD returnValue)
+        {
+            InputActionButtonState state = returnValue.Value;
+
+            // Si l'InputBinding utilise un joystick...
+
+            if (w.TryGet(bindingE, out InputBindingJoystickTypeCD joystickTypeCD))
+            {
+                InputBindingDeadZoneCD deadZoneCD = w.Get<InputBindingDeadZoneCD>(bindingE);
+                GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
+
+                switch (joystickTypeCD.Value)
+                {
+                    case JoystickType.Left:
+
+                        for (int i = 0; i < gamePadInput.NbMaxGamePads; ++i)
+                        {
+                            // TODO : récupérer l'état
+                        }
+
+                        break;
+                }
+            }
+
+            // Sinon, s'il utilise des touches...
+
+            else
+            {
+
+            }
+
+            returnValue.Value = state;
         }
 
         #endregion

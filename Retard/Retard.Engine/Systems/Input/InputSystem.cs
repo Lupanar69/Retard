@@ -1,4 +1,5 @@
-﻿using Arch.Core;
+﻿using System.Collections.Generic;
+using Arch.Core;
 using Arch.LowLevel;
 using Arch.Relationships;
 using Retard.Core.Components.Input;
@@ -53,7 +54,22 @@ namespace Retard.Core.Systems.Input
         /// </summary>
         public void Update()
         {
+            var query1 = new QueryDescription().WithAll<InputActionIDCD, InputActionButtonStateValueCD>();
+            var query2 = new QueryDescription().WithAll<InputActionIDCD, InputActionVector1DValueCD>();
+            var query3 = new QueryDescription().WithAll<InputActionIDCD, InputActionVector2DValueCD>();
 
+            World w = this.World;
+
+            this.World.Query(in query1, (Entity actionE, ref InputActionIDCD id, ref InputActionButtonStateValueCD returnValue) =>
+            {
+                ref var rel = ref w.GetRelationships<InputActionOf>(actionE);
+
+                foreach (KeyValuePair<Entity, InputActionOf> child in rel)
+                {
+                    Entity bindingE = child.Key;
+                    InputManager.SetButtonStateReturnValue(w, bindingE, ref returnValue);
+                }
+            });
         }
 
         /// <summary>
@@ -75,6 +91,10 @@ namespace Retard.Core.Systems.Input
         /// <param name="config">Les données de config</param>
         private static void CreateInputEntities(World world, InputConfigDTO config)
         {
+            bool usesMouse = InputManager.HasScheme<MouseInput>();
+            bool usesKeyboard = InputManager.HasScheme<KeyboardInput>();
+            bool usesGamePad = InputManager.HasScheme<GamePadInput>();
+
             for (int i = 0; i < config.Actions.Length; ++i)
             {
                 InputActionDTO action = config.Actions[i];
@@ -84,22 +104,32 @@ namespace Retard.Core.Systems.Input
                     continue;
                 }
 
-                Entity actionE = EntityFactory.CreateInputActionEntities(world, action.Name, action.ValueType);
+                UnsafeList<Entity> bindingEs = new(action.Bindings.Length);
 
-                for (int k = 0; k < action.Bindings.Length; ++k)
+                for (int j = 0; j < action.Bindings.Length; ++j)
                 {
-                    InputBindingDTO binding = action.Bindings[k];
+                    InputBindingDTO binding = action.Bindings[j];
                     Entity bindingE = EntityFactory.CreateInputBindingEntities
-                        (world, binding.KeySequence, binding.Joystick, binding.JoystickAxis, binding.DeadZone);
+                        (world, usesMouse, usesKeyboard, usesGamePad, binding.KeySequence, binding.Joystick, binding.JoystickAxis, binding.DeadZone);
 
-                    // Si un binding est null (aucune touche renseignée), on se contente de l'ignorer
+                    // Si un binding est null (aucune touche renseignée ou aucun IScheme correspondant dans l'InputManager),
+                    // on se contente de l'ignorer
 
-                    if (bindingE == Entity.Null)
+                    if (bindingE != Entity.Null)
                     {
-                        continue;
+                        bindingEs.Add(bindingE);
                     }
 
-                    world.AddRelationship<InputActionOf>(actionE, bindingE);
+                }
+
+                if (bindingEs.Count > 0)
+                {
+                    Entity actionE = EntityFactory.CreateInputActionEntities(world, action.Name, action.ValueType);
+
+                    for (int j = 0; j < bindingEs.Count; ++j)
+                    {
+                        world.AddRelationship<InputActionOf>(actionE, bindingEs[j]);
+                    }
                 }
             }
         }
@@ -135,7 +165,6 @@ namespace Retard.Core.Systems.Input
             });
 
             InputManager.InitializeInputActionEvents(list1, list2, list3);
-
         }
 
         #endregion

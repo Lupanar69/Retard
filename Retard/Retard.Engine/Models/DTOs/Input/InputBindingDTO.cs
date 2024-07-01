@@ -129,11 +129,10 @@ namespace Retard.Engine.Models.DTOs.Input
         /// <summary>
         /// Constructeur
         /// </summary>
-        /// <param name="joystick">Le joystick utilisé pour les InputActions de type Vector1D et Vector2D</param>
         /// <param name="joystickKeys">La séquence d'entrées à réaliser pour exécuter l'action (ex: Ctrl+Z).
         /// Pour les axes, cela équivaut à un tableau d'entrées pour chaque
         /// extrémité de chaque axe.</param>
-        public InputBindingDTO(JoystickType joystick, params JoystickKey[] joystickKeys) : this(joystick, JoystickAxis.None, 0f)
+        public InputBindingDTO(params JoystickKey[] joystickKeys) : this(JoystickType.None, JoystickAxis.None, 0f)
         {
             this.KeySequence = new InputKeySequenceElement[joystickKeys.Length];
 

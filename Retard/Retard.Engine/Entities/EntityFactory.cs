@@ -56,28 +56,41 @@ namespace Retard.Core.Entities
         /// Crée les entités des entrées
         /// </summary>
         /// <param name="world">Le monde contenant ces entités</param>
+        /// <param name="usesMouse"><see langword="true"/> si l'InputManager prend en charge la souris</param>
+        /// <param name="usesKeyboard"><see langword="true"/> si l'InputManager prend en charge le clavier</param>
+        /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
         /// <param name="keySequence">La séquence d'entrées à réaliser pour exécuter l'action (ex: Ctrl+Z)</param>
         /// <param name="joystick">Le joystick à utiliser</param>
         /// <param name="joystickAxis">L'axe du joystick à évaluer</param>
         /// <param name="deadZone"> La valeur en dessous de laquelle le joystick est considéré comme inerte</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static Entity CreateInputBindingEntities(World world, InputKeySequenceElement[] keySequence, JoystickType joystick, JoystickAxis joystickAxis, float deadZone)
+        internal static Entity CreateInputBindingEntities(World world, bool usesMouse, bool usesKeyboard, bool usesGamePad,
+            InputKeySequenceElement[] keySequence, JoystickType joystick, JoystickAxis joystickAxis, float deadZone)
         {
             if (joystick != JoystickType.None)
             {
-                Entity e = world.Create(new InputBindingDeadZoneCD { Value = deadZone });
+                if (!usesGamePad)
+                {
+                    return Entity.Null;
+                }
+
+                Entity e = world.Create
+                    (
+                        new InputBindingDeadZoneCD { Value = deadZone },
+                        new InputBindingJoystickTypeCD { Value = joystick }
+                    );
 
                 switch (joystickAxis)
                 {
                     case JoystickAxis.Both:
-                        world.Add(e, new InputBindingJoystickXAxisCD { Value = joystick });
-                        world.Add(e, new InputBindingJoystickYAxisCD { Value = joystick });
+                        world.Add<InputBindingJoystickXAxisTag>(e);
+                        world.Add<InputBindingJoystickYAxisTag>(e);
                         break;
                     case JoystickAxis.XAxis:
-                        world.Add(e, new InputBindingJoystickXAxisCD { Value = joystick });
+                        world.Add<InputBindingJoystickXAxisTag>(e);
                         break;
                     case JoystickAxis.YAxis:
-                        world.Add(e, new InputBindingJoystickYAxisCD { Value = joystick });
+                        world.Add<InputBindingJoystickYAxisTag>(e);
                         break;
                 }
 
@@ -90,27 +103,63 @@ namespace Retard.Core.Entities
                 UnsafeArray<int> keys = new(keySequence.Length);
                 UnsafeArray<InputKeySequenceState> validStates = new(keySequence.Length);
 
+                // Pour chaque élément de la séquence, on regarde
+                // si l'InputManager prend en charge son IScheme.
+                // Si non, le binding ne peut pas être lu et est invalide.
+
                 for (int i = 0; i < keySequence.Length; ++i)
                 {
                     InputKeySequenceElement element = keySequence[i];
 
                     if (element.MouseKey != MouseKey.None)
                     {
+                        if (!usesMouse)
+                        {
+                            keyTypes.Dispose();
+                            keys.Dispose();
+                            validStates.Dispose();
+                            return Entity.Null;
+                        }
+
                         keyTypes[i] = InputBindingKeyType.MouseKey;
                         keys[i] = (int)element.MouseKey;
                     }
                     else if (element.KeyboardKey != Keys.None)
                     {
+                        if (!usesKeyboard)
+                        {
+                            keyTypes.Dispose();
+                            keys.Dispose();
+                            validStates.Dispose();
+                            return Entity.Null;
+                        }
+
                         keyTypes[i] = InputBindingKeyType.KeyboardKey;
                         keys[i] = (int)element.KeyboardKey;
                     }
                     else if (element.GamePadKey != Buttons.None)
                     {
+                        if (!usesGamePad)
+                        {
+                            keyTypes.Dispose();
+                            keys.Dispose();
+                            validStates.Dispose();
+                            return Entity.Null;
+                        }
+
                         keyTypes[i] = InputBindingKeyType.GamePadKey;
                         keys[i] = (int)element.GamePadKey;
                     }
                     else if (element.JoystickKey != JoystickKey.None)
                     {
+                        if (!usesGamePad)
+                        {
+                            keyTypes.Dispose();
+                            keys.Dispose();
+                            validStates.Dispose();
+                            return Entity.Null;
+                        }
+
                         keyTypes[i] = InputBindingKeyType.JoystickKey;
                         keys[i] = (int)element.JoystickKey;
                     }
