@@ -163,6 +163,60 @@ namespace Retard.Core.ViewModels.Input
             return this._curState.MiddleButton == ButtonState.Released && this._previousState.MiddleButton == ButtonState.Pressed;
         }
 
+        /// <summary>
+        /// <see langword="true"/> si le bouton X1 de la souris est pressé
+        /// </summary>
+        /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
+        public bool XButton1Pressed()
+        {
+            return this._curState.XButton1 == ButtonState.Pressed && this._previousState.XButton1 == ButtonState.Released;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> si le bouton X1 de la souris est maintenu enfoncé
+        /// </summary>
+        /// <returns><see langword="true"/> si le bouton est maintenu</returns>
+        public bool XButton1Held()
+        {
+            return this._curState.XButton1 == ButtonState.Pressed && this._previousState.XButton1 == ButtonState.Pressed;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> si le bouton X1 de la souris est relâché
+        /// </summary>
+        /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
+        public bool XButton1Released()
+        {
+            return this._curState.XButton1 == ButtonState.Released && this._previousState.XButton1 == ButtonState.Pressed;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> si le bouton X2 de la souris est pressé
+        /// </summary>
+        /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
+        public bool XButton2Pressed()
+        {
+            return this._curState.XButton2 == ButtonState.Pressed && this._previousState.XButton2 == ButtonState.Released;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> si le bouton X2 de la souris est maintenu enfoncé
+        /// </summary>
+        /// <returns><see langword="true"/> si le bouton est maintenu</returns>
+        public bool XButton2Held()
+        {
+            return this._curState.XButton2 == ButtonState.Pressed && this._previousState.XButton2 == ButtonState.Pressed;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> si le bouton X2 de la souris est relâché
+        /// </summary>
+        /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>
+        public bool XButton2Released()
+        {
+            return this._curState.XButton2 == ButtonState.Released && this._previousState.XButton2 == ButtonState.Pressed;
+        }
+
         #endregion
     }
 }

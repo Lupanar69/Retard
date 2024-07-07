@@ -166,31 +166,33 @@ namespace Retard.Tests.ViewModels.Scenes
         private UnsafeArray<Rectangle> GetSpritesRects()
         {
             UnsafeArray<Rectangle> rects = new(this._size.X * this._size.Y);
+            Rectangle wallRect = this._spriteAtlas.GetSpriteRect(0);
+            Rectangle floorRect = this._spriteAtlas.GetSpriteRect(1);
             int count = 0;
 
             for (int i = 0; i < this._size.X; ++i)
             {
-                rects[i] = this._spriteAtlas.GetSpriteRect(0);
+                rects[i] = wallRect;
             }
 
             count += _size.X;
 
             for (int y = 1; y < this._size.Y - 1; ++y)
             {
-                rects[count] = this._spriteAtlas.GetSpriteRect(0);
+                rects[count] = wallRect;
 
                 for (int x = 1; x < this._size.X - 1; ++x)
                 {
-                    rects[x + count] = this._spriteAtlas.GetSpriteRect(1);
+                    rects[x + count] = floorRect;
                 }
 
-                rects[count + this._size.X - 1] = this._spriteAtlas.GetSpriteRect(0);
+                rects[count + this._size.X - 1] = wallRect;
                 count += _size.X;
             }
 
             for (int i = count; i < count + this._size.X; ++i)
             {
-                rects[i] = this._spriteAtlas.GetSpriteRect(0);
+                rects[i] = wallRect;
             }
 
             return rects;

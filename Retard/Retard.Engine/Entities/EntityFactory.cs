@@ -32,20 +32,20 @@ namespace Retard.Core.Entities
         /// <param name="name">L'ID du contexte</param>
         /// <param name="valueType">La valeur retournée par l'action</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputActionEntities(World world, string name, InputActionReturnValueType valueType)
+        public static Entity CreateInputActionEntities(World world, string name, InputActionReturnValueType valueType, int actionStateLength)
         {
             Entity e = world.Create(new InputActionIDCD { Value = name });
 
             switch (valueType)
             {
                 case InputActionReturnValueType.ButtonState:
-                    world.Add<InputActionButtonStateValueCD>(e);
+                    world.Add(e, new InputActionButtonStateValuesBU(actionStateLength));
                     break;
                 case InputActionReturnValueType.Vector1D:
-                    world.Add<InputActionVector1DValueCD>(e);
+                    world.Add(e, new InputActionVector1DValuesBU(actionStateLength));
                     break;
                 case InputActionReturnValueType.Vector2D:
-                    world.Add<InputActionVector2DValueCD>(e);
+                    world.Add(e, new InputActionVector2DValuesBU(actionStateLength));
                     break;
             }
 
@@ -170,9 +170,9 @@ namespace Retard.Core.Entities
 
                 return world.Create
                     (
-                    new InputBindingKeySequenceTypeBU { KeyTypes = keyTypes },
-                    new InputBindingKeySequenceIDsBU { Keys = keys },
-                    new InputBindingKeySequenceStatesBU { ValidStates = validStates }
+                    new InputBindingKeySequenceTypesBU { Value = keyTypes },
+                    new InputBindingKeySequenceIDsBU { Value = keys },
+                    new InputBindingKeySequenceStatesBU { Value = validStates }
                     );
             }
 

@@ -19,6 +19,11 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         public int NbMaxGamePads => this._nbMaxGamePads;
 
+        /// <summary>
+        /// Le nombre de manettes connectées.
+        /// </summary>
+        public int NbConnected => this._nbConnected;
+
         #endregion
 
         #region Variables statiques privées
@@ -61,6 +66,12 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         private readonly int _nbMaxGamePads;
 
+        /// <summary>
+        /// Le nombre de manettes connectées.
+        /// Nous évite d'avoir à évaluer toutes les manettes.
+        /// </summary>
+        private int _nbConnected;
+
         #endregion
 
         #region Constructeur
@@ -93,7 +104,20 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         public void Update()
         {
-            for (int i = 0; i < this._nbMaxGamePads; i++)
+            // Récupère le nombre de manettes connectées
+
+            for (int i = 0; i < this._nbMaxGamePads; ++i)
+            {
+                if (!GamePad.GetState(i).IsConnected)
+                {
+                    this._nbConnected = i;
+                    break;
+                }
+            }
+
+            // Ne calcule que les entrées des manettes connectées
+
+            for (int i = 0; i < this._nbConnected; ++i)
             {
                 GamePadState state = GamePad.GetState(i);
                 this._curStates[i] = state;
@@ -101,6 +125,17 @@ namespace Retard.Core.ViewModels.Input
                 this._rightThumbsticksAxes[i] = state.ThumbSticks.Right;
                 this._leftTriggersValues[i] = state.Triggers.Left;
                 this._rightTriggersValues[i] = state.Triggers.Right;
+            }
+
+            // Ignore les manettes non connectées
+
+            for (int i = this._nbConnected; i < this._nbMaxGamePads; ++i)
+            {
+                this._curStates[i] = default;
+                this._leftThumbsticksAxes[i] = default;
+                this._rightThumbsticksAxes[i] = default;
+                this._leftTriggersValues[i] = default;
+                this._rightTriggersValues[i] = default;
             }
         }
 

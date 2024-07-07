@@ -13,7 +13,7 @@ namespace Retard.Engine.Components.Input
         /// <summary>
         /// Les IDs des entrées à évaluer (à convertir en enum en fonction du KeyType)
         /// </summary>
-        public UnsafeArray<int> Keys;
+        public UnsafeArray<int> Value;
 
         #endregion
     }

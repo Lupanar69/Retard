@@ -15,7 +15,7 @@ namespace Retard.Engine.Components.Input
         /// Les états que doivent avoir les InputKeySequenceElements
         /// pour être considérés actifs
         /// </summary>
-        public UnsafeArray<InputKeySequenceState> ValidStates;
+        public UnsafeArray<InputKeySequenceState> Value;
 
         #endregion
     }

@@ -8,6 +8,7 @@ using Retard.Core.Models;
 using Retard.Core.ViewModels.App;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
+using Retard.Engine.ViewModels.Input;
 using Retard.Tests.ViewModels.Scenes;
 
 namespace Retard.Client
@@ -62,6 +63,7 @@ namespace Retard.Client
         #endregion
 
         #region Fonctions protégées
+        InputControls c = new();
 
         /// <summary>
         /// Init

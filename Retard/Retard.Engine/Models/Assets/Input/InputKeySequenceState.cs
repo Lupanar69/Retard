@@ -8,6 +8,7 @@
     {
         Pressed,
         Held,
-        Released
+        Released,
+        Inert
     }
 }

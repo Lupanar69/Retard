@@ -5,6 +5,7 @@
     /// </summary>
     public enum InputActionButtonState
     {
+        Inert,
         Pressed,
         Held,
         Released
