@@ -1,5 +1,5 @@
 ﻿using Arch.LowLevel;
-using Retard.Engine.Models.Assets.Input;
+using Retard.Engine.Models;
 
 namespace Retard.Engine.Components.Input
 {

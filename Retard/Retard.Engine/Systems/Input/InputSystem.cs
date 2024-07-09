@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Arch.Core;
+﻿using Arch.Core;
 using Arch.LowLevel;
 using Arch.Relationships;
 using Retard.Core.Components.Input;
@@ -9,7 +8,6 @@ using Retard.Core.Models.Arch;
 using Retard.Core.Models.ValueTypes;
 using Retard.Core.ViewModels.Input;
 using Retard.Engine.Components.Input;
-using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.Models.DTOs.Input;
 using Retard.Engine.ViewModels.Utilities;
 
@@ -56,22 +54,21 @@ namespace Retard.Core.Systems.Input
         /// </summary>
         public void Update()
         {
-            var query1 = new QueryDescription().WithAll<InputActionIDCD, InputActionButtonStateValuesBU>();
-            var query2 = new QueryDescription().WithAll<InputActionIDCD, InputActionVector1DValuesBU>();
-            var query3 = new QueryDescription().WithAll<InputActionIDCD, InputActionVector2DValuesBU>();
+            // Calcule les résultats des InputBindings
 
-            World w = this.World;
+            Queries.ProcessButtonStateInputBindingsQuery(this.World);
+            Queries.ProcessVector1DKeysInputBindingsQuery(this.World);
+            Queries.ProcessVector1DTriggerInputBindingsQuery(this.World);
+            Queries.ProcessVector1DJoystickXInputBindingsQuery(this.World);
+            Queries.ProcessVector1DJoystickYInputBindingsQuery(this.World);
+            Queries.ProcessVector2DKeysInputBindingsQuery(this.World);
+            Queries.ProcessVector2DJoystickInputBindingsQuery(this.World);
 
-            this.World.Query(in query1, (Entity actionE, ref InputActionIDCD id, ref InputActionButtonStateValuesBU returnValue) =>
-            {
-                ref var rel = ref w.GetRelationships<InputActionOf>(actionE);
+            // Appelle les events pour chaque InputAction
 
-                foreach (KeyValuePair<Entity, InputActionOf> child in rel)
-                {
-                    Entity bindingE = child.Key;
-                    InputManager.SetButtonStateReturnValue(w, bindingE, in id.Value, ref returnValue);
-                }
-            });
+            Queries.ProcessButtonStateInputActionsQuery(this.World, this.World);
+            Queries.ProcessVector1DInputActionsQuery(this.World, this.World);
+            Queries.ProcessVector2DInputActionsQuery(this.World, this.World);
         }
 
         /// <summary>
@@ -96,6 +93,7 @@ namespace Retard.Core.Systems.Input
             bool usesMouse = InputManager.HasScheme<MouseInput>();
             bool usesKeyboard = InputManager.HasScheme<KeyboardInput>();
             bool usesGamePad = InputManager.HasScheme<GamePadInput>();
+            int returnValueCount = usesGamePad ? InputManager.GetScheme<GamePadInput>().NbMaxGamePads : 1;
 
             for (int i = 0; i < config.Actions.Length; ++i)
             {
@@ -106,68 +104,64 @@ namespace Retard.Core.Systems.Input
                     continue;
                 }
 
+                #region Création des bindings
+
                 UnsafeList<Entity> bindingEs = new(action.Bindings.Length);
 
                 for (int j = 0; j < action.Bindings.Length; ++j)
                 {
                     InputBindingDTO binding = action.Bindings[j];
-                    Entity bindingE = EntityFactory.CreateInputBindingEntities
-                        (world, usesMouse, usesKeyboard, usesGamePad, binding.KeySequence, binding.Joystick, binding.JoystickAxis, binding.DeadZone);
+                    Entity e1 = EntityFactory.CreateInputBindingEntities(world, returnValueCount, usesMouse, usesKeyboard, usesGamePad, binding.KeySequence);
+                    Entity e2 = EntityFactory.CreateInputBindingEntities(world, returnValueCount, usesMouse, usesKeyboard, usesGamePad, binding.Vector1DKeys);
+                    Entity e3 = EntityFactory.CreateInputBindingEntities(world, returnValueCount, usesMouse, usesKeyboard, usesGamePad, binding.Vector2DKeys);
+                    Entity e4 = EntityFactory.CreateInputBindingEntities(world, returnValueCount, usesGamePad, binding.Joystick);
+                    Entity e5 = EntityFactory.CreateInputBindingEntities(world, returnValueCount, usesMouse, usesGamePad, binding.Trigger);
 
                     // Si un binding est null (aucune touche renseignée ou aucun IScheme correspondant dans l'InputManager),
                     // on se contente de l'ignorer
 
-                    if (bindingE != Entity.Null)
+                    if (e1 != Entity.Null)
                     {
-                        bindingEs.Add(bindingE);
+                        bindingEs.Add(e1);
+                    }
+
+                    if (e2 != Entity.Null)
+                    {
+                        bindingEs.Add(e2);
+                    }
+
+                    if (e3 != Entity.Null)
+                    {
+                        bindingEs.Add(e3);
+                    }
+
+                    if (e4 != Entity.Null)
+                    {
+                        bindingEs.Add(e4);
+                    }
+
+                    if (e5 != Entity.Null)
+                    {
+                        bindingEs.Add(e5);
                     }
 
                 }
 
+                #endregion
+
+                #region Création des actions
+
                 if (bindingEs.Count > 0)
                 {
-                    // Prépare les buffers de l'InputAction.
-                    // Leur taille dépend de l'existence du GamePadInput,
-                    // et de l'existence de bindings utilisant la manette
-
-                    int actionStateLength = 1;
-
-                    if (usesGamePad)
-                    {
-                        int nbMaxGamePads = InputManager.GetScheme<GamePadInput>().NbMaxGamePads;
-
-                        for (int j = 0; j < bindingEs.Count; ++j)
-                        {
-                            if (world.Has<InputBindingJoystickTypeCD>(bindingEs[j]))
-                            {
-                                actionStateLength = nbMaxGamePads;
-                                goto CreateInputActionEvents;
-                            }
-
-                            if (world.TryGet(bindingEs[j], out InputBindingKeySequenceTypesBU types))
-                            {
-                                for (int k = 0; k < types.Value.Length; ++k)
-                                {
-                                    if (types.Value[k] == InputBindingKeyType.GamePadKey ||
-                                        types.Value[k] == InputBindingKeyType.JoystickKey)
-                                    {
-                                        actionStateLength = nbMaxGamePads;
-                                        goto CreateInputActionEvents;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    CreateInputActionEvents:
-
-                    Entity actionE = EntityFactory.CreateInputActionEntities(world, action.Name, action.ValueType, actionStateLength);
+                    Entity actionE = EntityFactory.CreateInputActionEntities(world, action.Name, action.ValueType);
 
                     for (int j = 0; j < bindingEs.Count; ++j)
                     {
                         world.AddRelationship<InputActionOf>(actionE, bindingEs[j]);
                     }
                 }
+
+                #endregion
             }
         }
 
@@ -178,9 +172,9 @@ namespace Retard.Core.Systems.Input
         /// <param name="world">Le monde contenant les entités</param>
         private static void CreateInputActionEvents(World world)
         {
-            var query1 = new QueryDescription().WithAll<InputActionIDCD, InputActionButtonStateValuesBU>();
-            var query2 = new QueryDescription().WithAll<InputActionIDCD, InputActionVector1DValuesBU>();
-            var query3 = new QueryDescription().WithAll<InputActionIDCD, InputActionVector2DValuesBU>();
+            var query1 = new QueryDescription().WithAll<InputActionIDCD, InputActionButtonStateTag>();
+            var query2 = new QueryDescription().WithAll<InputActionIDCD, InputActionVector1DTag>();
+            var query3 = new QueryDescription().WithAll<InputActionIDCD, InputActionVector2DTag>();
 
             UnsafeList<NativeString> list1 = new(1);
             UnsafeList<NativeString> list2 = new(1);

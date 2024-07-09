@@ -10,6 +10,7 @@ using Retard.Core.Models.Assets.Input;
 using Retard.Core.Models.ValueTypes;
 using Retard.Core.Systems.Input;
 using Retard.Engine.Components.Input;
+using Retard.Engine.Models;
 using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.ViewModels.Input;
 
@@ -227,16 +228,16 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="bindingE">L'entité de l'InputBinding</param>
         /// <param name="inputActionID">L'ID de l'action</param>
         /// <param name="returnValue">La valeur de l'action</param>
-        internal static void SetButtonStateReturnValue(World w, Entity bindingE, in NativeString inputActionID, ref InputActionButtonStateValuesBU returnValue)
+        internal static void SetButtonStateReturnValue(World w, Entity bindingE, in NativeString inputActionID, ref InputBindingButtonStateValuesBU returnValue)
         {
             // Commence avec des inputs inertes
 
             int returnValuesCount = returnValue.Value.Length;
-            using UnsafeArray<InputActionButtonState> states = new(returnValuesCount);
+            using UnsafeArray<ButtonStateType> states = new(returnValuesCount);
 
             for (int i = 0; i < returnValuesCount; ++i)
             {
-                states[i] = InputActionButtonState.Inert;
+                states[i] = ButtonStateType.Inert;
             }
 
             #region Si l'InputBinding utilise un joystick...
@@ -251,26 +252,26 @@ namespace Retard.Core.ViewModels.Input
                     case JoystickType.Left:
                         for (int i = 0; i < gamePadInput.NbConnected; ++i)
                         {
-                            InputActionButtonState actionState = returnValue.Value[i];
+                            ButtonStateType actionState = returnValue.Value[i];
 
-                            if (actionState == InputActionButtonState.Inert &&
+                            if (actionState == ButtonStateType.Inert &&
                                 gamePadInput.IsLeftThumbstickPressed(i, deadZoneCD.Value))
                             {
-                                states[i] = InputActionButtonState.Pressed;
+                                states[i] = ButtonStateType.Pressed;
                                 InputManager.GetButtonEvent(inputActionID).Started?.Invoke(i);
                             }
 
-                            if (actionState == InputActionButtonState.Pressed &&
+                            if (actionState == ButtonStateType.Pressed &&
                                 gamePadInput.IsLeftThumbstickHeld(i, deadZoneCD.Value))
                             {
-                                states[i] = InputActionButtonState.Held;
+                                states[i] = ButtonStateType.Held;
                                 InputManager.GetButtonEvent(inputActionID).Performed?.Invoke(i);
                             }
 
-                            if (actionState == InputActionButtonState.Held &&
+                            if (actionState == ButtonStateType.Held &&
                                 gamePadInput.IsLeftThumbstickReleased(i, deadZoneCD.Value))
                             {
-                                states[i] = InputActionButtonState.Released;
+                                states[i] = ButtonStateType.Released;
                                 InputManager.GetButtonEvent(inputActionID).Finished?.Invoke(i);
                             }
                         }
@@ -279,26 +280,26 @@ namespace Retard.Core.ViewModels.Input
                     case JoystickType.Right:
                         for (int i = 0; i < gamePadInput.NbConnected; ++i)
                         {
-                            InputActionButtonState actionState = returnValue.Value[i];
+                            ButtonStateType actionState = returnValue.Value[i];
 
-                            if (actionState == InputActionButtonState.Inert &&
+                            if (actionState == ButtonStateType.Inert &&
                                 gamePadInput.IsRightThumbstickPressed(i, deadZoneCD.Value))
                             {
-                                states[i] = InputActionButtonState.Pressed;
+                                states[i] = ButtonStateType.Pressed;
                                 InputManager.GetButtonEvent(inputActionID).Started?.Invoke(i);
                             }
 
-                            if (actionState == InputActionButtonState.Pressed &&
+                            if (actionState == ButtonStateType.Pressed &&
                                 gamePadInput.IsRightThumbstickHeld(i, deadZoneCD.Value))
                             {
-                                states[i] = InputActionButtonState.Held;
+                                states[i] = ButtonStateType.Held;
                                 InputManager.GetButtonEvent(inputActionID).Performed?.Invoke(i);
                             }
 
-                            if (actionState == InputActionButtonState.Held &&
+                            if (actionState == ButtonStateType.Held &&
                                 gamePadInput.IsRightThumbstickReleased(i, deadZoneCD.Value))
                             {
-                                states[i] = InputActionButtonState.Released;
+                                states[i] = ButtonStateType.Released;
                                 InputManager.GetButtonEvent(inputActionID).Finished?.Invoke(i);
                             }
                         }
@@ -391,18 +392,18 @@ namespace Retard.Core.ViewModels.Input
 
                         switch (returnValue.Value[i])
                         {
-                            case InputActionButtonState.Inert:
-                                states[i] = InputActionButtonState.Pressed;
+                            case ButtonStateType.Inert:
+                                states[i] = ButtonStateType.Pressed;
                                 InputManager.GetButtonEvent(inputActionID).Started?.Invoke(i);
                                 break;
 
-                            case InputActionButtonState.Pressed:
-                                states[i] = InputActionButtonState.Held;
+                            case ButtonStateType.Pressed:
+                                states[i] = ButtonStateType.Held;
                                 InputManager.GetButtonEvent(inputActionID).Performed?.Invoke(i);
                                 break;
 
-                            case InputActionButtonState.Held:
-                                states[i] = InputActionButtonState.Released;
+                            case ButtonStateType.Held:
+                                states[i] = ButtonStateType.Released;
                                 InputManager.GetButtonEvent(inputActionID).Finished?.Invoke(i);
                                 break;
                         }
@@ -466,18 +467,18 @@ namespace Retard.Core.ViewModels.Input
 
                     switch (returnValue.Value[0])
                     {
-                        case InputActionButtonState.Inert:
-                            states[0] = InputActionButtonState.Pressed;
+                        case ButtonStateType.Inert:
+                            states[0] = ButtonStateType.Pressed;
                             InputManager.GetButtonEvent(inputActionID).Started?.Invoke(0);
                             break;
 
-                        case InputActionButtonState.Pressed:
-                            states[0] = InputActionButtonState.Held;
+                        case ButtonStateType.Pressed:
+                            states[0] = ButtonStateType.Held;
                             InputManager.GetButtonEvent(inputActionID).Performed?.Invoke(0);
                             break;
 
-                        case InputActionButtonState.Held:
-                            states[0] = InputActionButtonState.Released;
+                        case ButtonStateType.Held:
+                            states[0] = ButtonStateType.Released;
                             InputManager.GetButtonEvent(inputActionID).Finished?.Invoke(0);
                             break;
                     }
@@ -505,7 +506,7 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="mouseKey">La touche de la souris à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        private static InputKeySequenceState GetMouseKeyState(MouseKey mouseKey)
+        public static InputKeySequenceState GetMouseKeyState(MouseKey mouseKey)
         {
             MouseInput mouseInput = InputManager.GetScheme<MouseInput>();
 
@@ -561,7 +562,7 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="keyboardKey">La touche du clavier à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        private static InputKeySequenceState GetKeyboardKeyState(Keys keyboardKey)
+        public static InputKeySequenceState GetKeyboardKeyState(Keys keyboardKey)
         {
             KeyboardInput keyboardInput = InputManager.GetScheme<KeyboardInput>();
 
@@ -581,7 +582,7 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="gamePadKey">La touche de la manette à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        private static InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey)
+        public static InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey)
         {
             GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
 
@@ -602,7 +603,7 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="gamePadInput">Les contrôles de la manette</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        private static InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey, GamePadInput gamePadInput)
+        public static InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey, GamePadInput gamePadInput)
         {
             return gamePadInput.IsButtonPressed(playerIndex, gamePadKey)
                                         ? InputKeySequenceState.Pressed
@@ -620,7 +621,7 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="joystickKey">La touche de la manette à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        private static InputKeySequenceState GetJoystickKeyState(int playerIndex, JoystickKey joystickKey)
+        public static InputKeySequenceState GetJoystickKeyState(int playerIndex, JoystickKey joystickKey)
         {
             GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
             Vector2 leftAxis = gamePadInput.GetLeftThumbstickAxis(playerIndex);
@@ -704,7 +705,7 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="gamePadInput">Les contrôles de la manette</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        private static InputKeySequenceState GetJoystickKeyState(int playerIndex, JoystickKey joystickKey, GamePadInput gamePadInput)
+        public static InputKeySequenceState GetJoystickKeyState(int playerIndex, JoystickKey joystickKey, GamePadInput gamePadInput)
         {
             Vector2 leftAxis = gamePadInput.GetLeftThumbstickAxis(playerIndex);
             Vector2 rightAxis = gamePadInput.GetRightThumbstickAxis(playerIndex);

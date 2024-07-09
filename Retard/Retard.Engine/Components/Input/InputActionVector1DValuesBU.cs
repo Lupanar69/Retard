@@ -4,18 +4,18 @@ using Arch.LowLevel;
 namespace Retard.Core.Components.Input
 {
     /// <summary>
-    /// L'état de l'InputAction pressée
+    /// L'état de l'InputBinding pressé
     /// pour chaque joueur connecté.
     /// S'il n'y a aucune manette ou qu'elles ne sont pas prises en charge,
     /// le buffer est de taille 1.
     /// </summary>
     [Component]
-    public struct InputActionVector1DValuesBU
+    public struct InputBindingVector1DValuesBU
     {
         #region Variables d'instance
 
         /// <summary>
-        /// L'état du bouton lié à une InputAction
+        /// L'état du bouton lié à un InputBinding
         /// pour chaque joueur connecté.
         /// S'il n'y a aucune manette ou qu'elles ne sont pas prises en charge,
         /// le buffer est de taille 1.
@@ -30,7 +30,7 @@ namespace Retard.Core.Components.Input
         /// Constructeur
         /// </summary>
         /// <param name="length">La taille de la collection</param>
-        public InputActionVector1DValuesBU(int length)
+        public InputBindingVector1DValuesBU(int length)
         {
             this.Value = new UnsafeArray<float>(length);
 

@@ -11,7 +11,7 @@ namespace Retard.Core.Components.Input
     /// le buffer est de taille 1.
     /// </summary>
     [Component]
-    public struct InputActionVector2DValuesBU
+    public struct InputBindingVector2DValuesBU
     {
         #region Variables d'instance
 
@@ -31,7 +31,7 @@ namespace Retard.Core.Components.Input
         /// Constructeur
         /// </summary>
         /// <param name="length">La taille de la collection</param>
-        public InputActionVector2DValuesBU(int length)
+        public InputBindingVector2DValuesBU(int length)
         {
             this.Value = new UnsafeArray<Vector2>(length);
 

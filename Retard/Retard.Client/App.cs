@@ -8,7 +8,6 @@ using Retard.Core.Models;
 using Retard.Core.ViewModels.App;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
-using Retard.Engine.ViewModels.Input;
 using Retard.Tests.ViewModels.Scenes;
 
 namespace Retard.Client
@@ -63,7 +62,6 @@ namespace Retard.Client
         #endregion
 
         #region Fonctions protégées
-        InputControls c = new();
 
         /// <summary>
         /// Init
@@ -86,6 +84,12 @@ namespace Retard.Client
             // Initialise les scènes
 
             this.InitializeSceneManager();
+
+            //InputControls c = new();
+            //c.GetButtonEvent("Camera/LeftMousePressed").Started += (playerID) => p("pressed");
+            //c.GetButtonEvent("Camera/LeftMousePressed").Performed += (playerID) => p("held");
+            //c.GetButtonEvent("Camera/LeftMousePressed").Finished += (playerID) => p("released");
+            //c.Enable();
 
             base.Initialize();
         }

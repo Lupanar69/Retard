@@ -1,0 +1,110 @@
+﻿namespace Retard.Engine.Models
+{
+    #region Input
+
+    /// <summary>
+    /// L'état du bouton lié à un InputBinding
+    /// </summary>
+    public enum ButtonStateType
+    {
+        Inert,
+        Pressed,
+        Held,
+        Released
+    }
+
+    /// <summary>
+    /// Le type de valeur retournée par une InputAciton
+    /// </summary>
+    public enum InputActionReturnValueType
+    {
+        ButtonState,
+        Vector1D,
+        Vector2D,
+    }
+
+    /// <summary>
+    /// Représente les boutons de la souris
+    /// </summary>
+    public enum MouseKey
+    {
+        None,
+        Mouse0, // Bouton gauche
+        Mouse1, // Bouton droit
+        Mouse2, // Bouton milieu
+        Mouse3, // Bouton additionel gauche
+        Mouse4, // Bouton additionel droit
+    }
+
+    /// <summary>
+    /// Représente une direction du joystick lorsqu'il est poussé par le joueur. 
+    /// Evalué lorsqu'il approche sa valeur maximale ~1f
+    /// </summary>
+    public enum JoystickKey
+    {
+        None,
+        LeftNorth,
+        LeftEast,
+        LeftSouth,
+        LeftWest,
+        RightNorth,
+        RightEast,
+        RightSouth,
+        RightWest
+    }
+
+    /// <summary>
+    /// Représente les différents types d'entrées de type bouton
+    /// </summary>
+    public enum InputBindingKeyType
+    {
+        MouseKey,
+        KeyboardKey,
+        GamePadKey,
+        JoystickKey
+    }
+
+    /// <summary>
+    /// Le type de joystick utilisé par l'InputBinding
+    /// </summary>
+    public enum JoystickType
+    {
+        Left,
+        Right,
+        Both
+    }
+
+    /// <summary>
+    /// Le type de gâchette utilisée par l'InputBinding
+    /// </summary>
+    public enum TriggerType
+    {
+        LeftTrigger,
+        RightTrigger,
+        MouseWheel
+    }
+
+    /// <summary>
+    /// L'axe du joystick à évaluer
+    /// </summary>
+    public enum JoystickAxisType
+    {
+        XAxis,
+        YAxis,
+        Both
+    }
+
+    /// <summary>
+    /// L'état que doit avoir un InputKeySequenceElement
+    /// pour être considéré actif
+    /// </summary>
+    public enum InputKeySequenceState
+    {
+        Pressed,
+        Held,
+        Released,
+        Inert
+    }
+
+    #endregion
+}

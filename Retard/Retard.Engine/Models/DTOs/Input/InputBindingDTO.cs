@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Input;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Retard.Engine.Models.Assets.Input;
 
 namespace Retard.Engine.Models.DTOs.Input
@@ -12,10 +11,9 @@ namespace Retard.Engine.Models.DTOs.Input
         #region Propriétés
 
         /// <summary>
-        /// La séquence d'entrées à réaliser pour exécuter l'action (ex: Ctrl+Z).
-        /// Pour les axes, cela équivaut à un tableau d'entrées pour chaque
-        /// extrémité de chaque axe.
+        /// La séquence d'entrées à réaliser pour exécuter l'action (ex: Ctrl+Z, Ctrl+clic gauche).
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public InputKeySequenceElement[] KeySequence
         {
             get;
@@ -23,28 +21,44 @@ namespace Retard.Engine.Models.DTOs.Input
         }
 
         /// <summary>
-        /// Le joystick utilisé pour les InputActions de type Vector1D et Vector2D
+        /// Les touches pour actionner un seul axe (X ou Y).
+        /// Il ne peut y avoir que 2 touches (positive et négative).
         /// </summary>
-        public JoystickType Joystick
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public InputKeyVector1DElement[] Vector1DKeys
         {
             get;
             private set;
         }
 
         /// <summary>
-        /// L'axe de joystick à évaluer pour les InputActions de type Vector1D
+        /// Les touches pour actionner un axe 2D.
+        /// Il ne peut y avoir que 4 touches, dans l'ordre : gauche, droite, haut, bas.
         /// </summary>
-        public JoystickAxis JoystickAxis
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public InputKeyVector2DElement[] Vector2DKeys
         {
             get;
             private set;
         }
 
         /// <summary>
-        /// La valeur en dessous de laquelle l'input 
-        /// est considéré comme inerte
+        /// Contient les infos d'un binding utilisant un joystick
+        /// (type du joystick, axe et zone inerte)
         /// </summary>
-        public float DeadZone
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public InputBindingJoystick Joystick
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Contient les infos d'un binding utilisant une gâchette
+        /// (type de la gâchette et zone inerte)
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public InputBindingTrigger Trigger
         {
             get;
             private set;
@@ -57,28 +71,36 @@ namespace Retard.Engine.Models.DTOs.Input
         /// <summary>
         /// Constructeur
         /// </summary>
+        /// <param name="keySequence">La séquence d'entrées à réaliser pour exécuter l'action (ex: Ctrl+Z)</param>
+        /// <param name="vector1DKeys">Les touches pour actionner un seul axe (X ou Y)</param>
+        /// <param name="vector2DKeys">Les touches pour actionner un axe 2D</param>
         /// <param name="joystick">Le joystick utilisé pour les InputActions de type Vector1D et Vector2D</param>
-        /// <param name="joystickAxis">L'axe de joystick à évaluer pour les InputActions de type Vector1D</param>
-        /// <param name="deadZone"> La valeur en dessous de laquelle l'input est considéré comme inerte</param>
-        /// <param name="keySequence">La séquence d'entrées à réaliser pour exécuter l'action (ex: Ctrl+Z).
-        /// Pour les axes, cela équivaut à un tableau d'entrées pour chaque
-        /// extrémité de chaque axe.</param>
+        /// <param name="trigger">La gâchette utilisée pour les InputActions de type Vector1D</param>
         [JsonConstructor]
-        public InputBindingDTO(JoystickType joystick, JoystickAxis joystickAxis, float deadZone, InputKeySequenceElement[] keySequence)
+        public InputBindingDTO(InputKeySequenceElement[] keySequence, InputKeyVector1DElement[] vector1DKeys,
+                               InputKeyVector2DElement[] vector2DKeys, InputBindingJoystick joystick, InputBindingTrigger trigger)
         {
-            this.Joystick = joystick;
-            this.JoystickAxis = joystickAxis;
-            this.DeadZone = deadZone;
             this.KeySequence = keySequence;
+            this.Vector1DKeys = vector1DKeys;
+            this.Vector2DKeys = vector2DKeys;
+            this.Joystick = joystick;
+            this.Trigger = trigger;
+        }
+
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        /// <param name="trigger">La gâchette utilisée pour les InputActions de type Vector1D</param>
+        public InputBindingDTO(InputBindingTrigger trigger) : this(null, null, null, default, trigger)
+        {
+
         }
 
         /// <summary>
         /// Constructeur
         /// </summary>
         /// <param name="joystick">Le joystick utilisé pour les InputActions de type Vector1D et Vector2D</param>
-        /// <param name="joystickAxis">L'axe de joystick à évaluer pour les InputActions de type Vector1D</param>
-        /// <param name="deadZone"> La valeur en dessous de laquelle l'input est considéré comme inerte</param>
-        public InputBindingDTO(JoystickType joystick, JoystickAxis joystickAxis, float deadZone) : this(joystick, joystickAxis, deadZone, null)
+        public InputBindingDTO(InputBindingJoystick joystick) : this(null, null, null, joystick, default)
         {
 
         }
@@ -89,7 +111,7 @@ namespace Retard.Engine.Models.DTOs.Input
         /// <param name="keySequence">La séquence d'entrées à réaliser pour exécuter l'action (ex: Ctrl+Z).
         /// Pour les axes, cela équivaut à un tableau d'entrées pour chaque
         /// extrémité de chaque axe.</param>
-        public InputBindingDTO(params InputKeySequenceElement[] keySequence) : this(JoystickType.None, JoystickAxis.None, 0f, keySequence)
+        public InputBindingDTO(params InputKeySequenceElement[] keySequence) : this(keySequence, null, null, default, default)
         {
 
         }
@@ -97,49 +119,21 @@ namespace Retard.Engine.Models.DTOs.Input
         /// <summary>
         /// Constructeur
         /// </summary>
-        /// <param name="keyboardKeys">La séquence d'entrées à réaliser pour exécuter l'action (ex: Ctrl+Z).
-        /// Pour les axes, cela équivaut à un tableau d'entrées pour chaque
-        /// extrémité de chaque axe.</param>
-        public InputBindingDTO(params Keys[] keyboardKeys) : this(JoystickType.None, JoystickAxis.None, 0f)
+        /// <param name="vector1DKeys">Les touches pour actionner un seul axe (X ou Y).
+        /// Il ne peut y avoir que 2 touches (positive et négative).</param>
+        public InputBindingDTO(params InputKeyVector1DElement[] vector1DKeys) : this(null, vector1DKeys, null, default, default)
         {
-            this.KeySequence = new InputKeySequenceElement[keyboardKeys.Length];
 
-            for (int i = 0; i < keyboardKeys.Length; ++i)
-            {
-                this.KeySequence[i] = new InputKeySequenceElement(keyboardKeys[i], InputKeySequenceState.Held);
-            }
         }
 
         /// <summary>
         /// Constructeur
         /// </summary>
-        /// <param name="gamePadButtons">La séquence d'entrées à réaliser pour exécuter l'action (ex: Ctrl+Z).
-        /// Pour les axes, cela équivaut à un tableau d'entrées pour chaque
-        /// extrémité de chaque axe.</param>
-        public InputBindingDTO(params Buttons[] gamePadButtons) : this(JoystickType.None, JoystickAxis.None, 0f)
+        /// <param name="vector2DKeys">Les touches pour actionner un axe 2D.
+        /// Il ne peut y avoir que 4 touches, dans l'ordre : gauche, droite, haut, bas.</param>
+        public InputBindingDTO(params InputKeyVector2DElement[] vector2DKeys) : this(null, null, vector2DKeys, default, default)
         {
-            this.KeySequence = new InputKeySequenceElement[gamePadButtons.Length];
 
-            for (int i = 0; i < gamePadButtons.Length; ++i)
-            {
-                this.KeySequence[i] = new InputKeySequenceElement(gamePadButtons[i], InputKeySequenceState.Held);
-            }
-        }
-
-        /// <summary>
-        /// Constructeur
-        /// </summary>
-        /// <param name="joystickKeys">La séquence d'entrées à réaliser pour exécuter l'action (ex: Ctrl+Z).
-        /// Pour les axes, cela équivaut à un tableau d'entrées pour chaque
-        /// extrémité de chaque axe.</param>
-        public InputBindingDTO(params JoystickKey[] joystickKeys) : this(JoystickType.None, JoystickAxis.None, 0f)
-        {
-            this.KeySequence = new InputKeySequenceElement[joystickKeys.Length];
-
-            for (int i = 0; i < joystickKeys.Length; ++i)
-            {
-                this.KeySequence[i] = new InputKeySequenceElement(joystickKeys[i], InputKeySequenceState.Held);
-            }
         }
 
         #endregion

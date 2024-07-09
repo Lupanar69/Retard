@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Retard.Core.Models.Assets.Input;
+using Retard.Engine.Models;
 using Retard.Engine.Models.App;
 using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.Models.DTOs.App;
@@ -104,50 +104,64 @@ namespace Retard.Core.Models
             (
                 new InputActionDTO
                 (
-                    "Camera/Move",
+                    "Vector2D",
                     InputActionReturnValueType.Vector2D,
-                    new InputBindingDTO(Keys.Left, Keys.Right, Keys.Up, Keys.Down),
-                    new InputBindingDTO(Keys.Q, Keys.D, Keys.Z, Keys.S),
-                    new InputBindingDTO(Buttons.DPadLeft, Buttons.DPadRight, Buttons.DPadUp, Buttons.DPadDown),
-                    new InputBindingDTO(JoystickKey.LeftWest, JoystickKey.LeftEast, JoystickKey.LeftNorth, JoystickKey.LeftSouth),
-                    new InputBindingDTO(JoystickType.Right, JoystickAxis.Both, 0.24f)
-                ),
-                new InputActionDTO
-                (
-                    "Camera/LeftMousePressed",
-                    InputActionReturnValueType.ButtonState,
-                    new InputBindingDTO(new InputKeySequenceElement(MouseKey.Mouse0, InputKeySequenceState.Pressed))
-                ),
-                new InputActionDTO
-                (
-                    "Camera/Reset",
-                    InputActionReturnValueType.ButtonState,
                     new InputBindingDTO(
-                        new InputKeySequenceElement(Keys.LeftControl, InputKeySequenceState.Held),
-                        new InputKeySequenceElement(MouseKey.Mouse1, InputKeySequenceState.Pressed)
+                        new InputKeyVector2DElement(Keys.Right),
+                        new InputKeyVector2DElement(Keys.Left),
+                        new InputKeyVector2DElement(Keys.Up),
+                        new InputKeyVector2DElement(Keys.Down)
                         ),
                     new InputBindingDTO(
-                        new InputKeySequenceElement(Buttons.RightShoulder, InputKeySequenceState.Held),
-                        new InputKeySequenceElement(Buttons.A, InputKeySequenceState.Pressed)
+                        new InputKeyVector2DElement(Keys.D),
+                        new InputKeyVector2DElement(Keys.Q),
+                        new InputKeyVector2DElement(Keys.Z),
+                        new InputKeyVector2DElement(Keys.S)
+                        ),
+                    new InputBindingDTO(
+                        new InputKeyVector2DElement(Buttons.DPadRight),
+                        new InputKeyVector2DElement(Buttons.DPadLeft),
+                        new InputKeyVector2DElement(Buttons.DPadUp),
+                        new InputKeyVector2DElement(Buttons.DPadDown)
+                        ),
+
+                    new InputBindingDTO(
+                        new InputKeyVector2DElement(JoystickKey.LeftEast),
+                        new InputKeyVector2DElement(JoystickKey.LeftWest),
+                        new InputKeyVector2DElement(JoystickKey.LeftNorth),
+                        new InputKeyVector2DElement(JoystickKey.LeftSouth)
+                        ),
+                    new InputBindingDTO(new InputBindingJoystick(JoystickType.Right, JoystickAxisType.Both, 0.24f))
+                ),
+                new InputActionDTO
+                (
+                    "Vector1D",
+                    InputActionReturnValueType.Vector1D,
+                    new InputBindingDTO(
+                        new InputKeyVector1DElement(Buttons.RightShoulder),
+                        new InputKeyVector1DElement(Buttons.LeftShoulder)
+                        ),
+                    new InputBindingDTO(new InputBindingTrigger(TriggerType.LeftTrigger, 0.24f)),
+                    new InputBindingDTO(new InputBindingTrigger(TriggerType.MouseWheel, 0f)),
+                    new InputBindingDTO(new InputBindingJoystick(JoystickType.Left, JoystickAxisType.XAxis, 0.24f)),
+                    new InputBindingDTO(new InputBindingJoystick(JoystickType.Right, JoystickAxisType.YAxis, 0.24f))
+                ),
+                new InputActionDTO
+                (
+                    "ButtonState",
+                    InputActionReturnValueType.ButtonState,
+                    new InputBindingDTO(new InputKeySequenceElement(Keys.P, InputKeySequenceState.Pressed)),
+                    new InputBindingDTO(new InputKeySequenceElement(Keys.H, InputKeySequenceState.Held)),
+                    new InputBindingDTO(new InputKeySequenceElement(Keys.R, InputKeySequenceState.Released)),
+                    new InputBindingDTO(
+                        new InputKeySequenceElement(Keys.RightControl, InputKeySequenceState.Held),
+                        new InputKeySequenceElement(MouseKey.Mouse0, InputKeySequenceState.Pressed)
+                        ),
+                    new InputBindingDTO(
+                        new InputKeySequenceElement(Keys.RightControl, InputKeySequenceState.Held),
+                        new InputKeySequenceElement(MouseKey.Mouse0, InputKeySequenceState.Released)
                         )
                 )
-#if TESTS
-
-            , new InputActionDTO
-                  (
-                      "Test/CreateSprites",
-                      InputActionReturnValueType.ButtonState,
-                      new InputBindingDTO(new InputKeySequenceElement(Keys.Space, InputKeySequenceState.Pressed)),
-                      new InputBindingDTO(new InputKeySequenceElement(Buttons.Start, InputKeySequenceState.Pressed))
-                  )
-            , new InputActionDTO
-                  (
-                      "Test/DisableBlockInput",
-                      InputActionReturnValueType.ButtonState,
-                      new InputBindingDTO(new InputKeySequenceElement(Keys.Space, InputKeySequenceState.Pressed)),
-                      new InputBindingDTO(new InputKeySequenceElement(Buttons.Start, InputKeySequenceState.Pressed))
-                  )
-#endif
             );
 
         #endregion

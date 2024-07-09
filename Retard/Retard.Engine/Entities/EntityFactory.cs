@@ -5,8 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Retard.Core.Components.Input;
 using Retard.Core.Components.Sprites;
-using Retard.Core.Models.Assets.Input;
 using Retard.Engine.Components.Input;
+using Retard.Engine.Models;
 using Retard.Engine.Models.Assets.Input;
 
 namespace Retard.Core.Entities
@@ -32,20 +32,20 @@ namespace Retard.Core.Entities
         /// <param name="name">L'ID du contexte</param>
         /// <param name="valueType">La valeur retournée par l'action</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputActionEntities(World world, string name, InputActionReturnValueType valueType, int actionStateLength)
+        public static Entity CreateInputActionEntities(World world, string name, InputActionReturnValueType valueType)
         {
             Entity e = world.Create(new InputActionIDCD { Value = name });
 
             switch (valueType)
             {
                 case InputActionReturnValueType.ButtonState:
-                    world.Add(e, new InputActionButtonStateValuesBU(actionStateLength));
+                    world.Add(e, new InputActionButtonStateTag());
                     break;
                 case InputActionReturnValueType.Vector1D:
-                    world.Add(e, new InputActionVector1DValuesBU(actionStateLength));
+                    world.Add(e, new InputActionVector1DTag());
                     break;
                 case InputActionReturnValueType.Vector2D:
-                    world.Add(e, new InputActionVector2DValuesBU(actionStateLength));
+                    world.Add(e, new InputActionVector2DTag());
                     break;
             }
 
@@ -56,127 +56,249 @@ namespace Retard.Core.Entities
         /// Crée les entités des entrées
         /// </summary>
         /// <param name="world">Le monde contenant ces entités</param>
+        /// <param name="nbMaxPlayers">Le nombre de joueurs possibles</param>
         /// <param name="usesMouse"><see langword="true"/> si l'InputManager prend en charge la souris</param>
         /// <param name="usesKeyboard"><see langword="true"/> si l'InputManager prend en charge le clavier</param>
         /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
-        /// <param name="keySequence">La séquence d'entrées à réaliser pour exécuter l'action (ex: Ctrl+Z)</param>
-        /// <param name="joystick">Le joystick à utiliser</param>
-        /// <param name="joystickAxis">L'axe du joystick à évaluer</param>
-        /// <param name="deadZone"> La valeur en dessous de laquelle le joystick est considéré comme inerte</param>
+        /// <param name="keySequence">La liste d'entrées à exécuter</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static Entity CreateInputBindingEntities(World world, bool usesMouse, bool usesKeyboard, bool usesGamePad,
-            InputKeySequenceElement[] keySequence, JoystickType joystick, JoystickAxis joystickAxis, float deadZone)
+        public static Entity CreateInputBindingEntities(World world, int nbMaxPlayers,
+            bool usesMouse, bool usesKeyboard, bool usesGamePad, InputKeySequenceElement[] keySequence)
         {
-            if (joystick != JoystickType.None)
+            if (keySequence == null ^ keySequence.Length == 0)
             {
-                if (!usesGamePad)
+                return Entity.Null;
+            }
+
+            UnsafeArray<InputBindingKeyType> keyTypes = new(keySequence.Length);
+            UnsafeArray<int> keysIDs = new(keySequence.Length);
+            UnsafeArray<InputKeySequenceState> validStates = new(keySequence.Length);
+
+            // Pour chaque élément de la séquence, on regarde
+            // si l'InputManager prend en charge son IScheme.
+            // Si non, le binding ne peut pas être lu et est invalide.
+
+            for (int i = 0; i < keySequence.Length; ++i)
+            {
+                InputKeySequenceElement element = keySequence[i];
+
+                EntityFactory.ConvertKeySequenceElement(element, usesMouse, usesKeyboard, usesGamePad, out int id, out InputBindingKeyType type);
+
+                if (id == -1)
                 {
+                    keyTypes.Dispose();
+                    keysIDs.Dispose();
+                    validStates.Dispose();
                     return Entity.Null;
                 }
 
-                Entity e = world.Create
-                    (
-                        new InputBindingDeadZoneCD { Value = deadZone },
-                        new InputBindingJoystickTypeCD { Value = joystick }
-                    );
-
-                switch (joystickAxis)
-                {
-                    case JoystickAxis.Both:
-                        world.Add<InputBindingJoystickXAxisTag>(e);
-                        world.Add<InputBindingJoystickYAxisTag>(e);
-                        break;
-                    case JoystickAxis.XAxis:
-                        world.Add<InputBindingJoystickXAxisTag>(e);
-                        break;
-                    case JoystickAxis.YAxis:
-                        world.Add<InputBindingJoystickYAxisTag>(e);
-                        break;
-                }
-
-                return e;
+                validStates[i] = element.ValidState;
             }
 
-            if (keySequence != null || keySequence.Length >= 0)
+            return world.Create
+                (
+                new InputBindingKeySequenceTypesBU { Value = keyTypes },
+                new InputBindingKeySequenceIDsBU { Value = keysIDs },
+                new InputBindingKeySequenceStatesBU { Value = validStates },
+                new InputBindingButtonStateValuesBU(nbMaxPlayers)
+                );
+        }
+
+        /// <summary>
+        /// Crée les entités des entrées
+        /// </summary>
+        /// <param name="world">Le monde contenant ces entités</param>
+        /// <param name="nbMaxPlayers">Le nombre de joueurs possibles</param>
+        /// <param name="usesMouse"><see langword="true"/> si l'InputManager prend en charge la souris</param>
+        /// <param name="usesKeyboard"><see langword="true"/> si l'InputManager prend en charge le clavier</param>
+        /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
+        /// <param name="vector1DKeys">Les touches pour actionner un seul axe (X ou Y)</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity CreateInputBindingEntities(World world, int nbMaxPlayers,
+            bool usesMouse, bool usesKeyboard, bool usesGamePad, InputKeyVector1DElement[] vector1DKeys)
+        {
+            if (vector1DKeys == null ^ vector1DKeys.Length != 2)
             {
-                UnsafeArray<InputBindingKeyType> keyTypes = new(keySequence.Length);
-                UnsafeArray<int> keys = new(keySequence.Length);
-                UnsafeArray<InputKeySequenceState> validStates = new(keySequence.Length);
-
-                // Pour chaque élément de la séquence, on regarde
-                // si l'InputManager prend en charge son IScheme.
-                // Si non, le binding ne peut pas être lu et est invalide.
-
-                for (int i = 0; i < keySequence.Length; ++i)
-                {
-                    InputKeySequenceElement element = keySequence[i];
-
-                    if (element.MouseKey != MouseKey.None)
-                    {
-                        if (!usesMouse)
-                        {
-                            keyTypes.Dispose();
-                            keys.Dispose();
-                            validStates.Dispose();
-                            return Entity.Null;
-                        }
-
-                        keyTypes[i] = InputBindingKeyType.MouseKey;
-                        keys[i] = (int)element.MouseKey;
-                    }
-                    else if (element.KeyboardKey != Keys.None)
-                    {
-                        if (!usesKeyboard)
-                        {
-                            keyTypes.Dispose();
-                            keys.Dispose();
-                            validStates.Dispose();
-                            return Entity.Null;
-                        }
-
-                        keyTypes[i] = InputBindingKeyType.KeyboardKey;
-                        keys[i] = (int)element.KeyboardKey;
-                    }
-                    else if (element.GamePadKey != Buttons.None)
-                    {
-                        if (!usesGamePad)
-                        {
-                            keyTypes.Dispose();
-                            keys.Dispose();
-                            validStates.Dispose();
-                            return Entity.Null;
-                        }
-
-                        keyTypes[i] = InputBindingKeyType.GamePadKey;
-                        keys[i] = (int)element.GamePadKey;
-                    }
-                    else if (element.JoystickKey != JoystickKey.None)
-                    {
-                        if (!usesGamePad)
-                        {
-                            keyTypes.Dispose();
-                            keys.Dispose();
-                            validStates.Dispose();
-                            return Entity.Null;
-                        }
-
-                        keyTypes[i] = InputBindingKeyType.JoystickKey;
-                        keys[i] = (int)element.JoystickKey;
-                    }
-
-                    validStates[i] = element.ValidState;
-                }
-
-
-                return world.Create
-                    (
-                    new InputBindingKeySequenceTypesBU { Value = keyTypes },
-                    new InputBindingKeySequenceIDsBU { Value = keys },
-                    new InputBindingKeySequenceStatesBU { Value = validStates }
-                    );
+                return Entity.Null;
             }
 
-            return Entity.Null;
+            // Pour chaque élément de la séquence, on regarde
+            // si l'InputManager prend en charge son IScheme.
+            // Si non, le binding ne peut pas être lu et est invalide.
+
+            EntityFactory.ConvertVector1DKey(vector1DKeys[0], usesMouse, usesKeyboard, usesGamePad, out int positiveID, out InputBindingKeyType positiveType);
+
+            if (positiveID == -1)
+            {
+                return Entity.Null;
+            }
+
+            EntityFactory.ConvertVector1DKey(vector1DKeys[1], usesMouse, usesKeyboard, usesGamePad, out int negativeID, out InputBindingKeyType negativeType);
+
+            if (negativeID == -1)
+            {
+                return Entity.Null;
+            }
+
+            return world.Create
+                (
+                new InputBindingVector1DKeysIDsCD { PositiveID = positiveID, NegativeID = negativeID },
+                new InputBindingVector1DKeysTypesCD { PositiveType = positiveType, NegativeType = negativeType },
+                new InputBindingVector1DValuesBU(nbMaxPlayers)
+                );
+        }
+
+        /// <summary>
+        /// Crée les entités des entrées
+        /// </summary>
+        /// <param name="world">Le monde contenant ces entités</param>
+        /// <param name="nbMaxPlayers">Le nombre de joueurs possibles</param>
+        /// <param name="usesMouse"><see langword="true"/> si l'InputManager prend en charge la souris</param>
+        /// <param name="usesKeyboard"><see langword="true"/> si l'InputManager prend en charge le clavier</param>
+        /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
+        /// <param name="vector2DKeys">Les touches pour actionner un axe 2D</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity CreateInputBindingEntities(World world, int nbMaxPlayers,
+            bool usesMouse, bool usesKeyboard, bool usesGamePad, InputKeyVector2DElement[] vector2DKeys)
+        {
+            if (vector2DKeys == null ^ vector2DKeys.Length != 4)
+            {
+                return Entity.Null;
+            }
+
+            // Pour chaque élément de la séquence, on regarde
+            // si l'InputManager prend en charge son IScheme.
+            // Si non, le binding ne peut pas être lu et est invalide.
+
+            EntityFactory.ConvertVector2DKey(vector2DKeys[0], usesMouse, usesKeyboard, usesGamePad, out int positiveXID, out InputBindingKeyType positiveXType);
+
+            if (positiveXID == -1)
+            {
+                return Entity.Null;
+            }
+
+            EntityFactory.ConvertVector2DKey(vector2DKeys[1], usesMouse, usesKeyboard, usesGamePad, out int negativeXID, out InputBindingKeyType negativeXType);
+
+            if (negativeXID == -1)
+            {
+                return Entity.Null;
+            }
+
+            EntityFactory.ConvertVector2DKey(vector2DKeys[2], usesMouse, usesKeyboard, usesGamePad, out int positiveYID, out InputBindingKeyType positiveYType);
+
+            if (positiveYID == -1)
+            {
+                return Entity.Null;
+            }
+
+            EntityFactory.ConvertVector2DKey(vector2DKeys[3], usesMouse, usesKeyboard, usesGamePad, out int negativeYID, out InputBindingKeyType negativeYType);
+
+            if (negativeYID == -1)
+            {
+                return Entity.Null;
+            }
+
+            return world.Create
+                (
+                    new InputBindingVector2DKeysIDsCD
+                    {
+                        PositiveXID = positiveXID,
+                        NegativeXID = negativeXID,
+                        PositiveYID = positiveYID,
+                        NegativeYID = negativeYID
+                    },
+                    new InputBindingVector2DKeysTypesCD
+                    {
+                        PositiveXType = positiveXType,
+                        NegativeXType = negativeXType,
+                        PositiveYType = positiveYType,
+                        NegativeYType = negativeYType
+                    },
+                    new InputBindingVector2DValuesBU(nbMaxPlayers)
+                );
+        }
+
+        /// <summary>
+        /// Crée les entités des entrées
+        /// </summary>
+        /// <param name="world">Le monde contenant ces entités</param>
+        /// <param name="nbMaxPlayers">Le nombre de joueurs possibles</param>
+        /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
+        /// <param name="joystick">Le joystick utilisé</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity CreateInputBindingEntities(World world, int nbMaxPlayers,
+            bool usesGamePad, InputBindingJoystick joystick)
+        {
+            if (!usesGamePad)
+            {
+                return Entity.Null;
+            }
+
+            Entity e = world.Create
+                (
+                    new InputBindingDeadZoneCD { Value = joystick.DeadZone },
+                    new InputBindingJoystickTypeCD { Value = joystick.Type }
+                );
+
+            switch (joystick.Axis)
+            {
+                case JoystickAxisType.Both:
+                    world.Add<InputBindingJoystickXAxisTag>(e);
+                    world.Add<InputBindingJoystickYAxisTag>(e);
+                    world.Add(e, new InputBindingVector2DValuesBU(nbMaxPlayers));
+                    break;
+                case JoystickAxisType.XAxis:
+                    world.Add<InputBindingJoystickXAxisTag>(e);
+                    world.Add(e, new InputBindingVector1DValuesBU(nbMaxPlayers));
+                    break;
+                case JoystickAxisType.YAxis:
+                    world.Add<InputBindingJoystickYAxisTag>(e);
+                    world.Add(e, new InputBindingVector1DValuesBU(nbMaxPlayers));
+                    break;
+            }
+
+            return e;
+        }
+
+        /// <summary>
+        /// Crée les entités des entrées
+        /// </summary>
+        /// <param name="world">Le monde contenant ces entités</param>
+        /// <param name="nbMaxPlayers">Le nombre de joueurs possibles</param>
+        /// <param name="usesMouse"><see langword="true"/> si l'InputManager prend en charge la souris</param>
+        /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
+        /// <param name="trigger">Le trigger utilisé</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity CreateInputBindingEntities(World world, int nbMaxPlayers,
+            bool usesMouse, bool usesGamePad, InputBindingTrigger trigger)
+        {
+            switch (trigger.Type)
+            {
+                case TriggerType.MouseWheel:
+                    if (!usesMouse)
+                    {
+                        return Entity.Null;
+                    }
+
+                    goto case default;
+
+                case TriggerType.LeftTrigger:
+                case TriggerType.RightTrigger:
+                    if (!usesGamePad)
+                    {
+                        return Entity.Null;
+                    }
+
+                    goto case default;
+
+                default:
+                    return world.Create
+                    (
+                        new InputBindingDeadZoneCD { Value = trigger.DeadZone },
+                        new InputBindingTriggerTypeCD { Value = trigger.Type },
+                        new InputBindingVector1DValuesBU(nbMaxPlayers)
+                    );
+            }
         }
 
         #endregion
@@ -200,6 +322,181 @@ namespace Retard.Core.Entities
                     new SpriteRectCD { Value = rects[i] },
                     new SpriteColorCD { Value = Color.White }
                     );
+            }
+        }
+
+        #endregion
+
+        #region Fonctions statiques privées
+
+        /// <summary>
+        /// Convertit le KeySequenceElement
+        /// </summary>
+        /// <param name="element">Le KeySequence element</param>
+        /// <param name="usesMouse"><see langword="true"/> si l'InputManager prend en charge la souris</param>
+        /// <param name="usesKeyboard"><see langword="true"/> si l'InputManager prend en charge le clavier</param>
+        /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
+        /// <param name="id">L'id de la touche</param>
+        /// <param name="type">Le type de la touche</param>
+        private static void ConvertKeySequenceElement(InputKeySequenceElement element, bool usesMouse, bool usesKeyboard, bool usesGamePad,
+            out int id, out InputBindingKeyType type)
+        {
+            id = -1;
+            type = default;
+
+            if (element.MouseKey != MouseKey.None)
+            {
+                if (!usesMouse)
+                {
+                    return;
+                }
+
+                type = InputBindingKeyType.MouseKey;
+                id = (int)element.MouseKey;
+            }
+            else if (element.KeyboardKey != Keys.None)
+            {
+                if (!usesKeyboard)
+                {
+                    return;
+                }
+
+                type = InputBindingKeyType.KeyboardKey;
+                id = (int)element.KeyboardKey;
+            }
+            else if (element.GamePadKey != Buttons.None)
+            {
+                if (!usesGamePad)
+                {
+                    return;
+                }
+
+                type = InputBindingKeyType.GamePadKey;
+                id = (int)element.GamePadKey;
+            }
+            else if (element.JoystickKey != JoystickKey.None)
+            {
+                if (!usesGamePad)
+                {
+                    return;
+                }
+
+                type = InputBindingKeyType.JoystickKey;
+                id = (int)element.JoystickKey;
+            }
+        }
+
+        /// <summary>
+        /// Convertit la Vector1DKey
+        /// </summary>
+        /// <param name="element">La Vector1DKey</param>
+        /// <param name="usesMouse"><see langword="true"/> si l'InputManager prend en charge la souris</param>
+        /// <param name="usesKeyboard"><see langword="true"/> si l'InputManager prend en charge le clavier</param>
+        /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
+        /// <param name="id">L'id de la touche</param>
+        /// <param name="type">Le type de la touche</param>
+        private static void ConvertVector1DKey(InputKeyVector1DElement element, bool usesMouse, bool usesKeyboard, bool usesGamePad,
+            out int id, out InputBindingKeyType type)
+        {
+            id = -1;
+            type = default;
+
+            if (element.MouseKey != MouseKey.None)
+            {
+                if (!usesMouse)
+                {
+                    return;
+                }
+
+                type = InputBindingKeyType.MouseKey;
+                id = (int)element.MouseKey;
+            }
+            else if (element.KeyboardKey != Keys.None)
+            {
+                if (!usesKeyboard)
+                {
+                    return;
+                }
+
+                type = InputBindingKeyType.KeyboardKey;
+                id = (int)element.KeyboardKey;
+            }
+            else if (element.GamePadKey != Buttons.None)
+            {
+                if (!usesGamePad)
+                {
+                    return;
+                }
+
+                type = InputBindingKeyType.GamePadKey;
+                id = (int)element.GamePadKey;
+            }
+            else if (element.JoystickKey != JoystickKey.None)
+            {
+                if (!usesGamePad)
+                {
+                    return;
+                }
+
+                type = InputBindingKeyType.JoystickKey;
+                id = (int)element.JoystickKey;
+            }
+        }
+
+        /// <summary>
+        /// Convertit la Vector2DKey
+        /// </summary>
+        /// <param name="element">La Vector2DKey</param>
+        /// <param name="usesMouse"><see langword="true"/> si l'InputManager prend en charge la souris</param>
+        /// <param name="usesKeyboard"><see langword="true"/> si l'InputManager prend en charge le clavier</param>
+        /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
+        /// <param name="id">L'id de la touche</param>
+        /// <param name="type">Le type de la touche</param>
+        private static void ConvertVector2DKey(InputKeyVector2DElement element, bool usesMouse, bool usesKeyboard, bool usesGamePad,
+            out int id, out InputBindingKeyType type)
+        {
+            id = -1;
+            type = default;
+
+            if (element.MouseKey != MouseKey.None)
+            {
+                if (!usesMouse)
+                {
+                    return;
+                }
+
+                type = InputBindingKeyType.MouseKey;
+                id = (int)element.MouseKey;
+            }
+            else if (element.KeyboardKey != Keys.None)
+            {
+                if (!usesKeyboard)
+                {
+                    return;
+                }
+
+                type = InputBindingKeyType.KeyboardKey;
+                id = (int)element.KeyboardKey;
+            }
+            else if (element.GamePadKey != Buttons.None)
+            {
+                if (!usesGamePad)
+                {
+                    return;
+                }
+
+                type = InputBindingKeyType.GamePadKey;
+                id = (int)element.GamePadKey;
+            }
+            else if (element.JoystickKey != JoystickKey.None)
+            {
+                if (!usesGamePad)
+                {
+                    return;
+                }
+
+                type = InputBindingKeyType.JoystickKey;
+                id = (int)element.JoystickKey;
             }
         }
 

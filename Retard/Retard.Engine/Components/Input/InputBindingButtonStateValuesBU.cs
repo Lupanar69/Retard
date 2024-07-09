@@ -1,27 +1,25 @@
 ﻿using Arch.AOT.SourceGenerator;
 using Arch.LowLevel;
-using Retard.Core.Models.Assets.Input;
+using Retard.Engine.Models;
 
 namespace Retard.Core.Components.Input
 {
     /// <summary>
-    /// L'état du bouton lié à une InputAction
-    /// pour chaque joueur connecté.
+    /// Indique si la séquence de ce binding est valide pour le n° de joueur donné.
     /// S'il n'y a aucune manette ou qu'elles ne sont pas prises en charge,
     /// le buffer est de taille 1.
     /// </summary>
     [Component]
-    public struct InputActionButtonStateValuesBU
+    public struct InputBindingButtonStateValuesBU
     {
         #region Variables d'instance
 
         /// <summary>
-        /// L'état du bouton lié à une InputAction
-        /// pour chaque joueur connecté.
+        /// Indique si la séquence de ce binding est valide pour le n° de joueur donné.
         /// S'il n'y a aucune manette ou qu'elles ne sont pas prises en charge,
         /// le buffer est de taille 1.
         /// </summary>
-        public UnsafeArray<InputActionButtonState> Value;
+        public UnsafeArray<ButtonStateType> Value;
 
         #endregion
 
@@ -31,13 +29,13 @@ namespace Retard.Core.Components.Input
         /// Constructeur
         /// </summary>
         /// <param name="length">La taille de la collection</param>
-        public InputActionButtonStateValuesBU(int length)
+        public InputBindingButtonStateValuesBU(int length)
         {
-            this.Value = new UnsafeArray<InputActionButtonState>(length);
+            this.Value = new UnsafeArray<ButtonStateType>(length);
 
             for (int i = 0; i < length; ++i)
             {
-                this.Value[i] = InputActionButtonState.Inert;
+                this.Value[i] = ButtonStateType.Inert;
             }
         }
 
