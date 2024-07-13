@@ -4,12 +4,10 @@ using Arch.Core;
 using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Retard.Core.Components.Input;
 using Retard.Core.Models.Arch;
 using Retard.Core.Models.Assets.Input;
 using Retard.Core.Models.ValueTypes;
 using Retard.Core.Systems.Input;
-using Retard.Engine.Components.Input;
 using Retard.Engine.Models;
 using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.ViewModels.Input;
@@ -222,285 +220,6 @@ namespace Retard.Core.ViewModels.Input
         }
 
         /// <summary>
-        /// Calcule la valeur ButtonState de l'InputAction à partir de l'InputBinding renseigné
-        /// </summary>
-        /// <param name="w">Le monde contenant les entités</param>
-        /// <param name="bindingE">L'entité de l'InputBinding</param>
-        /// <param name="inputActionID">L'ID de l'action</param>
-        /// <param name="returnValue">La valeur de l'action</param>
-        internal static void SetButtonStateReturnValue(World w, Entity bindingE, in NativeString inputActionID, ref InputBindingButtonStateValuesBU returnValue)
-        {
-            // Commence avec des inputs inertes
-
-            int returnValuesCount = returnValue.Value.Length;
-            using UnsafeArray<ButtonStateType> states = new(returnValuesCount);
-
-            for (int i = 0; i < returnValuesCount; ++i)
-            {
-                states[i] = ButtonStateType.Inert;
-            }
-
-            #region Si l'InputBinding utilise un joystick...
-
-            if (w.TryGet(bindingE, out InputBindingJoystickTypeCD joystickTypeCD))
-            {
-                InputBindingDeadZoneCD deadZoneCD = w.Get<InputBindingDeadZoneCD>(bindingE);
-                GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
-
-                switch (joystickTypeCD.Value)
-                {
-                    case JoystickType.Left:
-                        for (int i = 0; i < gamePadInput.NbConnected; ++i)
-                        {
-                            ButtonStateType actionState = returnValue.Value[i];
-
-                            if (actionState == ButtonStateType.Inert &&
-                                gamePadInput.IsLeftThumbstickPressed(i, deadZoneCD.Value))
-                            {
-                                states[i] = ButtonStateType.Pressed;
-                                InputManager.GetButtonEvent(inputActionID).Started?.Invoke(i);
-                            }
-
-                            if (actionState == ButtonStateType.Pressed &&
-                                gamePadInput.IsLeftThumbstickHeld(i, deadZoneCD.Value))
-                            {
-                                states[i] = ButtonStateType.Held;
-                                InputManager.GetButtonEvent(inputActionID).Performed?.Invoke(i);
-                            }
-
-                            if (actionState == ButtonStateType.Held &&
-                                gamePadInput.IsLeftThumbstickReleased(i, deadZoneCD.Value))
-                            {
-                                states[i] = ButtonStateType.Released;
-                                InputManager.GetButtonEvent(inputActionID).Finished?.Invoke(i);
-                            }
-                        }
-                        break;
-
-                    case JoystickType.Right:
-                        for (int i = 0; i < gamePadInput.NbConnected; ++i)
-                        {
-                            ButtonStateType actionState = returnValue.Value[i];
-
-                            if (actionState == ButtonStateType.Inert &&
-                                gamePadInput.IsRightThumbstickPressed(i, deadZoneCD.Value))
-                            {
-                                states[i] = ButtonStateType.Pressed;
-                                InputManager.GetButtonEvent(inputActionID).Started?.Invoke(i);
-                            }
-
-                            if (actionState == ButtonStateType.Pressed &&
-                                gamePadInput.IsRightThumbstickHeld(i, deadZoneCD.Value))
-                            {
-                                states[i] = ButtonStateType.Held;
-                                InputManager.GetButtonEvent(inputActionID).Performed?.Invoke(i);
-                            }
-
-                            if (actionState == ButtonStateType.Held &&
-                                gamePadInput.IsRightThumbstickReleased(i, deadZoneCD.Value))
-                            {
-                                states[i] = ButtonStateType.Released;
-                                InputManager.GetButtonEvent(inputActionID).Finished?.Invoke(i);
-                            }
-                        }
-                        break;
-                }
-            }
-
-            #endregion
-
-            #region Sinon, s'il utilise des touches...
-
-            else
-            {
-                var sequenceIDs = w.Get<InputBindingKeySequenceIDsBU>(bindingE);
-                var sequenceTypes = w.Get<InputBindingKeySequenceTypesBU>(bindingE);
-                var sequenceStates = w.Get<InputBindingKeySequenceStatesBU>(bindingE);
-                int sequenceLength = sequenceIDs.Value.Length;
-
-                /* Pour chaque élément de la séquence, on regarde si tous
-                 * ses éléments sont entrés correctement.
-                 * Si le moindre élément fait défaut, la séquence entière est invalide.
-                 * 
-                 * Pour les boutons de manette :
-                 *      - Si tous les éléments sont des boutons de manette, la séquence
-                 *        est considérée comme ayant un ID de manette
-                 *      - Si tous ne sont pas des boutons de manette, 
-                 *        l'ID du joueur est considéré comme étant 0 (le joueur 1)
-                */
-
-                bool gamePadOnly = true;
-
-                #region Détermine d'abord si la séquence ne contient que des boutons de manette
-
-                for (int i = 0; i < sequenceLength; ++i)
-                {
-                    InputBindingKeyType keyType = sequenceTypes.Value[i];
-
-                    switch (keyType)
-                    {
-                        case InputBindingKeyType.MouseKey:
-                        case InputBindingKeyType.KeyboardKey:
-                            gamePadOnly = false;
-                            goto Next;
-                    }
-                }
-
-                #endregion
-
-                Next:
-
-                #region Si manette uniquement, on évalue la séquence pour chacune d'entre elles
-
-                if (gamePadOnly)
-                {
-                    GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
-
-                    for (int i = 0; i < gamePadInput.NbConnected; ++i)
-                    {
-                        for (int j = 0; j < sequenceLength; ++j)
-                        {
-                            int id = sequenceIDs.Value[j];
-                            InputBindingKeyType keyType = sequenceTypes.Value[j];
-                            InputKeySequenceState validState = sequenceStates.Value[j];
-
-                            #region Si la séquence est invalide, on passe à la manette suivante
-
-                            switch (keyType)
-                            {
-                                case InputBindingKeyType.GamePadKey:
-                                    Buttons gamePadKey = (Buttons)id;
-                                    if (InputManager.GetGamePadKeyState(i, gamePadKey, gamePadInput) != validState)
-                                    {
-                                        goto NextGamePad;
-                                    }
-                                    break;
-
-                                case InputBindingKeyType.JoystickKey:
-                                    JoystickKey joystickKey = (JoystickKey)id;
-                                    if (InputManager.GetJoystickKeyState(i, joystickKey, gamePadInput) != validState)
-                                    {
-                                        goto NextGamePad;
-                                    }
-                                    break;
-                            }
-
-                            #endregion
-                        }
-
-                        #region La séquence est valide, on appelle l'event associé
-
-                        switch (returnValue.Value[i])
-                        {
-                            case ButtonStateType.Inert:
-                                states[i] = ButtonStateType.Pressed;
-                                InputManager.GetButtonEvent(inputActionID).Started?.Invoke(i);
-                                break;
-
-                            case ButtonStateType.Pressed:
-                                states[i] = ButtonStateType.Held;
-                                InputManager.GetButtonEvent(inputActionID).Performed?.Invoke(i);
-                                break;
-
-                            case ButtonStateType.Held:
-                                states[i] = ButtonStateType.Released;
-                                InputManager.GetButtonEvent(inputActionID).Finished?.Invoke(i);
-                                break;
-                        }
-
-                        #endregion
-
-                        NextGamePad:
-                        continue;
-                    }
-                }
-
-                #endregion
-
-                #region Sinon, on évalue uniquement pour le joueur 1
-
-                else
-                {
-                    for (int i = 0; i < sequenceLength; ++i)
-                    {
-                        int id = sequenceIDs.Value[i];
-                        InputBindingKeyType keyType = sequenceTypes.Value[i];
-                        InputKeySequenceState validState = sequenceStates.Value[i];
-
-                        switch (keyType)
-                        {
-                            case InputBindingKeyType.MouseKey:
-                                MouseKey mouseKey = (MouseKey)id;
-                                if (InputManager.GetMouseKeyState(mouseKey) != validState)
-                                {
-                                    goto End;
-                                }
-                                break;
-
-                            case InputBindingKeyType.KeyboardKey:
-                                Keys keyboardKey = (Keys)id;
-                                if (InputManager.GetKeyboardKeyState(keyboardKey) != validState)
-                                {
-                                    goto End;
-                                }
-                                break;
-
-                            case InputBindingKeyType.GamePadKey:
-                                Buttons gamePadKey = (Buttons)id;
-                                if (InputManager.GetGamePadKeyState(0, gamePadKey) != validState)
-                                {
-                                    goto End;
-                                }
-                                break;
-
-                            case InputBindingKeyType.JoystickKey:
-                                JoystickKey joystickKey = (JoystickKey)id;
-                                if (InputManager.GetJoystickKeyState(0, joystickKey) != validState)
-                                {
-                                    goto End;
-                                }
-                                break;
-                        }
-                    }
-
-                    #region La séquence est valide, on appelle l'event associé
-
-                    switch (returnValue.Value[0])
-                    {
-                        case ButtonStateType.Inert:
-                            states[0] = ButtonStateType.Pressed;
-                            InputManager.GetButtonEvent(inputActionID).Started?.Invoke(0);
-                            break;
-
-                        case ButtonStateType.Pressed:
-                            states[0] = ButtonStateType.Held;
-                            InputManager.GetButtonEvent(inputActionID).Performed?.Invoke(0);
-                            break;
-
-                        case ButtonStateType.Held:
-                            states[0] = ButtonStateType.Released;
-                            InputManager.GetButtonEvent(inputActionID).Finished?.Invoke(0);
-                            break;
-                    }
-
-
-                    #endregion
-                }
-
-                #endregion
-            }
-
-            #endregion
-
-            End:
-
-            for (int i = 0; i < returnValuesCount; ++i)
-            {
-                returnValue.Value[i] = states[i];
-            }
-        }
-
-        /// <summary>
         /// Retourne l'état de la touche
         /// </summary>
         /// <param name="mouseKey">La touche de la souris à evaluer</param>
@@ -581,7 +300,6 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="playerIndex">L'ID de la manette</param>
         /// <param name="gamePadKey">La touche de la manette à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
-        /// <exception cref="Exception">La touche renseignée est invalide</exception>
         public static InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey)
         {
             GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
@@ -602,7 +320,6 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="gamePadKey">La touche de la manette à evaluer</param>
         /// <param name="gamePadInput">Les contrôles de la manette</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
-        /// <exception cref="Exception">La touche renseignée est invalide</exception>
         public static InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey, GamePadInput gamePadInput)
         {
             return gamePadInput.IsButtonPressed(playerIndex, gamePadKey)

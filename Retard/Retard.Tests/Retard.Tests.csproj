@@ -1,12 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DefineConstants>$(DefineConstants);ENABLE_LOGS;TESTS;PURE_ECS</DefineConstants>
 	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+	  <DefineConstants>$(DefineConstants);ENABLE_LOGS;TESTS;PURE_ECS</DefineConstants>
+	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<DefineConstants>$(DefineConstants);ENABLE_LOGS;TESTS;PURE_ECS</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+	  <DefineConstants>$(DefineConstants);ENABLE_LOGS;TESTS;PURE_ECS</DefineConstants>
 	</PropertyGroup>
 	
 	<ItemGroup>

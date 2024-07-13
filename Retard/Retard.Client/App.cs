@@ -8,6 +8,7 @@ using Retard.Core.Models;
 using Retard.Core.ViewModels.App;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
+using Retard.Engine.ViewModels.Input;
 using Retard.Tests.ViewModels.Scenes;
 
 namespace Retard.Client
@@ -85,11 +86,11 @@ namespace Retard.Client
 
             this.InitializeSceneManager();
 
-            //InputControls c = new();
-            //c.GetButtonEvent("Camera/LeftMousePressed").Started += (playerID) => p("pressed");
-            //c.GetButtonEvent("Camera/LeftMousePressed").Performed += (playerID) => p("held");
-            //c.GetButtonEvent("Camera/LeftMousePressed").Finished += (playerID) => p("released");
-            //c.Enable();
+            InputControls c = new();
+            c.GetButtonEvent("ButtonState").Started += (playerID) => p("started");
+            c.GetButtonEvent("ButtonState").Performed += (playerID) => p("performed");
+            c.GetButtonEvent("ButtonState").Finished += (playerID) => p("finished");
+            c.Enable();
 
             base.Initialize();
         }

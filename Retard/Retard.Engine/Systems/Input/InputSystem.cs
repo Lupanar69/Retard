@@ -7,7 +7,6 @@ using Retard.Core.Models;
 using Retard.Core.Models.Arch;
 using Retard.Core.Models.ValueTypes;
 using Retard.Core.ViewModels.Input;
-using Retard.Engine.Components.Input;
 using Retard.Engine.Models.DTOs.Input;
 using Retard.Engine.ViewModels.Utilities;
 
@@ -27,6 +26,15 @@ namespace Retard.Core.Systems.Input
 
         #endregion
 
+        #region Variables d'instance
+
+        /// <summary>
+        /// Pour obtenir les entrées manette
+        /// </summary>
+        private GamePadInput _gamePadInput;
+
+        #endregion
+
         #region Constructeur
 
         /// <summary>
@@ -36,6 +44,7 @@ namespace Retard.Core.Systems.Input
         public InputSystem(World world)
         {
             this.World = world;
+            InputManager.TryGetScheme(out this._gamePadInput);
 
             string customInputConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.CUSTOM_INPUT_CONFIG_PATH}";
             string json = JsonUtilities.ReadFile(customInputConfigPath);
@@ -93,7 +102,7 @@ namespace Retard.Core.Systems.Input
             bool usesMouse = InputManager.HasScheme<MouseInput>();
             bool usesKeyboard = InputManager.HasScheme<KeyboardInput>();
             bool usesGamePad = InputManager.HasScheme<GamePadInput>();
-            int returnValueCount = usesGamePad ? InputManager.GetScheme<GamePadInput>().NbMaxGamePads : 1;
+            int nbMaxControllers = usesGamePad ? InputManager.GetScheme<GamePadInput>().NbMaxGamePads : 1;
 
             for (int i = 0; i < config.Actions.Length; ++i)
             {
@@ -111,11 +120,11 @@ namespace Retard.Core.Systems.Input
                 for (int j = 0; j < action.Bindings.Length; ++j)
                 {
                     InputBindingDTO binding = action.Bindings[j];
-                    Entity e1 = EntityFactory.CreateInputBindingEntities(world, returnValueCount, usesMouse, usesKeyboard, usesGamePad, binding.KeySequence);
-                    Entity e2 = EntityFactory.CreateInputBindingEntities(world, returnValueCount, usesMouse, usesKeyboard, usesGamePad, binding.Vector1DKeys);
-                    Entity e3 = EntityFactory.CreateInputBindingEntities(world, returnValueCount, usesMouse, usesKeyboard, usesGamePad, binding.Vector2DKeys);
-                    Entity e4 = EntityFactory.CreateInputBindingEntities(world, returnValueCount, usesGamePad, binding.Joystick);
-                    Entity e5 = EntityFactory.CreateInputBindingEntities(world, returnValueCount, usesMouse, usesGamePad, binding.Trigger);
+                    Entity e1 = EntityFactory.CreateInputBindingEntities(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.KeySequence);
+                    Entity e2 = EntityFactory.CreateInputBindingEntities(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.Vector1DKeys);
+                    Entity e3 = EntityFactory.CreateInputBindingEntities(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.Vector2DKeys);
+                    Entity e4 = EntityFactory.CreateInputBindingEntities(world, nbMaxControllers, usesGamePad, binding.Joystick);
+                    Entity e5 = EntityFactory.CreateInputBindingEntities(world, nbMaxControllers, usesMouse, usesGamePad, binding.Trigger);
 
                     // Si un binding est null (aucune touche renseignée ou aucun IScheme correspondant dans l'InputManager),
                     // on se contente de l'ignorer
@@ -144,7 +153,6 @@ namespace Retard.Core.Systems.Input
                     {
                         bindingEs.Add(e5);
                     }
-
                 }
 
                 #endregion
@@ -153,7 +161,7 @@ namespace Retard.Core.Systems.Input
 
                 if (bindingEs.Count > 0)
                 {
-                    Entity actionE = EntityFactory.CreateInputActionEntities(world, action.Name, action.ValueType);
+                    Entity actionE = EntityFactory.CreateInputActionEntities(world, nbMaxControllers, action.Name, action.ValueType);
 
                     for (int j = 0; j < bindingEs.Count; ++j)
                     {
@@ -172,9 +180,9 @@ namespace Retard.Core.Systems.Input
         /// <param name="world">Le monde contenant les entités</param>
         private static void CreateInputActionEvents(World world)
         {
-            var query1 = new QueryDescription().WithAll<InputActionIDCD, InputActionButtonStateTag>();
-            var query2 = new QueryDescription().WithAll<InputActionIDCD, InputActionVector1DTag>();
-            var query3 = new QueryDescription().WithAll<InputActionIDCD, InputActionVector2DTag>();
+            var query1 = new QueryDescription().WithAll<InputActionIDCD, InputButtonStateValuesBU>();
+            var query2 = new QueryDescription().WithAll<InputActionIDCD, InputVector1DValuesBU>();
+            var query3 = new QueryDescription().WithAll<InputActionIDCD, InputVector2DValuesBU>();
 
             UnsafeList<NativeString> list1 = new(1);
             UnsafeList<NativeString> list2 = new(1);

@@ -1,6 +1,5 @@
 ﻿using Arch.AOT.SourceGenerator;
 using Arch.LowLevel;
-using Retard.Engine.Models;
 
 namespace Retard.Core.Components.Input
 {
@@ -10,7 +9,7 @@ namespace Retard.Core.Components.Input
     /// le buffer est de taille 1.
     /// </summary>
     [Component]
-    public struct InputBindingButtonStateValuesBU
+    public struct InputButtonStateValuesBU
     {
         #region Variables d'instance
 
@@ -19,7 +18,7 @@ namespace Retard.Core.Components.Input
         /// S'il n'y a aucune manette ou qu'elles ne sont pas prises en charge,
         /// le buffer est de taille 1.
         /// </summary>
-        public UnsafeArray<ButtonStateType> Value;
+        public UnsafeArray<bool> Value;
 
         #endregion
 
@@ -29,13 +28,13 @@ namespace Retard.Core.Components.Input
         /// Constructeur
         /// </summary>
         /// <param name="length">La taille de la collection</param>
-        public InputBindingButtonStateValuesBU(int length)
+        public InputButtonStateValuesBU(int length)
         {
-            this.Value = new UnsafeArray<ButtonStateType>(length);
+            this.Value = new UnsafeArray<bool>(length);
 
             for (int i = 0; i < length; ++i)
             {
-                this.Value[i] = ButtonStateType.Inert;
+                this.Value[i] = false;
             }
         }
 

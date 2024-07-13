@@ -5,10 +5,13 @@ using Arch.Relationships;
 using Arch.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Retard.Core.Components.Input;
 using Retard.Core.Components.Sprites;
 using Retard.Core.Models.Assets.Sprites;
+using Retard.Core.ViewModels.Input;
 using Retard.Engine.Components.Input;
+using Retard.Engine.Models;
 
 namespace Retard.Core.Entities
 {
@@ -32,9 +35,88 @@ namespace Retard.Core.Entities
             in InputBindingKeySequenceIDsBU idsBU,
             in InputBindingKeySequenceTypesBU typesBU,
             in InputBindingKeySequenceStatesBU statesBU,
-            ref InputBindingButtonStateValuesBU returnValuesBU)
+            ref InputButtonStateValuesBU returnValuesBU)
         {
+            for (int i = 0; i < returnValuesBU.Value.Length; ++i)
+            {
+                for (int j = 0; j < idsBU.Value.Length; ++j)
+                {
+                    int id = idsBU.Value[j];
+                    InputBindingKeyType type = typesBU.Value[j];
+                    InputKeySequenceState validState = statesBU.Value[j];
 
+                    // Si la séquence n'est pas valide
+
+                    switch (type)
+                    {
+                        case InputBindingKeyType.MouseKey:
+
+                            // Seul le contrôleur 1 peut utiliser la souris et le clavier
+                            // (les autres contrôleurs sont des manettes)
+
+                            if (i > 0)
+                            {
+                                return;
+                            }
+
+                            MouseKey mouseKey = (MouseKey)id;
+
+                            if (InputManager.GetMouseKeyState(mouseKey) != validState)
+                            {
+                                returnValuesBU.Value[i] = false;
+                                goto NextController;
+                            }
+                            break;
+
+                        case InputBindingKeyType.KeyboardKey:
+
+                            // Seul le contrôleur 1 peut utiliser la souris et le clavier
+                            // (les autres contrôleurs sont des manettes)
+
+                            if (i > 0)
+                            {
+                                return;
+                            }
+
+                            Keys keyboardKey = (Keys)id;
+
+                            if (InputManager.GetKeyboardKeyState(keyboardKey) != validState)
+                            {
+                                returnValuesBU.Value[i] = false;
+                                goto NextController;
+                            }
+
+                            break;
+
+                        case InputBindingKeyType.GamePadKey:
+                            Buttons gamePadKey = (Buttons)id;
+
+                            if (InputManager.GetGamePadKeyState(i, gamePadKey) != validState)
+                            {
+                                returnValuesBU.Value[i] = false;
+                                goto NextController;
+                            }
+                            break;
+
+                        case InputBindingKeyType.JoystickKey:
+                            JoystickKey joystickKey = (JoystickKey)id;
+
+                            if (InputManager.GetJoystickKeyState(i, joystickKey) != validState)
+                            {
+                                returnValuesBU.Value[i] = false;
+                                goto NextController;
+                            }
+                            break;
+                    }
+                }
+
+                // Si la séquence est valide
+
+                returnValuesBU.Value[i] = true;
+
+                NextController:
+                continue;
+            }
         }
 
         /// <summary>
@@ -48,7 +130,7 @@ namespace Retard.Core.Entities
         public static void ProcessVector1DKeysInputBindings(
             in InputBindingVector1DKeysIDsCD idsBU,
             in InputBindingVector1DKeysTypesCD typesBU,
-            ref InputBindingVector1DValuesBU returnValuesBU)
+            ref InputVector1DValuesBU returnValuesBU)
         {
 
         }
@@ -64,7 +146,7 @@ namespace Retard.Core.Entities
         public static void ProcessVector2DKeysInputBindings(
             in InputBindingVector2DKeysIDsCD idsBU,
             in InputBindingVector2DKeysTypesCD typesBU,
-            ref InputBindingVector2DValuesBU returnValuesBU)
+            ref InputVector2DValuesBU returnValuesBU)
         {
 
         }
@@ -80,7 +162,7 @@ namespace Retard.Core.Entities
         public static void ProcessVector1DTriggerInputBindings(
             in InputBindingDeadZoneCD deadZoneCD,
             in InputBindingTriggerTypeCD triggerType,
-            ref InputBindingVector1DValuesBU returnValuesBU)
+            ref InputVector1DValuesBU returnValuesBU)
         {
 
         }
@@ -96,7 +178,7 @@ namespace Retard.Core.Entities
         public static void ProcessVector2DJoystickInputBindings(
             in InputBindingDeadZoneCD deadZoneCD,
             in InputBindingJoystickTypeCD joystickType,
-            ref InputBindingVector2DValuesBU returnValuesBU)
+            ref InputVector2DValuesBU returnValuesBU)
         {
 
         }
@@ -113,7 +195,7 @@ namespace Retard.Core.Entities
         public static void ProcessVector1DJoystickXInputBindings(
             in InputBindingDeadZoneCD deadZoneCD,
             in InputBindingJoystickTypeCD joystickType,
-            ref InputBindingVector1DValuesBU returnValuesBU)
+            ref InputVector1DValuesBU returnValuesBU)
         {
 
         }
@@ -131,7 +213,7 @@ namespace Retard.Core.Entities
         public static void ProcessVector1DJoystickYInputBindings(
             in InputBindingDeadZoneCD deadZoneCD,
             in InputBindingJoystickTypeCD joystickType,
-            ref InputBindingVector1DValuesBU returnValuesBU)
+            ref InputVector1DValuesBU returnValuesBU)
         {
 
         }
@@ -146,10 +228,96 @@ namespace Retard.Core.Entities
         /// <param name="w">Le monde contenant les entités</param>
         /// <param name="actionE">L'entité de l'InputAction</param>
         /// <param name="actionID">l'ID de l'InputAction</param>
+        /// <param name="actionValues">La valeur de l'InputAction pour chaque contrôleur</param>
         [Query]
-        [All(typeof(InputActionButtonStateTag))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ProcessButtonStateInputActions([Data] World w, in Entity actionE, in InputActionIDCD actionID)
+        public static void ProcessButtonStateInputActions(
+            [Data] World w,
+            in Entity actionE,
+            in InputActionIDCD actionID,
+            ref InputButtonStateValuesBU actionValues)
+        {
+            ref var rel = ref w.GetRelationships<InputActionOf>(actionE);
+
+            for (int i = 0; i < actionValues.Value.Length; ++i)
+            {
+                // On regarde si tous les bindings sont au repos
+
+                bool allInactive = true;
+
+                foreach (KeyValuePair<Entity, InputActionOf> child in rel)
+                {
+                    Entity bindingE = child.Key;
+                    InputButtonStateValuesBU bindingValues = w.Get<InputButtonStateValuesBU>(bindingE);
+
+                    if (bindingValues.Value[i] == true)
+                    {
+                        allInactive = false;
+                        break;
+                    }
+                }
+
+                // Si les bindings sont au repos, on arrête l'action
+
+                switch (allInactive)
+                {
+                    case true:
+                        switch (actionValues.Value[i])
+                        {
+                            case true:
+                                actionValues.Value[i] = false;
+                                InputManager.GetButtonEvent(actionID.Value).Finished?.Invoke(i);
+                                break;
+                        }
+                        break;
+                    case false:
+
+                        // Si certains bindings sont actifs, on lance l'action
+
+                        foreach (KeyValuePair<Entity, InputActionOf> child in rel)
+                        {
+                            Entity bindingE = child.Key;
+                            InputButtonStateValuesBU bindingValues = w.Get<InputButtonStateValuesBU>(bindingE);
+
+                            switch (bindingValues.Value[i])
+                            {
+                                case true:
+                                    switch (actionValues.Value[i])
+                                    {
+                                        case false:
+                                            actionValues.Value[i] = true;
+                                            InputManager.GetButtonEvent(actionID.Value).Started?.Invoke(i);
+                                            break;
+
+                                        case true:
+                                            InputManager.GetButtonEvent(actionID.Value).Performed?.Invoke(i);
+                                            goto NextController;    // Empêche plusieurs bindings actifs de réinvoquer l'action
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+                }
+
+                NextController:
+                continue;
+            }
+        }
+
+        /// <summary>
+        /// Détermine l'action à activer pour chaque InputAction
+        /// </summary>
+        /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="actionE">L'entité de l'InputAction</param>
+        /// <param name="actionID">l'ID de l'InputAction</param>
+        /// <param name="actionValues">La valeur de l'InputAction pour chaque contrôleur</param>
+        [Query]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ProcessVector1DInputActions(
+            [Data] World w,
+            in Entity actionE,
+            in InputActionIDCD actionID,
+            ref InputVector1DValuesBU actionValues)
         {
             ref var rel = ref w.GetRelationships<InputActionOf>(actionE);
 
@@ -165,29 +333,14 @@ namespace Retard.Core.Entities
         /// <param name="w">Le monde contenant les entités</param>
         /// <param name="actionE">L'entité de l'InputAction</param>
         /// <param name="actionID">l'ID de l'InputAction</param>
+        /// <param name="actionValues">La valeur de l'InputAction pour chaque contrôleur</param>
         [Query]
-        [All(typeof(InputActionVector1DTag))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ProcessVector1DInputActions([Data] World w, in Entity actionE, in InputActionIDCD actionID)
-        {
-            ref var rel = ref w.GetRelationships<InputActionOf>(actionE);
-
-            foreach (KeyValuePair<Entity, InputActionOf> child in rel)
-            {
-                Entity bindingE = child.Key;
-            }
-        }
-
-        /// <summary>
-        /// Détermine l'action à activer pour chaque InputAction
-        /// </summary>
-        /// <param name="w">Le monde contenant les entités</param>
-        /// <param name="actionE">L'entité de l'InputAction</param>
-        /// <param name="actionID">l'ID de l'InputAction</param>
-        [Query]
-        [All(typeof(InputActionVector2DTag))]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ProcessVector2DInputActions([Data] World w, in Entity actionE, in InputActionIDCD actionID)
+        public static void ProcessVector2DInputActions(
+            [Data] World w,
+            in Entity actionE,
+            in InputActionIDCD actionID,
+            ref InputVector2DValuesBU actionValues)
         {
             ref var rel = ref w.GetRelationships<InputActionOf>(actionE);
 

@@ -156,10 +156,6 @@ namespace Retard.Core.Models
                     new InputBindingDTO(
                         new InputKeySequenceElement(Keys.RightControl, InputKeySequenceState.Held),
                         new InputKeySequenceElement(MouseKey.Mouse0, InputKeySequenceState.Pressed)
-                        ),
-                    new InputBindingDTO(
-                        new InputKeySequenceElement(Keys.RightControl, InputKeySequenceState.Held),
-                        new InputKeySequenceElement(MouseKey.Mouse0, InputKeySequenceState.Released)
                         )
                 )
             );

@@ -8,9 +8,9 @@
     public enum ButtonStateType
     {
         Inert,
-        Pressed,
-        Held,
-        Released
+        Started,
+        Performed,
+        Finished
     }
 
     /// <summary>
@@ -69,6 +69,7 @@
     /// </summary>
     public enum JoystickType
     {
+        None,
         Left,
         Right,
         Both
@@ -79,6 +80,7 @@
     /// </summary>
     public enum TriggerType
     {
+        None,
         LeftTrigger,
         RightTrigger,
         MouseWheel
