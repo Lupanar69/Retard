@@ -141,10 +141,14 @@ namespace Retard.Core.Models
                         new InputKeyVector1DElement(Buttons.RightShoulder),
                         new InputKeyVector1DElement(Buttons.LeftShoulder)
                         ),
-                    new InputBindingDTO(new InputBindingTrigger(TriggerType.LeftTrigger, 0.24f)),
+                    new InputBindingDTO(
+                        new InputKeyVector1DElement(Keys.Right),
+                        new InputKeyVector1DElement(Keys.Left)
+                        ),
+                    new InputBindingDTO(new InputBindingTrigger(TriggerType.LeftTrigger, 0.12f)),
                     new InputBindingDTO(new InputBindingTrigger(TriggerType.MouseWheel, 0f)),
-                    new InputBindingDTO(new InputBindingJoystick(JoystickType.Left, JoystickAxisType.XAxis, 0.24f)),
-                    new InputBindingDTO(new InputBindingJoystick(JoystickType.Right, JoystickAxisType.YAxis, 0.24f))
+                    new InputBindingDTO(new InputBindingJoystick(JoystickType.Left, JoystickAxisType.XAxis, 0.12f)),
+                    new InputBindingDTO(new InputBindingJoystick(JoystickType.Right, JoystickAxisType.YAxis, 0.12f))
                 ),
                 new InputActionDTO
                 (

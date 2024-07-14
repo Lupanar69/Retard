@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.Relationships;
@@ -122,17 +123,145 @@ namespace Retard.Core.Entities
         /// <summary>
         /// Calcule les valeurs de chaque InputBinding
         /// </summary>
-        /// <param name="idsBU">Les IDs de chaque élément de la séquence de touches</param>
-        /// <param name="typesBU">Les types de touche de chaque élément de la séquence de touches</param>
+        /// <param name="idsCD">Les IDs de chaque élément de la séquence de touches</param>
+        /// <param name="typesCD">Les types de touche de chaque élément de la séquence de touches</param>
         /// <param name="returnValuesBU">Les valeurs du binding à retourner</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ProcessVector1DKeysInputBindings(
-            in InputBindingVector1DKeysIDsCD idsBU,
-            in InputBindingVector1DKeysTypesCD typesBU,
+            in InputBindingVector1DKeysIDsCD idsCD,
+            in InputBindingVector1DKeysTypesCD typesCD,
             ref InputVector1DValuesBU returnValuesBU)
         {
+            for (int i = 0; i < returnValuesBU.Value.Length; ++i)
+            {
+                float positiveValue = 0f;
+                float negativeValue = 0f;
 
+                switch (typesCD.PositiveType)
+                {
+                    case InputBindingKeyType.MouseKey:
+
+                        // Seul le contrôleur 1 peut utiliser la souris et le clavier
+                        // (les autres contrôleurs sont des manettes)
+
+                        if (i > 0)
+                        {
+                            return;
+                        }
+
+                        MouseKey mouseKey = (MouseKey)idsCD.PositiveID;
+                        InputKeySequenceState mouseKeyState = InputManager.GetMouseKeyState(mouseKey);
+
+                        if (mouseKeyState == InputKeySequenceState.Pressed || mouseKeyState == InputKeySequenceState.Held)
+                        {
+                            positiveValue = 1f;
+                        }
+                        break;
+
+                    case InputBindingKeyType.KeyboardKey:
+
+                        // Seul le contrôleur 1 peut utiliser la souris et le clavier
+                        // (les autres contrôleurs sont des manettes)
+
+                        if (i > 0)
+                        {
+                            return;
+                        }
+
+                        Keys keyboardKey = (Keys)idsCD.PositiveID;
+                        InputKeySequenceState keyboardKeyState = InputManager.GetKeyboardKeyState(keyboardKey);
+
+                        if (keyboardKeyState == InputKeySequenceState.Pressed || keyboardKeyState == InputKeySequenceState.Held)
+                        {
+                            positiveValue = 1f;
+                        }
+                        break;
+
+                    case InputBindingKeyType.GamePadKey:
+                        Buttons gamePadKey = (Buttons)idsCD.PositiveID;
+                        InputKeySequenceState gamePadKeyState = InputManager.GetGamePadKeyState(i, gamePadKey);
+
+                        if (gamePadKeyState == InputKeySequenceState.Pressed || gamePadKeyState == InputKeySequenceState.Held)
+                        {
+                            positiveValue = 1f;
+                        }
+                        break;
+
+                    case InputBindingKeyType.JoystickKey:
+                        JoystickKey joystickKey = (JoystickKey)idsCD.PositiveID;
+                        InputKeySequenceState joystickKeyState = InputManager.GetJoystickKeyState(i, joystickKey);
+
+                        if (joystickKeyState == InputKeySequenceState.Pressed || joystickKeyState == InputKeySequenceState.Held)
+                        {
+                            positiveValue = 1f;
+                        }
+                        break;
+                }
+
+                switch (typesCD.NegativeType)
+                {
+                    case InputBindingKeyType.MouseKey:
+
+                        // Seul le contrôleur 1 peut utiliser la souris et le clavier
+                        // (les autres contrôleurs sont des manettes)
+
+                        if (i > 0)
+                        {
+                            return;
+                        }
+
+                        MouseKey mouseKey = (MouseKey)idsCD.NegativeID;
+                        InputKeySequenceState mouseKeyState = InputManager.GetMouseKeyState(mouseKey);
+
+                        if (mouseKeyState == InputKeySequenceState.Pressed || mouseKeyState == InputKeySequenceState.Held)
+                        {
+                            negativeValue = -1f;
+                        }
+                        break;
+
+                    case InputBindingKeyType.KeyboardKey:
+
+                        // Seul le contrôleur 1 peut utiliser la souris et le clavier
+                        // (les autres contrôleurs sont des manettes)
+
+                        if (i > 0)
+                        {
+                            return;
+                        }
+
+                        Keys keyboardKey = (Keys)idsCD.NegativeID;
+                        InputKeySequenceState keyboardKeyState = InputManager.GetKeyboardKeyState(keyboardKey);
+
+                        if (keyboardKeyState == InputKeySequenceState.Pressed || keyboardKeyState == InputKeySequenceState.Held)
+                        {
+                            negativeValue = -1f;
+                        }
+                        break;
+
+                    case InputBindingKeyType.GamePadKey:
+                        Buttons gamePadKey = (Buttons)idsCD.NegativeID;
+                        InputKeySequenceState gamePadKeyState = InputManager.GetGamePadKeyState(i, gamePadKey);
+
+                        if (gamePadKeyState == InputKeySequenceState.Pressed || gamePadKeyState == InputKeySequenceState.Held)
+                        {
+                            negativeValue = -1f;
+                        }
+                        break;
+
+                    case InputBindingKeyType.JoystickKey:
+                        JoystickKey joystickKey = (JoystickKey)idsCD.NegativeID;
+                        InputKeySequenceState joystickKeyState = InputManager.GetJoystickKeyState(i, joystickKey);
+
+                        if (joystickKeyState == InputKeySequenceState.Pressed || joystickKeyState == InputKeySequenceState.Held)
+                        {
+                            negativeValue = -1f;
+                        }
+                        break;
+                }
+
+                returnValuesBU.Value[i] = positiveValue + negativeValue;
+            }
         }
 
         /// <summary>
@@ -308,22 +437,41 @@ namespace Retard.Core.Entities
         /// Détermine l'action à activer pour chaque InputAction
         /// </summary>
         /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="nbControllers">Le nombre max de contrôleurs pris en charge par l'InputSystem</param>
         /// <param name="actionE">L'entité de l'InputAction</param>
         /// <param name="actionID">l'ID de l'InputAction</param>
-        /// <param name="actionValues">La valeur de l'InputAction pour chaque contrôleur</param>
         [Query]
+        [All(typeof(InputActionVector1DTag))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ProcessVector1DInputActions(
             [Data] World w,
+            [Data] int nbControllers,
             in Entity actionE,
-            in InputActionIDCD actionID,
-            ref InputVector1DValuesBU actionValues)
+            in InputActionIDCD actionID)
         {
             ref var rel = ref w.GetRelationships<InputActionOf>(actionE);
 
-            foreach (KeyValuePair<Entity, InputActionOf> child in rel)
+            for (int i = 0; i < nbControllers; ++i)
             {
-                Entity bindingE = child.Key;
+                // Si certains bindings sont actifs, on lance l'action
+
+                float returnValue = 0f;
+
+                foreach (KeyValuePair<Entity, InputActionOf> child in rel)
+                {
+                    Entity bindingE = child.Key;
+                    InputVector1DValuesBU bindingValues = w.Get<InputVector1DValuesBU>(bindingE);
+
+                    if (Math.Abs(bindingValues.Value[i]) > Math.Abs(returnValue))
+                    {
+                        returnValue = bindingValues.Value[i];
+                    }
+                }
+
+                if (Math.Abs(returnValue) > float.Epsilon)
+                {
+                    InputManager.GetVector1DEvent(actionID.Value).Performed?.Invoke(i, returnValue);
+                }
             }
         }
 
@@ -331,16 +479,17 @@ namespace Retard.Core.Entities
         /// Détermine l'action à activer pour chaque InputAction
         /// </summary>
         /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="nbControllers">Le nombre max de contrôleurs pris en charge par l'InputSystem</param>
         /// <param name="actionE">L'entité de l'InputAction</param>
         /// <param name="actionID">l'ID de l'InputAction</param>
-        /// <param name="actionValues">La valeur de l'InputAction pour chaque contrôleur</param>
         [Query]
+        [All(typeof(InputActionVector2DTag))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ProcessVector2DInputActions(
             [Data] World w,
+            [Data] int nbControllers,
             in Entity actionE,
-            in InputActionIDCD actionID,
-            ref InputVector2DValuesBU actionValues)
+            in InputActionIDCD actionID)
         {
             ref var rel = ref w.GetRelationships<InputActionOf>(actionE);
 

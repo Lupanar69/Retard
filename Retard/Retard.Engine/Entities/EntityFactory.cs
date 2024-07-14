@@ -43,10 +43,10 @@ namespace Retard.Core.Entities
                     world.Add(e, new InputButtonStateValuesBU(nbMaxControllers));
                     break;
                 case InputActionReturnValueType.Vector1D:
-                    world.Add(e, new InputVector1DValuesBU(nbMaxControllers));
+                    world.Add(e, new InputActionVector1DTag());
                     break;
                 case InputActionReturnValueType.Vector2D:
-                    world.Add(e, new InputVector2DValuesBU(nbMaxControllers));
+                    world.Add(e, new InputActionVector2DTag());
                     break;
             }
 

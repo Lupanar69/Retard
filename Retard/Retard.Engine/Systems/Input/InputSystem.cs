@@ -29,9 +29,9 @@ namespace Retard.Core.Systems.Input
         #region Variables d'instance
 
         /// <summary>
-        /// Pour obtenir les entrées manette
+        /// Le nombre max de contrôleurs pris en charge par l'InputSystem
         /// </summary>
-        private GamePadInput _gamePadInput;
+        private readonly int _nbMaxControllers;
 
         #endregion
 
@@ -44,13 +44,13 @@ namespace Retard.Core.Systems.Input
         public InputSystem(World world)
         {
             this.World = world;
-            InputManager.TryGetScheme(out this._gamePadInput);
+            this._nbMaxControllers = InputManager.TryGetScheme(out GamePadInput gamePadInput) ? gamePadInput.NbMaxGamePads : 1;
 
             string customInputConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.CUSTOM_INPUT_CONFIG_PATH}";
             string json = JsonUtilities.ReadFile(customInputConfigPath);
             var config = JsonUtilities.DeserializeObject<InputConfigDTO>(json);
 
-            InputSystem.CreateInputEntities(this.World, config);
+            InputSystem.CreateInputEntities(this.World, config, this._nbMaxControllers);
             InputSystem.CreateInputActionEvents(this.World);
         }
 
@@ -76,8 +76,8 @@ namespace Retard.Core.Systems.Input
             // Appelle les events pour chaque InputAction
 
             Queries.ProcessButtonStateInputActionsQuery(this.World, this.World);
-            Queries.ProcessVector1DInputActionsQuery(this.World, this.World);
-            Queries.ProcessVector2DInputActionsQuery(this.World, this.World);
+            Queries.ProcessVector1DInputActionsQuery(this.World, this.World, this._nbMaxControllers);
+            Queries.ProcessVector2DInputActionsQuery(this.World, this.World, this._nbMaxControllers);
         }
 
         /// <summary>
@@ -97,12 +97,12 @@ namespace Retard.Core.Systems.Input
         /// </summary>
         /// <param name="world">Le monde contenant les entités</param>
         /// <param name="config">Les données de config</param>
-        private static void CreateInputEntities(World world, InputConfigDTO config)
+        /// <param name="nbMaxControllers">Le nombre max de contrôleurs pris en charge par l'InputSystem</param>
+        private static void CreateInputEntities(World world, InputConfigDTO config, int nbMaxControllers)
         {
             bool usesMouse = InputManager.HasScheme<MouseInput>();
             bool usesKeyboard = InputManager.HasScheme<KeyboardInput>();
             bool usesGamePad = InputManager.HasScheme<GamePadInput>();
-            int nbMaxControllers = usesGamePad ? InputManager.GetScheme<GamePadInput>().NbMaxGamePads : 1;
 
             for (int i = 0; i < config.Actions.Length; ++i)
             {

@@ -63,9 +63,17 @@ namespace Retard.Engine.ViewModels.Input
         /// <summary>
         /// Constructeur
         /// </summary>
-        public InputControls() : this(new(1), new(1), new(1))
+        public InputControls()
         {
+            this._enabled = false;
 
+            this._buttonStateHandlesIDs = new UnsafeList<NativeString>(1);
+            this._vector1DHandlesIDs = new UnsafeList<NativeString>(1);
+            this._vector2DHandlesIDs = new UnsafeList<NativeString>(1);
+
+            this._buttonStateHandles = new UnsafeList<InputActionButtonStateHandles>(1);
+            this._vector1DHandles = new UnsafeList<InputActionVector1DHandles>(1);
+            this._vector2DHandles = new UnsafeList<InputActionVector2DHandles>(1);
         }
 
         /// <summary>
@@ -103,7 +111,6 @@ namespace Retard.Engine.ViewModels.Input
                 ref InputActionVector2DHandles rHandles = ref inputControls._vector2DHandles[i];
                 lHandles.Performed += rHandles.Performed;
             }
-
         }
 
         /// <summary>
