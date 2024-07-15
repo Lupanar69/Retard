@@ -243,8 +243,6 @@ namespace Retard.Core.Entities
             switch (joystick.Axis)
             {
                 case JoystickAxisType.Both:
-                    world.Add<InputBindingJoystickXAxisTag>(e);
-                    world.Add<InputBindingJoystickYAxisTag>(e);
                     world.Add(e, new InputVector2DValuesBU(nbMaxControllers));
                     break;
                 case JoystickAxisType.XAxis:

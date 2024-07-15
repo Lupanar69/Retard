@@ -71,8 +71,7 @@
     {
         None,
         Left,
-        Right,
-        Both
+        Right
     }
 
     /// <summary>

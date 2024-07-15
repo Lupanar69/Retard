@@ -121,6 +121,7 @@ namespace Retard.Core.ViewModels.Scenes
         public static void RemoveLastActiveScene()
         {
             IScene scene = SceneManager._activeScenes[^1];
+            scene.DisableControls();
             Type t = scene.GetType();
             SceneManager._activeScenes.Remove(scene);
             SceneManager._inactiveScenes.Add(t, scene);
@@ -134,6 +135,7 @@ namespace Retard.Core.ViewModels.Scenes
         public static void RemoveActiveScene(IScene scene)
         {
             Type t = scene.GetType();
+            scene.DisableControls();
             SceneManager._activeScenes.Remove(scene);
             SceneManager._inactiveScenes.Add(t, scene);
             SceneManager.SetScenesControlsActiveState();
@@ -151,6 +153,7 @@ namespace Retard.Core.ViewModels.Scenes
             {
                 IScene s = SceneManager._activeScenes[i];
                 Type t = s.GetType();
+                s.DisableControls();
                 SceneManager._activeScenes.RemoveAt(i);
                 SceneManager._inactiveScenes.Add(t, s);
             }

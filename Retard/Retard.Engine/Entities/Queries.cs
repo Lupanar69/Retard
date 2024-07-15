@@ -579,16 +579,31 @@ namespace Retard.Core.Entities
         /// Calcule les valeurs de chaque InputBinding
         /// </summary>
         /// <param name="deadZoneCD">La valeur en dessous de laquelle l'input est considéré comme inerte</param>
-        /// <param name="joystickType">Le type du joystick de l'InputBinding</param>
+        /// <param name="joystickTypeCD">Le type du joystick de l'InputBinding</param>
         /// <param name="returnValuesBU">Les valeurs du binding à retourner</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ProcessVector2DJoystickInputBindings(
             in InputBindingDeadZoneCD deadZoneCD,
-            in InputBindingJoystickTypeCD joystickType,
+            in InputBindingJoystickTypeCD joystickTypeCD,
             ref InputVector2DValuesBU returnValuesBU)
         {
+            GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
 
+            for (int i = 0; i < returnValuesBU.Value.Length; ++i)
+            {
+                switch (joystickTypeCD.Value)
+                {
+                    case JoystickType.Left:
+                        Vector2 value1 = gamePadInput.GetLeftThumbstickAxis(i);
+                        returnValuesBU.Value[i] = value1.Length() > deadZoneCD.Value ? value1 : Vector2.Zero;
+                        break;
+                    case JoystickType.Right:
+                        Vector2 value2 = gamePadInput.GetRightThumbstickAxis(i);
+                        returnValuesBU.Value[i] = value2.Length() > deadZoneCD.Value ? value2 : Vector2.Zero;
+                        break;
+                }
+            }
         }
 
         /// <summary>

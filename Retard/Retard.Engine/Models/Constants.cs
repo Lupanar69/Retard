@@ -131,7 +131,7 @@ namespace Retard.Core.Models
                         new InputKeyVector2DElement(JoystickKey.LeftNorth),
                         new InputKeyVector2DElement(JoystickKey.LeftSouth)
                         ),
-                    new InputBindingDTO(new InputBindingJoystick(JoystickType.Right, JoystickAxisType.Both, 0.24f))
+                    new InputBindingDTO(new InputBindingJoystick(JoystickType.Right, 0.24f))
                 ),
                 new InputActionDTO
                 (
