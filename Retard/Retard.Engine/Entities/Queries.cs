@@ -596,11 +596,11 @@ namespace Retard.Core.Entities
                 {
                     case JoystickType.Left:
                         Vector2 value1 = gamePadInput.GetLeftThumbstickAxis(i);
-                        returnValuesBU.Value[i] = value1.Length() > deadZoneCD.Value ? value1 : Vector2.Zero;
+                        returnValuesBU.Value[i] = value1.LengthSquared() > deadZoneCD.Value * deadZoneCD.Value ? value1 : Vector2.Zero;
                         break;
                     case JoystickType.Right:
                         Vector2 value2 = gamePadInput.GetRightThumbstickAxis(i);
-                        returnValuesBU.Value[i] = value2.Length() > deadZoneCD.Value ? value2 : Vector2.Zero;
+                        returnValuesBU.Value[i] = value2.LengthSquared() > deadZoneCD.Value * deadZoneCD.Value ? value2 : Vector2.Zero;
                         break;
                 }
             }
