@@ -8,7 +8,6 @@ using Retard.Core.Models;
 using Retard.Core.ViewModels.App;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
-using Retard.Engine.ViewModels.Input;
 using Retard.Tests.ViewModels.Scenes;
 
 namespace Retard.Client
@@ -85,10 +84,6 @@ namespace Retard.Client
             // Initialise les scènes
 
             this.InitializeSceneManager();
-
-            InputControls c = new();
-            c.GetVector2DEvent("Vector2D").Performed += (playerID, value) => p($"player : {playerID} ; value : {value}");
-            c.Enable();
 
             base.Initialize();
         }

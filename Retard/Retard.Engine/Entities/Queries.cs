@@ -610,17 +610,32 @@ namespace Retard.Core.Entities
         /// Calcule les valeurs de chaque InputBinding
         /// </summary>
         /// <param name="deadZoneCD">La valeur en dessous de laquelle l'input est considéré comme inerte</param>
-        /// <param name="joystickType">Le type du joystick de l'InputBinding</param>
+        /// <param name="joystickTypeCD">Le type du joystick de l'InputBinding</param>
         /// <param name="returnValuesBU">Les valeurs du binding à retourner</param>
         [Query]
         [All(typeof(InputBindingJoystickXAxisTag)), None(typeof(InputBindingJoystickYAxisTag))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ProcessVector1DJoystickXInputBindings(
             in InputBindingDeadZoneCD deadZoneCD,
-            in InputBindingJoystickTypeCD joystickType,
+            in InputBindingJoystickTypeCD joystickTypeCD,
             ref InputVector1DValuesBU returnValuesBU)
         {
+            GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
 
+            for (int i = 0; i < returnValuesBU.Value.Length; ++i)
+            {
+                switch (joystickTypeCD.Value)
+                {
+                    case JoystickType.Left:
+                        Vector2 value1 = gamePadInput.GetLeftThumbstickAxis(i);
+                        returnValuesBU.Value[i] = Math.Abs(value1.X) > deadZoneCD.Value ? value1.X : 0f;
+                        break;
+                    case JoystickType.Right:
+                        Vector2 value2 = gamePadInput.GetRightThumbstickAxis(i);
+                        returnValuesBU.Value[i] = Math.Abs(value2.X) > deadZoneCD.Value ? value2.X : 0f;
+                        break;
+                }
+            }
         }
 
 
@@ -628,17 +643,32 @@ namespace Retard.Core.Entities
         /// Calcule les valeurs de chaque InputBinding
         /// </summary>
         /// <param name="deadZoneCD">La valeur en dessous de laquelle l'input est considéré comme inerte</param>
-        /// <param name="joystickType">Le type du joystick de l'InputBinding</param>
+        /// <param name="joystickTypeCD">Le type du joystick de l'InputBinding</param>
         /// <param name="returnValuesBU">Les valeurs du binding à retourner</param>
         [Query]
         [All(typeof(InputBindingJoystickYAxisTag)), None(typeof(InputBindingJoystickXAxisTag))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ProcessVector1DJoystickYInputBindings(
             in InputBindingDeadZoneCD deadZoneCD,
-            in InputBindingJoystickTypeCD joystickType,
+            in InputBindingJoystickTypeCD joystickTypeCD,
             ref InputVector1DValuesBU returnValuesBU)
         {
+            GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
 
+            for (int i = 0; i < returnValuesBU.Value.Length; ++i)
+            {
+                switch (joystickTypeCD.Value)
+                {
+                    case JoystickType.Left:
+                        Vector2 value1 = gamePadInput.GetLeftThumbstickAxis(i);
+                        returnValuesBU.Value[i] = Math.Abs(value1.Y) > deadZoneCD.Value ? value1.Y : 0f;
+                        break;
+                    case JoystickType.Right:
+                        Vector2 value2 = gamePadInput.GetRightThumbstickAxis(i);
+                        returnValuesBU.Value[i] = Math.Abs(value2.Y) > deadZoneCD.Value ? value2.Y : 0f;
+                        break;
+                }
+            }
         }
 
         #endregion
