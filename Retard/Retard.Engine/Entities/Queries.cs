@@ -536,16 +536,44 @@ namespace Retard.Core.Entities
         /// Calcule les valeurs de chaque InputBinding
         /// </summary>
         /// <param name="deadZoneCD">La valeur en dessous de laquelle l'input est considéré comme inerte</param>
-        /// <param name="triggerType">Le type du trigger de l'InputBinding</param>
+        /// <param name="triggerTypeCD">Le type du trigger de l'InputBinding</param>
         /// <param name="returnValuesBU">Les valeurs du binding à retourner</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ProcessVector1DTriggerInputBindings(
             in InputBindingDeadZoneCD deadZoneCD,
-            in InputBindingTriggerTypeCD triggerType,
+            in InputBindingTriggerTypeCD triggerTypeCD,
             ref InputVector1DValuesBU returnValuesBU)
         {
+            for (int i = 0; i < returnValuesBU.Value.Length; ++i)
+            {
+                switch (triggerTypeCD.Value)
+                {
+                    case TriggerType.LeftTrigger:
+                        GamePadInput gamePadInput1 = InputManager.GetScheme<GamePadInput>();
+                        float value1 = gamePadInput1.GetLeftTriggerValue(i);
+                        returnValuesBU.Value[i] = Math.Abs(value1) > deadZoneCD.Value ? value1 : 0f;
+                        break;
+                    case TriggerType.RightTrigger:
+                        GamePadInput gamePadInput2 = InputManager.GetScheme<GamePadInput>();
+                        float value2 = gamePadInput2.GetRightTriggerValue(i);
+                        returnValuesBU.Value[i] = Math.Abs(value2) > deadZoneCD.Value ? value2 : 0f;
+                        break;
+                    case TriggerType.MouseWheel:
 
+                        // Seul le contrôleur 1 peut utiliser la souris
+
+                        if (i > 0)
+                        {
+                            return;
+                        }
+
+                        MouseInput mouseInput = InputManager.GetScheme<MouseInput>();
+                        float value = mouseInput.ScrollWheelDown() ? -1f : mouseInput.ScrollWheelUp() ? 1f : 0f;
+                        returnValuesBU.Value[0] = value;
+                        break;
+                }
+            }
         }
 
         /// <summary>

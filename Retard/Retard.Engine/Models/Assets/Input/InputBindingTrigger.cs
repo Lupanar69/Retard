@@ -17,7 +17,7 @@ namespace Retard.Engine.Models.Assets.Input
         public TriggerType Type
         {
             get;
-            private set;
+            init;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Retard.Engine.Models.Assets.Input
         public float DeadZone
         {
             get;
-            private set;
+            init;
         }
 
         #endregion

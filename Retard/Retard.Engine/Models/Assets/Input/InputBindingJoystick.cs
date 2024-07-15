@@ -17,7 +17,7 @@ namespace Retard.Engine.Models.Assets.Input
         public JoystickType Type
         {
             get;
-            private set;
+            init;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Retard.Engine.Models.Assets.Input
         public JoystickAxisType Axis
         {
             get;
-            private set;
+            init;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Retard.Engine.Models.Assets.Input
         public float DeadZone
         {
             get;
-            private set;
+            init;
         }
 
         #endregion

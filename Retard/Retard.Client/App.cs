@@ -87,7 +87,7 @@ namespace Retard.Client
             this.InitializeSceneManager();
 
             InputControls c = new();
-            c.GetVector2DEvent("Vector2D").Performed += (playerID, value) => p($"player : {playerID} ; value : {value}");
+            c.GetVector1DEvent("Vector1D").Performed += (playerID, value) => p($"player : {playerID} ; value : {value}");
             c.Enable();
 
             base.Initialize();

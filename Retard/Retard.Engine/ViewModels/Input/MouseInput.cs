@@ -83,6 +83,24 @@ namespace Retard.Core.ViewModels.Input
         }
 
         /// <summary>
+        /// Indique si la molette est descendue
+        /// </summary>
+        /// <returns><see langword="true"/> si la valeur de la molette est négative</returns>
+        public bool ScrollWheelDown()
+        {
+            return this._curState.ScrollWheelValue < this._previousState.ScrollWheelValue;
+        }
+
+        /// <summary>
+        /// Indique si la molette est descendue
+        /// </summary>
+        /// <returns><see langword="true"/> si la valeur de la molette est négative</returns>
+        public bool ScrollWheelUp()
+        {
+            return this._curState.ScrollWheelValue > this._previousState.ScrollWheelValue;
+        }
+
+        /// <summary>
         /// <see langword="true"/> si le bouton gauche de la souris est pressé
         /// </summary>
         /// <returns><see langword="true"/> si le bouton passe de l'état relâché à l'état pressé</returns>

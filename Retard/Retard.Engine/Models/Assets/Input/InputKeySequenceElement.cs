@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
-using Retard.Core.Models.Assets.Input;
 
 namespace Retard.Engine.Models.Assets.Input
 {
@@ -18,7 +17,7 @@ namespace Retard.Engine.Models.Assets.Input
         public MouseKey MouseKey
         {
             get;
-            private set;
+            init;
         }
 
         /// <summary>
@@ -27,7 +26,7 @@ namespace Retard.Engine.Models.Assets.Input
         public Keys KeyboardKey
         {
             get;
-            private set;
+            init;
         }
 
         /// <summary>
@@ -36,7 +35,7 @@ namespace Retard.Engine.Models.Assets.Input
         public Buttons GamePadKey
         {
             get;
-            private set;
+            init;
         }
 
         /// <summary>
@@ -45,7 +44,7 @@ namespace Retard.Engine.Models.Assets.Input
         public JoystickKey JoystickKey
         {
             get;
-            private set;
+            init;
         }
 
         /// <summary>
@@ -56,7 +55,7 @@ namespace Retard.Engine.Models.Assets.Input
         public InputKeySequenceState ValidState
         {
             get;
-            private set;
+            init;
         }
 
         #endregion
