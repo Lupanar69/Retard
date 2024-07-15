@@ -569,8 +569,7 @@ namespace Retard.Core.Entities
                         }
 
                         MouseInput mouseInput = InputManager.GetScheme<MouseInput>();
-                        float value = mouseInput.ScrollWheelDown() ? -1f : mouseInput.ScrollWheelUp() ? 1f : 0f;
-                        returnValuesBU.Value[0] = value;
+                        returnValuesBU.Value[0] = Math.Clamp(mouseInput.GetMouseWheelScrollValue(), -1f, 1f);
                         break;
                 }
             }
