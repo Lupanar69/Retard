@@ -1,7 +1,6 @@
 ﻿using Arch.Core;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using Retard.Core.Components.Sprites;
 using Retard.Core.Entities;
 using Retard.Core.Models.Arch;
 using Retard.Core.Models.Assets.Sprites;
@@ -38,16 +37,6 @@ namespace Retard.Core.Systems.Sprite
         /// La caméra du jeu
         /// </summary>
         private readonly OrthographicCamera _camera;
-
-        /// <summary>
-        /// Retrouve les components d'un sprite
-        /// </summary>
-        private QueryDescription _spriteDesc = new QueryDescription().WithAll<SpritePositionCD, SpriteRectCD, SpriteColorCD>();
-
-        /// <summary>
-        /// Retrouve les components d'un sprite animé
-        /// </summary>
-        private QueryDescription _animatedSpriteDesc = new QueryDescription().WithAll<SpriteFrameCD, SpriteRectCD>();
 
         #endregion
 

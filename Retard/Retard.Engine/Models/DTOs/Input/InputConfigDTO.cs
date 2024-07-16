@@ -14,7 +14,7 @@
         public InputActionDTO[] Actions
         {
             get;
-            private set;
+            init;
         }
 
         #endregion

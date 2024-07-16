@@ -3,7 +3,6 @@ using Arch.Core;
 using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Retard.Core.Components.Sprites;
 using Retard.Core.Entities;
@@ -93,8 +92,10 @@ namespace Retard.Tests.ViewModels.Scenes
         public SpriteDrawTestScene(OrthographicCamera camera, Point size)
         {
             this._camera = camera;
-            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
             this._size = size;
+            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
+            this.Controls = new InputControls();
+            this.Controls.GetButtonEvent("Test/CreateSprites").Started += this.CreateSpriteEntities;
 
             // Charge les textures
 
@@ -119,15 +120,6 @@ namespace Retard.Tests.ViewModels.Scenes
         #region Méthodes publiques
 
         /// <inheritdoc/>
-        public void OnUpdateInput(GameTime gameTime)
-        {
-            if (this._keyboardInput.IsKeyPressed(Keys.Space))
-            {
-                this.CreateSpriteEntities();
-            }
-        }
-
-        /// <inheritdoc/>
         public void OnUpdate(GameTime gameTime)
         {
             this._updateSystems.Update();
@@ -148,7 +140,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// pour tester les systèmes d'affihage
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void CreateSpriteEntities()
+        private void CreateSpriteEntities(int _)
         {
             using UnsafeArray<Rectangle> rects = this.GetSpritesRects();
             using UnsafeArray<Vector2> positions = this.GetSpritesPositions();

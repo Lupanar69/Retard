@@ -16,7 +16,7 @@ namespace Retard.Engine.Models.DTOs.Input
         public string Name
         {
             get;
-            private set;
+            init;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Retard.Engine.Models.DTOs.Input
         public InputActionReturnValueType ValueType
         {
             get;
-            private set;
+            init;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Retard.Engine.Models.DTOs.Input
         public InputBindingDTO[] Bindings
         {
             get;
-            private set;
+            init;
         }
 
         #endregion

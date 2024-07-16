@@ -876,9 +876,8 @@ namespace Retard.Core.Entities
             in SpriteRectCD rect,
             in SpriteColorCD color)
         {
-            Rectangle destinationRectangle =
-                new((int)pos.Value.X, (int)pos.Value.Y, rect.Value.Width, rect.Value.Height);
 
+            Rectangle destinationRectangle = new((int)pos.Value.X, (int)pos.Value.Y, rect.Value.Width, rect.Value.Height);
             spriteBatch.Draw(spriteAtlas.Texture, destinationRectangle, rect.Value, color.Value);
         }
 

@@ -104,7 +104,7 @@ namespace Retard.Core.Models
             (
                 new InputActionDTO
                 (
-                    "Vector2D",
+                    "Camera/Move",
                     InputActionReturnValueType.Vector2D,
                     new InputBindingDTO(
                         new InputKeyVector2DElement(Keys.Right),
@@ -135,33 +135,25 @@ namespace Retard.Core.Models
                 ),
                 new InputActionDTO
                 (
-                    "Vector1D",
-                    InputActionReturnValueType.Vector1D,
-                    new InputBindingDTO(
-                        new InputKeyVector1DElement(Buttons.RightShoulder),
-                        new InputKeyVector1DElement(Buttons.LeftShoulder)
-                        ),
-                    new InputBindingDTO(
-                        new InputKeyVector1DElement(Keys.Right),
-                        new InputKeyVector1DElement(Keys.Left)
-                        ),
-                    new InputBindingDTO(new InputBindingTrigger(TriggerType.LeftTrigger, 0.12f)),
-                    new InputBindingDTO(new InputBindingTrigger(TriggerType.MouseWheel, 0f)),
-                    new InputBindingDTO(new InputBindingJoystick(JoystickType.Left, JoystickAxisType.XAxis, 0.12f)),
-                    new InputBindingDTO(new InputBindingJoystick(JoystickType.Right, JoystickAxisType.YAxis, 0.12f))
+                    "Camera/Reset",
+                    InputActionReturnValueType.ButtonState,
+                    new InputBindingDTO(new InputKeySequenceElement(Keys.R, InputKeySequenceState.Released))
                 ),
                 new InputActionDTO
                 (
-                    "ButtonState",
+                    "Camera/LeftMouseHeld",
                     InputActionReturnValueType.ButtonState,
-                    new InputBindingDTO(new InputKeySequenceElement(Keys.P, InputKeySequenceState.Pressed)),
-                    new InputBindingDTO(new InputKeySequenceElement(Keys.H, InputKeySequenceState.Held)),
-                    new InputBindingDTO(new InputKeySequenceElement(Keys.R, InputKeySequenceState.Released)),
-                    new InputBindingDTO(
-                        new InputKeySequenceElement(Keys.RightControl, InputKeySequenceState.Held),
-                        new InputKeySequenceElement(MouseKey.Mouse0, InputKeySequenceState.Pressed)
-                        )
+                    new InputBindingDTO(new InputKeySequenceElement(MouseKey.Mouse0, InputKeySequenceState.Held))
                 )
+#if TESTS
+                ,
+                new InputActionDTO
+                (
+                    "Test/CreateSprites",
+                    InputActionReturnValueType.ButtonState,
+                    new InputBindingDTO(new InputKeySequenceElement(Keys.Space, InputKeySequenceState.Pressed))
+                )
+#endif
             );
 
         #endregion

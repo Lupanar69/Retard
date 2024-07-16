@@ -17,7 +17,7 @@ namespace Retard.Engine.Models.DTOs.Input
         public InputKeySequenceElement[] KeySequence
         {
             get;
-            private set;
+            init;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Retard.Engine.Models.DTOs.Input
         public InputKeyVector1DElement[] Vector1DKeys
         {
             get;
-            private set;
+            init;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Retard.Engine.Models.DTOs.Input
         public InputKeyVector2DElement[] Vector2DKeys
         {
             get;
-            private set;
+            init;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Retard.Engine.Models.DTOs.Input
         public InputBindingJoystick Joystick
         {
             get;
-            private set;
+            init;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Retard.Engine.Models.DTOs.Input
         public InputBindingTrigger Trigger
         {
             get;
-            private set;
+            init;
         }
 
         #endregion
