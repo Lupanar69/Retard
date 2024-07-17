@@ -47,10 +47,18 @@
         LeftEast,
         LeftSouth,
         LeftWest,
+        LeftNorthEast,
+        LeftSouthEast,
+        LeftSouthWest,
+        LeftNorthWest,
         RightNorth,
         RightEast,
         RightSouth,
-        RightWest
+        RightWest,
+        RightNorthEast,
+        RightSouthEast,
+        RightSouthWest,
+        RightNorthWest,
     }
 
     /// <summary>

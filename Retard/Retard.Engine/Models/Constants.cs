@@ -144,6 +144,13 @@ namespace Retard.Core.Models
                     "Camera/LeftMouseHeld",
                     InputActionReturnValueType.ButtonState,
                     new InputBindingDTO(new InputKeySequenceElement(MouseKey.Mouse0, InputKeySequenceState.Held))
+                ),
+                new InputActionDTO
+                (
+                    "Exit",
+                    InputActionReturnValueType.ButtonState,
+                    new InputBindingDTO(new InputKeySequenceElement(Keys.Escape, InputKeySequenceState.Pressed)),
+                    new InputBindingDTO(new InputKeySequenceElement(Buttons.Back, InputKeySequenceState.Pressed))
                 )
 #if TESTS
                 ,

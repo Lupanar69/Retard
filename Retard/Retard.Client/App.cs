@@ -8,6 +8,7 @@ using Retard.Core.Models;
 using Retard.Core.ViewModels.App;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
+using Retard.Engine.ViewModels.Input;
 using Retard.Tests.ViewModels.Scenes;
 
 namespace Retard.Client
@@ -35,14 +36,9 @@ namespace Retard.Client
         private World _world;
 
         /// <summary>
-        /// Le contrôleur pour clavier
+        /// Pour s'abonner aux inputs
         /// </summary>
-        private KeyboardInput _keyboardInput;
-
-        /// <summary>
-        /// Le contrôleur pour manette
-        /// </summary>
-        private GamePadInput _gamePadInput;
+        private InputControls _controls;
 
         #endregion
 
@@ -78,8 +74,9 @@ namespace Retard.Client
 
             InputManager.InitializeSchemes(new KeyboardInput(), new MouseInput(), new GamePadInput(GamePad.MaximumGamePadCount));
             InputManager.InitializeSystems(this._world);
-            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
-            this._gamePadInput = InputManager.GetScheme<GamePadInput>();
+            this._controls = new InputControls();
+            this._controls.GetButtonEvent("Exit").Started += (_) => { this.Exit(); };
+            this._controls.Enable();
 
             // Initialise les scènes
 
@@ -102,14 +99,14 @@ namespace Retard.Client
         /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
         protected override void Update(GameTime gameTime)
         {
+            if (SceneManager.IsEmpty)
+            {
+                this.Exit();
+            }
+
             // Màj les inputs
 
             InputManager.Update();
-
-            if (this._gamePadInput.IsButtonPressed(0, Buttons.Back) || this._keyboardInput.IsKeyPressed(Keys.Escape) || SceneManager.IsEmpty)
-            {
-                Exit();
-            }
 
             // Màj les scènes
 

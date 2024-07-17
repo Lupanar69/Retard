@@ -378,86 +378,35 @@ namespace Retard.Core.ViewModels.Input
                                         ? InputKeySequenceState.Released
                                         : InputKeySequenceState.Inert,
 
-                JoystickKey.RightNorth => rightAxis.Y > 0f && gamePadInput.IsRightThumbstickYAxisPressed(playerIndex, 0.9f)
+                JoystickKey.LeftNorthEast => leftAxis.X > 0f && leftAxis.Y > 0f && gamePadInput.IsLeftThumbstickXAxisPressed(playerIndex, 0.5f) && gamePadInput.IsLeftThumbstickYAxisPressed(playerIndex, 0.5f)
                                         ? InputKeySequenceState.Pressed
-                                        : rightAxis.Y > 0f && gamePadInput.IsRightThumbstickYAxisHeld(playerIndex, 0.9f)
+                                        : leftAxis.X > 0f && leftAxis.Y > 0f && gamePadInput.IsLeftThumbstickXAxisHeld(playerIndex, 0.5f) && gamePadInput.IsLeftThumbstickYAxisHeld(playerIndex, 0.5f)
                                         ? InputKeySequenceState.Held
-                                        : rightAxis.Y > 0f && gamePadInput.IsRightThumbstickYAxisReleased(playerIndex, 0.9f)
+                                        : leftAxis.X > 0f && leftAxis.Y > 0f && gamePadInput.IsLeftThumbstickXAxisReleased(playerIndex, 0.5f) && gamePadInput.IsLeftThumbstickYAxisReleased(playerIndex, 0.5f)
                                         ? InputKeySequenceState.Released
                                         : InputKeySequenceState.Inert,
 
-                JoystickKey.RightEast => rightAxis.X > 0f && gamePadInput.IsRightThumbstickXAxisPressed(playerIndex, 0.9f)
+                JoystickKey.LeftSouthEast => leftAxis.X > 0f && leftAxis.Y < 0f && gamePadInput.IsLeftThumbstickXAxisPressed(playerIndex, 0.5f) && gamePadInput.IsLeftThumbstickYAxisPressed(playerIndex, 0.5f)
                                         ? InputKeySequenceState.Pressed
-                                        : rightAxis.X > 0f && gamePadInput.IsRightThumbstickXAxisHeld(playerIndex, 0.9f)
+                                        : leftAxis.X > 0f && leftAxis.Y < 0f && gamePadInput.IsLeftThumbstickXAxisHeld(playerIndex, 0.5f) && gamePadInput.IsLeftThumbstickYAxisHeld(playerIndex, 0.5f)
                                         ? InputKeySequenceState.Held
-                                        : rightAxis.X > 0f && gamePadInput.IsRightThumbstickXAxisReleased(playerIndex, 0.9f)
+                                        : leftAxis.X > 0f && leftAxis.Y < 0f && gamePadInput.IsLeftThumbstickXAxisReleased(playerIndex, 0.5f) && gamePadInput.IsLeftThumbstickYAxisReleased(playerIndex, 0.5f)
                                         ? InputKeySequenceState.Released
                                         : InputKeySequenceState.Inert,
 
-                JoystickKey.RightSouth => rightAxis.Y < 0f && gamePadInput.IsRightThumbstickYAxisPressed(playerIndex, 0.9f)
+                JoystickKey.LeftSouthWest => leftAxis.X < 0f && leftAxis.Y < 0f && gamePadInput.IsLeftThumbstickXAxisPressed(playerIndex, 0.5f) && gamePadInput.IsLeftThumbstickYAxisPressed(playerIndex, 0.5f)
                                         ? InputKeySequenceState.Pressed
-                                        : rightAxis.Y < 0f && gamePadInput.IsRightThumbstickYAxisHeld(playerIndex, 0.9f)
+                                        : leftAxis.X < 0f && leftAxis.Y < 0f && gamePadInput.IsLeftThumbstickXAxisHeld(playerIndex, 0.5f) && gamePadInput.IsLeftThumbstickYAxisHeld(playerIndex, 0.5f)
                                         ? InputKeySequenceState.Held
-                                        : rightAxis.Y < 0f && gamePadInput.IsRightThumbstickYAxisReleased(playerIndex, 0.9f)
+                                        : leftAxis.X < 0f && leftAxis.Y < 0f && gamePadInput.IsLeftThumbstickXAxisReleased(playerIndex, 0.5f) && gamePadInput.IsLeftThumbstickYAxisReleased(playerIndex, 0.5f)
                                         ? InputKeySequenceState.Released
                                         : InputKeySequenceState.Inert,
 
-                JoystickKey.RightWest => rightAxis.X < 0f && gamePadInput.IsRightThumbstickXAxisPressed(playerIndex, 0.9f)
+                JoystickKey.LeftNorthWest => leftAxis.X < 0f && leftAxis.Y > 0f && gamePadInput.IsLeftThumbstickXAxisPressed(playerIndex, 0.5f) && gamePadInput.IsLeftThumbstickYAxisPressed(playerIndex, 0.5f)
                                         ? InputKeySequenceState.Pressed
-                                        : rightAxis.X < 0f && gamePadInput.IsRightThumbstickXAxisHeld(playerIndex, 0.9f)
+                                        : leftAxis.X < 0f && leftAxis.Y > 0f && gamePadInput.IsLeftThumbstickXAxisHeld(playerIndex, 0.5f) && gamePadInput.IsLeftThumbstickYAxisHeld(playerIndex, 0.5f)
                                         ? InputKeySequenceState.Held
-                                        : rightAxis.X < 0f && gamePadInput.IsRightThumbstickXAxisReleased(playerIndex, 0.9f)
-                                        ? InputKeySequenceState.Released
-                                        : InputKeySequenceState.Inert,
-
-                _ => throw new Exception($"Erreur : MouseKey{joystickKey} invalide"),
-            };
-        }
-
-        /// <summary>
-        /// Retourne l'état de la touche
-        /// </summary>
-        /// <param name="playerIndex">L'ID de la manette</param>
-        /// <param name="joystickKey">La touche de la manette à evaluer</param>
-        /// <param name="gamePadInput">Les contrôles de la manette</param>
-        /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
-        /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        public static InputKeySequenceState GetJoystickKeyState(int playerIndex, JoystickKey joystickKey, GamePadInput gamePadInput)
-        {
-            Vector2 leftAxis = gamePadInput.GetLeftThumbstickAxis(playerIndex);
-            Vector2 rightAxis = gamePadInput.GetRightThumbstickAxis(playerIndex);
-
-            return joystickKey switch
-            {
-                JoystickKey.LeftNorth => leftAxis.Y > 0f && gamePadInput.IsLeftThumbstickYAxisPressed(playerIndex, 0.9f)
-                                        ? InputKeySequenceState.Pressed
-                                        : leftAxis.Y > 0f && gamePadInput.IsLeftThumbstickYAxisHeld(playerIndex, 0.9f)
-                                        ? InputKeySequenceState.Held
-                                        : leftAxis.Y > 0f && gamePadInput.IsLeftThumbstickYAxisReleased(playerIndex, 0.9f)
-                                        ? InputKeySequenceState.Released
-                                        : InputKeySequenceState.Inert,
-
-                JoystickKey.LeftEast => leftAxis.X > 0f && gamePadInput.IsLeftThumbstickXAxisPressed(playerIndex, 0.9f)
-                                        ? InputKeySequenceState.Pressed
-                                        : leftAxis.X > 0f && gamePadInput.IsLeftThumbstickXAxisHeld(playerIndex, 0.9f)
-                                        ? InputKeySequenceState.Held
-                                        : leftAxis.X > 0f && gamePadInput.IsLeftThumbstickXAxisReleased(playerIndex, 0.9f)
-                                        ? InputKeySequenceState.Released
-                                        : InputKeySequenceState.Inert,
-
-                JoystickKey.LeftSouth => leftAxis.Y < 0f && gamePadInput.IsLeftThumbstickYAxisPressed(playerIndex, 0.9f)
-                                        ? InputKeySequenceState.Pressed
-                                        : leftAxis.Y < 0f && gamePadInput.IsLeftThumbstickYAxisHeld(playerIndex, 0.9f)
-                                        ? InputKeySequenceState.Held
-                                        : leftAxis.Y < 0f && gamePadInput.IsLeftThumbstickYAxisReleased(playerIndex, 0.9f)
-                                        ? InputKeySequenceState.Released
-                                        : InputKeySequenceState.Inert,
-
-                JoystickKey.LeftWest => leftAxis.X < 0f && gamePadInput.IsLeftThumbstickXAxisPressed(playerIndex, 0.9f)
-                                        ? InputKeySequenceState.Pressed
-                                        : leftAxis.X < 0f && gamePadInput.IsLeftThumbstickXAxisHeld(playerIndex, 0.9f)
-                                        ? InputKeySequenceState.Held
-                                        : leftAxis.X < 0f && gamePadInput.IsLeftThumbstickXAxisReleased(playerIndex, 0.9f)
+                                        : leftAxis.X < 0f && leftAxis.Y > 0f && gamePadInput.IsLeftThumbstickXAxisReleased(playerIndex, 0.5f) && gamePadInput.IsLeftThumbstickYAxisReleased(playerIndex, 0.5f)
                                         ? InputKeySequenceState.Released
                                         : InputKeySequenceState.Inert,
 
@@ -493,7 +442,38 @@ namespace Retard.Core.ViewModels.Input
                                         ? InputKeySequenceState.Released
                                         : InputKeySequenceState.Inert,
 
-                _ => throw new Exception($"Erreur : MouseKey{joystickKey} invalide"),
+                JoystickKey.RightNorthEast => rightAxis.X > 0f && rightAxis.Y > 0f && gamePadInput.IsRightThumbstickXAxisPressed(playerIndex, 0.5f) && gamePadInput.IsRightThumbstickYAxisPressed(playerIndex, 0.5f)
+                                        ? InputKeySequenceState.Pressed
+                                        : rightAxis.X > 0f && rightAxis.Y > 0f && gamePadInput.IsRightThumbstickXAxisHeld(playerIndex, 0.5f) && gamePadInput.IsRightThumbstickYAxisHeld(playerIndex, 0.5f)
+                                        ? InputKeySequenceState.Held
+                                        : rightAxis.X > 0f && rightAxis.Y > 0f && gamePadInput.IsRightThumbstickXAxisReleased(playerIndex, 0.5f) && gamePadInput.IsRightThumbstickYAxisReleased(playerIndex, 0.5f)
+                                        ? InputKeySequenceState.Released
+                                        : InputKeySequenceState.Inert,
+
+                JoystickKey.RightSouthEast => rightAxis.X > 0f && rightAxis.Y < 0f && gamePadInput.IsRightThumbstickXAxisPressed(playerIndex, 0.5f) && gamePadInput.IsRightThumbstickYAxisPressed(playerIndex, 0.5f)
+                                        ? InputKeySequenceState.Pressed
+                                        : rightAxis.X > 0f && rightAxis.Y < 0f && gamePadInput.IsRightThumbstickXAxisHeld(playerIndex, 0.5f) && gamePadInput.IsRightThumbstickYAxisHeld(playerIndex, 0.5f)
+                                        ? InputKeySequenceState.Held
+                                        : rightAxis.X > 0f && rightAxis.Y < 0f && gamePadInput.IsRightThumbstickXAxisReleased(playerIndex, 0.5f) && gamePadInput.IsRightThumbstickYAxisReleased(playerIndex, 0.5f)
+                                        ? InputKeySequenceState.Released
+                                        : InputKeySequenceState.Inert,
+
+                JoystickKey.RightSouthWest => rightAxis.X < 0f && rightAxis.Y < 0f && gamePadInput.IsRightThumbstickXAxisPressed(playerIndex, 0.5f) && gamePadInput.IsRightThumbstickYAxisPressed(playerIndex, 0.5f)
+                                        ? InputKeySequenceState.Pressed
+                                        : rightAxis.X < 0f && rightAxis.Y < 0f && gamePadInput.IsRightThumbstickXAxisHeld(playerIndex, 0.5f) && gamePadInput.IsRightThumbstickYAxisHeld(playerIndex, 0.5f)
+                                        ? InputKeySequenceState.Held
+                                        : rightAxis.X < 0f && rightAxis.Y < 0f && gamePadInput.IsRightThumbstickXAxisReleased(playerIndex, 0.5f) && gamePadInput.IsRightThumbstickYAxisReleased(playerIndex, 0.5f)
+                                        ? InputKeySequenceState.Released
+                                        : InputKeySequenceState.Inert,
+
+                JoystickKey.RightNorthWest => rightAxis.X < 0f && rightAxis.Y > 0f && gamePadInput.IsRightThumbstickXAxisPressed(playerIndex, 0.5f) && gamePadInput.IsRightThumbstickYAxisPressed(playerIndex, 0.5f)
+                                        ? InputKeySequenceState.Pressed
+                                        : rightAxis.X < 0f && rightAxis.Y > 0f && gamePadInput.IsRightThumbstickXAxisHeld(playerIndex, 0.5f) && gamePadInput.IsRightThumbstickYAxisHeld(playerIndex, 0.5f)
+                                        ? InputKeySequenceState.Held
+                                        : rightAxis.X < 0f && rightAxis.Y > 0f && gamePadInput.IsRightThumbstickXAxisReleased(playerIndex, 0.5f) && gamePadInput.IsRightThumbstickYAxisReleased(playerIndex, 0.5f)
+                                        ? InputKeySequenceState.Released
+                                        : InputKeySequenceState.Inert,
+
             };
         }
 
