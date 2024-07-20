@@ -8,7 +8,7 @@ namespace Retard.Engine.Models.Assets.Input
     /// Les événements pour les inputs de type ButtonState,
     /// avec le n° du joueur
     /// </summary>
-    public struct InputActionButtonStateHandles
+    public readonly struct InputActionButtonStateHandles
     {
         #region Propriétés
 
@@ -46,17 +46,17 @@ namespace Retard.Engine.Models.Assets.Input
         /// <summary>
         /// Appelé quand l'action démarre
         /// </summary>
-        private Handle<Action<int>> _started;
+        private readonly Handle<Action<int>> _started;
 
         /// <summary>
         /// Appelé quand l'action est en cours
         /// </summary>
-        private Handle<Action<int>> _performed;
+        private readonly Handle<Action<int>> _performed;
 
         /// <summary>
         /// Appelé quand l'action est terminée
         /// </summary>
-        private Handle<Action<int>> _finished;
+        private readonly Handle<Action<int>> _finished;
 
         #endregion
 
@@ -70,9 +70,9 @@ namespace Retard.Engine.Models.Assets.Input
         /// <param name="finished">Handle de l'action de fin de l'event</param>
         public InputActionButtonStateHandles(Handle<Action<int>> started, Handle<Action<int>> performed, Handle<Action<int>> finished)
         {
-            _started = started;
-            _performed = performed;
-            _finished = finished;
+            this._started = started;
+            this._performed = performed;
+            this._finished = finished;
         }
 
         #endregion

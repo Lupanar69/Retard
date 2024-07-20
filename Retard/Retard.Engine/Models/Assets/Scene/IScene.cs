@@ -59,19 +59,19 @@ namespace Retard.Core.Models.Assets.Scene
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
         public void OnUpdateInput(GameTime gameTime) { }
 
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
         public void OnUpdate(GameTime gameTime) { }
 
         /// <summary>
         /// Pour afficher des éléments à l'écran
         /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
         public void OnDraw(GameTime gameTime) { }
 
         #endregion

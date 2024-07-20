@@ -4,7 +4,7 @@ using Retard.Engine.Models.App;
 namespace Retard.Engine.Models.DTOs.App
 {
     /// <summary>
-    /// Représente les données des paramètres de l'application
+    /// Représente les données des paramètres du jeu
     /// </summary>
     public sealed class AppSettingsDTO
     {
@@ -14,7 +14,7 @@ namespace Retard.Engine.Models.DTOs.App
         /// Les paramètres de la fenêtre
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
-        public WindowSettings WindowSettings { get; private set; }
+        public readonly WindowSettings WindowSettings;
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace Retard.Engine.Models.DTOs.App
         /// <param name="windowSettings">Les paramètres de la fenêtre</param>
         public AppSettingsDTO(WindowSettings windowSettings)
         {
-            WindowSettings = windowSettings;
+            this.WindowSettings = windowSettings;
         }
 
         #endregion

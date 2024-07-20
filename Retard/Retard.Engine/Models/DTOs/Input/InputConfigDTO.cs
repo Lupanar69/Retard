@@ -11,11 +11,7 @@
         /// <summary>
         /// La liste des actions de ce contexte
         /// </summary>
-        public InputActionDTO[] Actions
-        {
-            get;
-            init;
-        }
+        public readonly InputActionDTO[] Actions;
 
         #endregion
 

@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using Retard.Core.Models;
+using Retard.Engine.Models.DTOs.App;
+using Retard.Engine.Models.DTOs.Input;
 using Retard.Engine.ViewModels.Utilities;
 
 namespace Retard.Core.ViewModels.App
@@ -12,21 +14,12 @@ namespace Retard.Core.ViewModels.App
         #region Méthodes statiques publiques
 
         /// <summary>
-        /// Initialise les fichiers de config
-        /// </summary>
-        public static void Initialize()
-        {
-            AppConfigFileCreation.CreateDefaultConfigFiles();
-        }
-
-        #endregion
-
-        #region Méthodes statiques privées
-
-        /// <summary>
         /// Crée les fichiers de config par défaut
         /// </summary>
-        private static void CreateDefaultConfigFiles()
+        /// <param name="defaultInputConfig">La config des inputs par défaut</param>
+        /// <param name="defaultAppSettings">Les paramètres de l'appli par défaut</param>
+        /// <param name="overrideCustomFiles">Si <see langword="true"/>, écrase les fichiers créés par l'utilisateur</param>
+        public static void CreateDefaultConfigFiles(InputConfigDTO defaultInputConfig, AppSettingsDTO defaultAppSettings, bool overrideCustomFiles = false)
         {
             // Chemins d'accès des fichiers de configuration
 
@@ -43,8 +36,8 @@ namespace Retard.Core.ViewModels.App
             // On les réécrit à chaque lancement du jeu au cas où le joueur
             // les aurait modifié.
 
-            string defaultInputConfigJson = JsonUtilities.SerializeObject(Constants.DEFAULT_INPUT_CONFIG);
-            string defaultAppSettingsConfigJson = JsonUtilities.SerializeObject(Constants.DEFAULT_APP_SETTINGS);
+            string defaultInputConfigJson = JsonUtilities.SerializeObject(defaultInputConfig);
+            string defaultAppSettingsConfigJson = JsonUtilities.SerializeObject(defaultAppSettings);
 
             JsonUtilities.WriteToFile(defaultInputConfigJson, defaultInputConfigPath);
             JsonUtilities.WriteToFile(defaultAppSettingsConfigJson, defaultAppSettingsConfigPath);
@@ -53,13 +46,13 @@ namespace Retard.Core.ViewModels.App
             // pour éviter d'effacer les préférences du joueur.
             // (On fait un if pour chaque si l'un d'entre eux est supprimé mais les autres existent toujours)
 
-            if (!File.Exists(customInputConfigPath) || Constants.OVERRIDE_DEFAULT_AND_CUSTOM_FILES)
+            if (!File.Exists(customInputConfigPath) || overrideCustomFiles)
             {
                 JsonUtilities.CreatPathIfNotExists(customInputConfigPath);
                 JsonUtilities.WriteToFile(defaultInputConfigJson, customInputConfigPath);
             }
 
-            if (!File.Exists(customAppSettingsConfigPath) || Constants.OVERRIDE_DEFAULT_AND_CUSTOM_FILES)
+            if (!File.Exists(customAppSettingsConfigPath) || overrideCustomFiles)
             {
                 JsonUtilities.CreatPathIfNotExists(customAppSettingsConfigPath);
                 JsonUtilities.WriteToFile(defaultAppSettingsConfigJson, customAppSettingsConfigPath);

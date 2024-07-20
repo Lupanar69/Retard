@@ -14,55 +14,35 @@ namespace Retard.Engine.Models.DTOs.Input
         /// La séquence d'entrées à réaliser pour exécuter l'action (ex: Ctrl+Z, Ctrl+clic gauche).
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public InputKeySequenceElement[] KeySequence
-        {
-            get;
-            init;
-        }
+        public readonly InputKeySequenceElement[] KeySequence;
 
         /// <summary>
         /// Les touches pour actionner un seul axe (X ou Y).
         /// Il ne peut y avoir que 2 touches (positive et négative).
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public InputKeyVector1DElement[] Vector1DKeys
-        {
-            get;
-            init;
-        }
+        public readonly InputKeyVector1DElement[] Vector1DKeys;
 
         /// <summary>
         /// Les touches pour actionner un axe 2D.
         /// Il ne peut y avoir que 4 touches, dans l'ordre : gauche, droite, haut, bas.
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public InputKeyVector2DElement[] Vector2DKeys
-        {
-            get;
-            init;
-        }
+        public readonly InputKeyVector2DElement[] Vector2DKeys;
 
         /// <summary>
         /// Contient les infos d'un binding utilisant un joystick
         /// (type du joystick, axe et zone inerte)
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public InputBindingJoystick Joystick
-        {
-            get;
-            init;
-        }
+        public readonly InputBindingJoystick Joystick;
 
         /// <summary>
         /// Contient les infos d'un binding utilisant une gâchette
         /// (type de la gâchette et zone inerte)
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public InputBindingTrigger Trigger
-        {
-            get;
-            init;
-        }
+        public readonly InputBindingTrigger Trigger;
 
         #endregion
 

@@ -9,7 +9,7 @@ namespace Retard.Engine.Models.Assets.Input
     /// Contient l'event retournant la valeur de l'action,
     /// avec le n° du joueur
     /// </summary>
-    public struct InputActionVector2DHandles
+    public readonly struct InputActionVector2DHandles
     {
         #region Propriétés
 
@@ -30,7 +30,7 @@ namespace Retard.Engine.Models.Assets.Input
         /// <summary>
         /// Appelé quand l'action est en cours
         /// </summary>
-        private Handle<Action<int, Vector2>> _performed;
+        private readonly Handle<Action<int, Vector2>> _performed;
 
         #endregion
 
@@ -42,7 +42,7 @@ namespace Retard.Engine.Models.Assets.Input
         /// <param name="performed">Handle de l'action en cours de l'event</param>
         public InputActionVector2DHandles(Handle<Action<int, Vector2>> performed)
         {
-            _performed = performed;
+            this._performed = performed;
         }
 
         #endregion

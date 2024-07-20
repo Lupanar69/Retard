@@ -6,7 +6,7 @@ namespace Retard.Engine.Models.Assets.Input
     /// Contient les infos d'un binding utilisant une gâchette
     /// (type de la gâchette, axe et zone inerte)
     /// </summary>
-    public struct InputBindingTrigger
+    public readonly struct InputBindingTrigger
     {
         #region Variables d'instance
 
@@ -14,21 +14,13 @@ namespace Retard.Engine.Models.Assets.Input
         /// La gâchette utilisé pour les InputActions de type Vector1D
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
-        public TriggerType Type
-        {
-            get;
-            init;
-        }
+        public readonly TriggerType Type;
 
         /// <summary>
         /// La valeur en dessous de laquelle l'input 
         /// est considéré comme inerte
         /// </summary>
-        public float DeadZone
-        {
-            get;
-            init;
-        }
+        public readonly float DeadZone;
 
         #endregion
 

@@ -94,7 +94,7 @@ namespace Retard.Core.Models.Arch
         public virtual void AfterUpdate(in T t) { }
 
         /// <inheritdoc />
-        public virtual void Dispose() { }
+        public virtual void Dispose() { GC.SuppressFinalize(this); }
     }
 
 }

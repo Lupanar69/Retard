@@ -5,7 +5,7 @@ using Retard.Core.Models;
 namespace Retard.Core.ViewModels.App
 {
     /// <summary>
-    /// Gère les performance de l'application
+    /// Gère les performance du jeu
     /// </summary>
     public static class AppPerformance
     {
@@ -81,8 +81,8 @@ namespace Retard.Core.ViewModels.App
         /// </summary>
         public static void ResetUserDefinedFrameRates()
         {
-            _userDefinedFocusedFrameRate = Constants.DEFAULT_FOCUSED_FRAMERATE;
-            _userDefinedUnfocusedFrameRate = Constants.DEFAULT_UNFOCUSED_FRAMERATE;
+            AppPerformance._userDefinedFocusedFrameRate = Constants.DEFAULT_FOCUSED_FRAMERATE;
+            AppPerformance._userDefinedUnfocusedFrameRate = Constants.DEFAULT_UNFOCUSED_FRAMERATE;
         }
 
         #endregion

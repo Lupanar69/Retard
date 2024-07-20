@@ -8,6 +8,15 @@ namespace Retard.Core.ViewModels.Tests
     /// </summary>
     public static class log
     {
+        #region Variables statiques
+
+        /// <summary>
+        /// Pour concaténer les messages
+        /// </summary>
+        private static readonly StringBuilder _sb = new();
+
+        #endregion
+
         /// <summary>
         /// Affiche un message dans la fenêtre Output
         /// </summary>
@@ -25,16 +34,16 @@ namespace Retard.Core.ViewModels.Tests
         [Conditional("ENABLE_LOGS")]
         public static void p2(params object[] args)
         {
-            StringBuilder sb = new(args.Length * (150));
+            log._sb.EnsureCapacity(args.Length * 150);
 
-            sb.Append($"{args[0].ToString()}");
+            log._sb.Append($"{args[0].ToString()}");
 
-            for (int i = 1; i < args.Length; i++)
+            for (int i = 1; i < args.Length; ++i)
             {
-                sb.Append($" ; {args[i].ToString()}");
+                log._sb.Append($" ; {args[i].ToString()}");
             }
 
-            Trace.WriteLine(sb.ToString());
+            Trace.WriteLine(log._sb.ToString());
         }
     }
 }

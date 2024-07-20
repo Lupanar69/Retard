@@ -176,7 +176,7 @@ namespace Retard.Core.ViewModels.Input
         }
 
         /// <summary>
-        /// Indique si le type d'entrée est disponible pour cette application
+        /// Indique si le type d'entrée est disponible pour ce jeu
         /// </summary>
         /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
         /// <returns><see langword="true"/> si le contrôleur souhaité existe</returns>
@@ -473,7 +473,7 @@ namespace Retard.Core.ViewModels.Input
                                         : rightAxis.X < 0f && rightAxis.Y > 0f && gamePadInput.IsRightThumbstickXAxisReleased(playerIndex, 0.5f) && gamePadInput.IsRightThumbstickYAxisReleased(playerIndex, 0.5f)
                                         ? InputKeySequenceState.Released
                                         : InputKeySequenceState.Inert,
-
+                _ => throw new NotImplementedException($"JoystickKey non implémenté ({joystickKey})"),
             };
         }
 

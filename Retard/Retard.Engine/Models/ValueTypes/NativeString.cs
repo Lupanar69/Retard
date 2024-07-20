@@ -8,16 +8,12 @@ namespace Retard.Core.Models.ValueTypes
     /// </summary>
     public readonly struct NativeString : IDisposable
     {
-        #region Propriétés
+        #region Variables d'instance
 
         /// <summary>
         /// Longueur de la string
         /// </summary>
-        public int Length { get; init; }
-
-        #endregion
-
-        #region Variables d'instance
+        public readonly int Length;
 
         /// <summary>
         /// Le tableau contenant chaque caractère de la string.
@@ -211,7 +207,7 @@ namespace Retard.Core.Models.ValueTypes
         /// Convertit la NativeString en string
         /// </summary>
         /// <returns>La chaîne de caractère contenue dans cette struct</returns>
-        public override string ToString()
+        public readonly override string ToString()
         {
             return this._arr.AsSpan().ToString();
         }

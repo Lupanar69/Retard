@@ -9,7 +9,7 @@
         {
             // Lance le jeu
 
-            using App game = new();
+            using GameApp game = new();
             game.Run();
         }
     }

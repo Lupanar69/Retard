@@ -6,6 +6,7 @@
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
     <Platforms>AnyCPU;x86</Platforms>
+    <Configurations>Debug;Release;Master</Configurations>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -21,7 +22,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>$(DefineConstants);PURE_ECS</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Master|AnyCPU'">
+    <DefineConstants>$(DefineConstants);PURE_ECS</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <DefineConstants>$(DefineConstants);PURE_ECS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Master|x86'">
     <DefineConstants>$(DefineConstants);PURE_ECS</DefineConstants>
   </PropertyGroup>
 	
@@ -41,18 +48,18 @@
   <ItemGroup>
     <PackageReference Include="Arch" Version="1.2.8" />
     <PackageReference Include="Arch.AOT.SourceGenerator" Version="1.0.1" />
-    <PackageReference Include="Arch.EventBus" Version="1.0.2" />
     <PackageReference Include="Arch.LowLevel" Version="1.1.1" />
     <PackageReference Include="Arch.Persistence" Version="1.0.4" />
     <PackageReference Include="Arch.Relationships" Version="1.0.1" />
     <PackageReference Include="Arch.System" Version="1.0.5" />
     <PackageReference Include="Arch.System.SourceGenerator" Version="1.2.1" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
-    <PackageReference Include="MonoGame.Extended" Version="3.9.0-prerelease.4" />
+    <PackageReference Include="MonoGame.Extended" Version="4.0.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Retard.Core\Retard.Core.csproj" />
     <ProjectReference Include="..\Retard.Engine\Retard.Engine.csproj" />
     <ProjectReference Include="..\Retard.Tests\Retard.Tests.csproj" />
   </ItemGroup>

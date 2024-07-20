@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Retard.Engine.Models.Assets.Input;
 
 namespace Retard.Engine.Models.DTOs.Input
 {
@@ -13,30 +12,18 @@ namespace Retard.Engine.Models.DTOs.Input
         /// <summary>
         /// L'ID de cette action
         /// </summary>
-        public string Name
-        {
-            get;
-            init;
-        }
+        public readonly string Name;
 
         /// <summary>
         /// Le type de valeur retournée par une InputAciton
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
-        public InputActionReturnValueType ValueType
-        {
-            get;
-            init;
-        }
+        public readonly InputActionReturnValueType ValueType;
 
         /// <summary>
         /// La liste des bindings de cette action
         /// </summary>
-        public InputBindingDTO[] Bindings
-        {
-            get;
-            init;
-        }
+        public readonly InputBindingDTO[] Bindings;
 
         #endregion
 
@@ -50,9 +37,9 @@ namespace Retard.Engine.Models.DTOs.Input
         /// <param name="bindings">Les entrées liées à cette action</param>
         public InputActionDTO(string name, InputActionReturnValueType valueType, params InputBindingDTO[] bindings)
         {
-            Name = name;
-            ValueType = valueType;
-            Bindings = bindings;
+            this.Name = name;
+            this.ValueType = valueType;
+            this.Bindings = bindings;
         }
 
         #endregion

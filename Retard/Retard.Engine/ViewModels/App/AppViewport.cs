@@ -8,10 +8,24 @@ using Retard.Engine.ViewModels.Utilities;
 namespace Retard.Core.ViewModels.App
 {
     /// <summary>
-    /// Gère les paramètres de la fenêtre de l'application
+    /// Gère les paramètres de la fenêtre du jeu
     /// </summary>
     public static class AppViewport
     {
+        #region Evénements
+
+        /// <summary>
+        /// Appelé quand la résolution de la fenêtre est changée manuellement
+        /// </summary>
+        public static EventHandler<Point> OnClientSizeChangedEvent = delegate { };
+
+        /// <summary>
+        /// Appelé quand la résolution de la fenêtre est changée par code
+        /// </summary>
+        public static EventHandler<Point> OnViewportResolutionSetEvent = delegate { };
+
+        #endregion
+
         #region Propriétés
 
         /// <summary>
@@ -36,20 +50,6 @@ namespace Retard.Core.ViewModels.App
         /// Permet de modifier les paramètres de la fenêtre
         /// </summary>
         private static GraphicsDeviceManager _graphicsDeviceManager;
-
-        #endregion
-
-        #region Evénements
-
-        /// <summary>
-        /// Appelé quand la résolution de la fenêtre est changée manuellement
-        /// </summary>
-        internal static EventHandler OnClientSizeChangedEvent = delegate { };
-
-        /// <summary>
-        /// Appelé quand la résolution de la fenêtre est changée par code
-        /// </summary>
-        internal static EventHandler<Point> OnViewportResolutionSetEvent = delegate { };
 
         #endregion
 
@@ -114,6 +114,7 @@ namespace Retard.Core.ViewModels.App
         private static void OnClientSizeChangedCallback(object sender, EventArgs e)
         {
             AppViewport.WindowResolution = new Point(AppViewport._game.GraphicsDevice.Viewport.Width, AppViewport._game.GraphicsDevice.Viewport.Height);
+            AppViewport.OnClientSizeChangedEvent?.Invoke(null, AppViewport.WindowResolution);
         }
 
         #endregion

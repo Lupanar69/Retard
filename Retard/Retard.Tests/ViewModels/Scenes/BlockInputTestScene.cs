@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models;
 using Retard.Core.Models.Assets.Scene;
-using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
 using Retard.Engine.ViewModels.Input;
+using E = Retard.Engine.ViewModels.Engine;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -36,12 +35,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Texture de test
         /// </summary>
-        private Texture2D _debugTex;
-
-        /// <summary>
-        /// Le contrôleur pour clavier
-        /// </summary>
-        private readonly KeyboardInput _keyboardInput;
+        private readonly Texture2D _debugTex;
 
         #endregion
 
@@ -53,22 +47,15 @@ namespace Retard.Tests.ViewModels.Scenes
         public BlockInputTestScene()
         {
             this.ConsumeInput = true;
-            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
-            this._debugTex = SceneManager.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
+            this._debugTex = E.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
+
+            this.Controls = new();
+            this.Controls.GetButtonEvent("Test/Enter").Started += this.RemoveActiveSceneCallback;
         }
 
         #endregion
 
         #region Méthodes publiques
-
-        ///<inheritdoc/>
-        public void OnUpdateInput(GameTime gameTime)
-        {
-            if (this._keyboardInput.IsKeyPressed(Keys.Space))
-            {
-                SceneManager.RemoveActiveScene(this);
-            }
-        }
 
         ///<inheritdoc/>
         public void OnDraw(GameTime gameTime)
@@ -82,5 +69,16 @@ namespace Retard.Tests.ViewModels.Scenes
 
         #endregion
 
+        #region Méthodes privées
+
+        /// <summary>
+        /// Retire la scène de la liste des scènes actives
+        /// </summary>
+        public void RemoveActiveSceneCallback(int _)
+        {
+            SceneManager.RemoveActiveScene(this);
+        }
+
+        #endregion
     }
 }

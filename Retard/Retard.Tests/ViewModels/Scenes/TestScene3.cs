@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models;
 using Retard.Core.Models.Assets.Scene;
-using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
 using Retard.Engine.ViewModels.Input;
+using E = Retard.Engine.ViewModels.Engine;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -36,12 +35,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Texture de test
         /// </summary>
-        private Texture2D _debugTex;
-
-        /// <summary>
-        /// Le contrôleur pour clavier
-        /// </summary>
-        private readonly KeyboardInput _keyboardInput;
+        private readonly Texture2D _debugTex;
 
         #endregion
 
@@ -52,8 +46,9 @@ namespace Retard.Tests.ViewModels.Scenes
         /// </summary>
         public TestScene3()
         {
-            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
-            this._debugTex = SceneManager.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
+            this._debugTex = E.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
+            this.Controls = new();
+            this.Controls.GetButtonEvent("Test/Numpad9").Started += this.RemoveActiveAndOverlaidScenesCallback;
         }
 
         #endregion
@@ -61,22 +56,25 @@ namespace Retard.Tests.ViewModels.Scenes
         #region Méthodes publiques
 
         /// <inheritdoc/>
-        public void OnUpdateInput(GameTime gameTime)
-        {
-            if (this._keyboardInput.IsKeyPressed(Keys.NumPad9))
-            {
-                SceneManager.RemoveActiveAndOverlaidScenes(this);
-            }
-        }
-
-        /// <inheritdoc/>
         public void OnDraw(GameTime gameTime)
         {
             SceneManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
 
-            SceneManager.SpriteBatch.Draw(this._debugTex, new Vector2((this._debugTex.Width + 32) * 2, 0), Color.White);
+            SceneManager.SpriteBatch.Draw(this._debugTex, Vector2.Zero, Color.White);
 
             SceneManager.SpriteBatch.End();
+        }
+
+        #endregion
+
+        #region Méthodes privées
+
+        /// <summary>
+        /// Retire la scène ainsi que toutes celles superposées de la liste des scènes actives
+        /// </summary>
+        private void RemoveActiveAndOverlaidScenesCallback(int _)
+        {
+            SceneManager.RemoveActiveAndOverlaidScenes(this);
         }
 
         #endregion

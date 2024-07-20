@@ -7,45 +7,29 @@ namespace Retard.Engine.Models.Assets.Input
     /// Les touches pour actionner un axe 2D.
     /// Il ne peut y avoir que 4 touches, dans l'ordre : gauche, droite, haut, bas.
     /// </summary>
-    public struct InputKeyVector2DElement
+    public readonly struct InputKeyVector2DElement
     {
         #region Variables d'instance
 
         /// <summary>
         /// Le bouton de la souris à évaluer
         /// </summary>
-        public MouseKey MouseKey
-        {
-            get;
-            init;
-        }
+        public readonly MouseKey MouseKey;
 
         /// <summary>
         /// Le bouton du clavier à évaluer
         /// </summary>
-        public Keys KeyboardKey
-        {
-            get;
-            init;
-        }
+        public readonly Keys KeyboardKey;
 
         /// <summary>
         /// Le bouton de la manette à évaluer
         /// </summary>
-        public Buttons GamePadKey
-        {
-            get;
-            init;
-        }
+        public readonly Buttons GamePadKey;
 
         /// <summary>
         /// La direction du joystick à évaluer
         /// </summary>
-        public JoystickKey JoystickKey
-        {
-            get;
-            init;
-        }
+        public readonly JoystickKey JoystickKey;
 
         #endregion
 
@@ -60,10 +44,10 @@ namespace Retard.Engine.Models.Assets.Input
         [JsonConstructor]
         public InputKeyVector2DElement(MouseKey mouseKey, Keys keyboardKey, Buttons gamePadKey, JoystickKey joystickKey)
         {
-            MouseKey = mouseKey;
-            KeyboardKey = keyboardKey;
-            GamePadKey = gamePadKey;
-            JoystickKey = joystickKey;
+            this.MouseKey = mouseKey;
+            this.KeyboardKey = keyboardKey;
+            this.GamePadKey = gamePadKey;
+            this.JoystickKey = joystickKey;
         }
 
         /// <summary>

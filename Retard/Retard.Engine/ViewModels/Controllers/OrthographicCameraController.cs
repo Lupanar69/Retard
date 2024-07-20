@@ -53,7 +53,17 @@ namespace Retard.Core.ViewModels.Controllers
             controls.GetButtonEvent("Camera/Reset").Started += this.ResetCameraPos;
             controls.GetVector2DEvent("Camera/Move").Performed += this.MoveCamera;
             controls.GetButtonEvent("Camera/LeftMouseHeld").Performed += this.MoveCamera;
+
+            GameState.OnFocusEvent += (_, _) => controls.Enable();
+            GameState.OnFocusLostEvent += (_, _) => controls.Disable();
         }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~OrthographicCameraController()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
 
         #endregion
 
@@ -74,7 +84,7 @@ namespace Retard.Core.ViewModels.Controllers
         /// <param name="value">La valeur du contrôleur</param>
         private void MoveCamera(int playerIndex, Vector2 value)
         {
-            if (playerIndex == 0 && GameState.GameHasFocus)
+            if (playerIndex == 0)
             {
                 value.Y *= -1;
                 this.Camera.Move(value * this._moveSpeed);
@@ -93,7 +103,7 @@ namespace Retard.Core.ViewModels.Controllers
         /// </summary>
         private void MoveCamera(int _)
         {
-            if (GameState.GameHasFocus && this._mouseInput.IsCursorInsideWindow)
+            if (this._mouseInput.IsCursorInsideWindow)
             {
                 this.Camera.Move(-this._mouseInput.MousePosDelta);
             }

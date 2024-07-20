@@ -6,7 +6,7 @@ namespace Retard.Engine.ViewModels.Utilities
     /// <summary>
     /// Convertisseur générique
     /// </summary>
-    /// <typeparam name="TDest">Le type de départ</typeparam>
+    /// <typeparam name="TFrom">Le type de départ</typeparam>
     /// <typeparam name="TDest">Le type de destination</typeparam>
     public readonly struct UnmanagedConverter<TFrom, TDest> where TFrom : struct, IConvertible where TDest : struct, IConvertible
     {

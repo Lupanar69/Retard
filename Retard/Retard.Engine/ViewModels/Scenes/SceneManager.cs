@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Arch.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Retard.Core.Models.Assets.Scene;
 
@@ -30,11 +29,6 @@ namespace Retard.Core.ViewModels.Scenes
         /// </summary>
         public static World World { get; private set; }
 
-        /// <summary>
-        /// Les assets du jeu
-        /// </summary
-        public static ContentManager Content { get; private set; }
-
         #endregion
 
         #region Variables d'instance
@@ -42,12 +36,12 @@ namespace Retard.Core.ViewModels.Scenes
         /// <summary>
         /// Un ObjectPoo pour recycler les scènes déjà crées
         /// </summary>
-        private static Dictionary<Type, IScene> _inactiveScenes;
+        private static readonly Dictionary<Type, IScene> _inactiveScenes;
 
         /// <summary>
         /// Les scènes actives
         /// </summary>
-        private static List<IScene> _activeScenes;
+        private static readonly List<IScene> _activeScenes;
 
         #endregion
 
@@ -59,6 +53,7 @@ namespace Retard.Core.ViewModels.Scenes
         static SceneManager()
         {
             SceneManager._activeScenes = new List<IScene>(1);
+            SceneManager._inactiveScenes = new Dictionary<Type, IScene>(1);
         }
 
         #endregion
@@ -68,14 +63,10 @@ namespace Retard.Core.ViewModels.Scenes
         /// <summary>
         /// Initialise le SceneManager
         /// </summary>
-        /// <param name="scenePoolCapacity">La taille de l'ObjectPool des scènes</param>
-        /// <param name="content">Les assets du jeu</param>
         /// <param name="world">Le monde contenant les entités</param>
         /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
-        public static void Initialize(int scenePoolCapacity, ContentManager content, World world, SpriteBatch spriteBatch)
+        public static void Initialize(World world, SpriteBatch spriteBatch)
         {
-            SceneManager._inactiveScenes = new Dictionary<Type, IScene>(scenePoolCapacity);
-            SceneManager.Content = content;
             SceneManager.World = world;
             SceneManager.SpriteBatch = spriteBatch;
         }
@@ -164,7 +155,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// <summary>
         /// Màj les entrées lues par chaque scène
         /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
         public static void UpdateInput(GameTime gameTime)
         {
             for (int i = SceneManager._activeScenes.Count - 1; i >= 0; --i)
@@ -182,7 +173,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// <summary>
         /// Màj la logique de chaque scène
         /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
         public static void Update(GameTime gameTime)
         {
             for (int i = SceneManager._activeScenes.Count - 1; i >= 0; --i)
@@ -200,7 +191,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// <summary>
         /// Affiche le contenu des scènes à l'écran
         /// </summary>
-        /// <param name="gameTime">Le temps écoulé depuis le début de l'application</param>
+        /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
         public static void Draw(GameTime gameTime)
         {
             int startDrawIndex = 0;

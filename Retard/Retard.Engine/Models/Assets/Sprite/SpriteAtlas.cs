@@ -13,17 +13,17 @@ namespace Retard.Core.Models.Assets.Sprites
         /// <summary>
         /// La texture source du sprite
         /// </summary>
-        public Texture2D Texture { get; init; }
+        public readonly Texture2D Texture;
 
         /// <summary>
         /// Le nombre de lignes de sprite
         /// </summary>
-        public int Rows { get; init; }
+        public readonly int Rows;
 
         /// <summary>
         /// Le nombre de colonnes de sprite
         /// </summary>
-        public int Columns { get; init; }
+        public readonly int Columns;
 
         #endregion
 

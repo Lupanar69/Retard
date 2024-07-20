@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using Arch.Core;
 using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,9 +10,8 @@ using Retard.Core.Models.Arch;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.Models.Assets.Sprites;
 using Retard.Core.Systems.Sprite;
-using Retard.Core.ViewModels.Input;
-using Retard.Core.ViewModels.Scenes;
 using Retard.Engine.ViewModels.Input;
+using E = Retard.Engine.ViewModels.Engine;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -46,11 +44,6 @@ namespace Retard.Tests.ViewModels.Scenes
         private readonly OrthographicCamera _camera;
 
         /// <summary>
-        /// Le contrôleur pour clavier
-        /// </summary>
-        private readonly KeyboardInput _keyboardInput;
-
-        /// <summary>
         /// Les systèmes du monde à màj dans Update()
         /// </summary>
         private readonly Group _updateSystems;
@@ -63,7 +56,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// La texture des sprites
         /// </summary>
-        private SpriteAtlas _spriteAtlas;
+        private readonly SpriteAtlas _spriteAtlas;
 
         /// <summary>
         /// Nb de sprites à créer
@@ -71,9 +64,9 @@ namespace Retard.Tests.ViewModels.Scenes
         private readonly Point _size;
 
         /// <summary>
-        /// Retrouve les components d'un sprite
+        /// La résolution d'un sprite en pixels
         /// </summary>
-        private readonly QueryDescription _spriteDesc = new QueryDescription().WithAll<SpritePositionCD, SpriteRectCD, SpriteColorCD>();
+        private readonly int _spriteResolution;
 
         /// <summary>
         /// L'archétype des sprites
@@ -89,27 +82,28 @@ namespace Retard.Tests.ViewModels.Scenes
         /// </summary>
         /// <param name="camera">La caméra du jeu</param>
         /// <param name="size">La taille de la carte à dessiner</param>
-        public SpriteDrawTestScene(OrthographicCamera camera, Point size)
+        /// <param name="spriteResolution">La résolution d'un sprite en pixels</param>
+        public SpriteDrawTestScene(OrthographicCamera camera, Point size, int spriteResolution)
         {
             this._camera = camera;
             this._size = size;
-            this._keyboardInput = InputManager.GetScheme<KeyboardInput>();
+            this._spriteResolution = spriteResolution;
             this.Controls = new InputControls();
-            this.Controls.GetButtonEvent("Test/CreateSprites").Started += this.CreateSpriteEntities;
+            this.Controls.GetButtonEvent("Test/Space").Started += this.CreateSpriteEntities;
 
             // Charge les textures
 
-            Texture2D debugTex = SceneManager.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
+            Texture2D debugTex = E.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
             this._spriteAtlas = new SpriteAtlas(debugTex, 4, 4);
 
             // Initialise les systèmes
 
-            SceneManager.World.Reserve(_spriteArchetype, this._size.X * this._size.Y);
+            E.World.Reserve(_spriteArchetype, this._size.X * this._size.Y);
             this._updateSystems = new Group("Update Systems");
             this._drawSystems = new Group("Draw Systems");
 
-            this._drawSystems.Add(new SpriteDrawSystem(SceneManager.World, SceneManager.SpriteBatch, this._spriteAtlas, this._camera));
-            this._updateSystems.Add(new AnimatedSpriteUpdateSystem(SceneManager.World));
+            this._drawSystems.Add(new SpriteDrawSystem(E.World, E.SpriteBatch, this._spriteAtlas, this._camera));
+            this._updateSystems.Add(new AnimatedSpriteUpdateSystem(E.World));
 
             this._updateSystems.Initialize();
             this._drawSystems.Initialize();
@@ -147,7 +141,7 @@ namespace Retard.Tests.ViewModels.Scenes
 
             // Crée tous les sprites en un seul appel
 
-            EntityFactory.CreateSpriteEntities(SceneManager.World, positions, rects);
+            EntityFactory.CreateSpriteEntities(E.World, positions, rects);
         }
 
         /// <summary>
@@ -204,7 +198,7 @@ namespace Retard.Tests.ViewModels.Scenes
             {
                 for (int x = 0; x < this._size.X; ++x)
                 {
-                    positions[x + count] = new Vector2(x, y) * Constants.SPRITE_SIZE_PIXELS;
+                    positions[x + count] = new Vector2(x, y) * this._spriteResolution;
                 }
 
                 count += this._size.X;

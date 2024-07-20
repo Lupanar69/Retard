@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Retard.Engine.Models.Assets.Input
 {
@@ -7,7 +6,7 @@ namespace Retard.Engine.Models.Assets.Input
     /// Contient les infos d'un binding utilisant un joystick
     /// (type du joystick, axe et zone inerte)
     /// </summary>
-    public struct InputBindingJoystick
+    public readonly struct InputBindingJoystick
     {
         #region Variables d'instance
 
@@ -15,31 +14,19 @@ namespace Retard.Engine.Models.Assets.Input
         /// Le joystick utilisé pour les InputActions de type Vector1D et Vector2D
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
-        public JoystickType Type
-        {
-            get;
-            init;
-        }
+        public readonly JoystickType Type;
 
         /// <summary>
         /// L'axe de joystick à évaluer pour les InputActions de type Vector1D
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
-        public JoystickAxisType Axis
-        {
-            get;
-            init;
-        }
+        public readonly JoystickAxisType Axis;
 
         /// <summary>
         /// La valeur en dessous de laquelle l'input 
         /// est considéré comme inerte
         /// </summary>
-        public float DeadZone
-        {
-            get;
-            init;
-        }
+        public readonly float DeadZone;
 
         #endregion
 
