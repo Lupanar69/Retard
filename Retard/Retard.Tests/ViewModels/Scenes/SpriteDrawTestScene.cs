@@ -11,7 +11,7 @@ using Retard.Core.Models.Assets.Scene;
 using Retard.Core.Models.Assets.Sprites;
 using Retard.Core.Systems.Sprite;
 using Retard.Engine.ViewModels.Input;
-using E = Retard.Engine.ViewModels.Engine;
+using E = Retard.Engine.ViewModels.GameEngine;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -88,8 +88,6 @@ namespace Retard.Tests.ViewModels.Scenes
             this._camera = camera;
             this._size = size;
             this._spriteResolution = spriteResolution;
-            this.Controls = new InputControls();
-            this.Controls.GetButtonEvent("Test/Space").Started += this.CreateSpriteEntities;
 
             // Charge les textures
 
@@ -107,6 +105,12 @@ namespace Retard.Tests.ViewModels.Scenes
 
             this._updateSystems.Initialize();
             this._drawSystems.Initialize();
+
+            // Inputs
+
+            //this.Controls = new InputControls();
+            //this.Controls.GetButtonEvent("Test/Space").Started += this.CreateSpriteEntities;
+            this.CreateSpriteEntities(0);
         }
 
         #endregion

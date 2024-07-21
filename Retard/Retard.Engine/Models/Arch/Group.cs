@@ -196,17 +196,6 @@ public readonly struct Group : ISystem
     }
 
     /// <summary>
-    ///     Disposes this <see cref="Group"/> and all <see cref="ISystem"/>'s within.
-    /// </summary>
-    public void Dispose()
-    {
-        foreach (var system in _systems)
-        {
-            system.Dispose();
-        }
-    }
-
-    /// <summary>
     ///     Converts this <see cref="Group"/> to a human readable string.
     /// </summary>
     /// <returns></returns>
@@ -231,15 +220,9 @@ public readonly struct Group : ISystem
     /// <summary>
     ///     The struct <see cref="SystemEntry"/> represents the given <see cref="ISystem"/> in the <see cref="Group"/> with all its performance statistics.
     /// </summary>
-    private readonly struct SystemEntry : IDisposable
+    private readonly struct SystemEntry
     {
         public readonly ISystem System;
-
-
-        public void Dispose()
-        {
-            System.Dispose();
-        }
 
         public SystemEntry(ISystem system)
         {
@@ -438,17 +421,6 @@ public readonly struct Group<T> : ISystem<T>
     }
 
     /// <summary>
-    ///     Disposes this <see cref="Group{T}"/> and all <see cref="ISystem{T}"/>'s within.
-    /// </summary>
-    public void Dispose()
-    {
-        foreach (var system in _systems)
-        {
-            system.Dispose();
-        }
-    }
-
-    /// <summary>
     ///     Converts this <see cref="Group{T}"/> to a human readable string.
     /// </summary>
     /// <returns></returns>
@@ -473,14 +445,9 @@ public readonly struct Group<T> : ISystem<T>
     /// <summary>
     ///     The struct <see cref="SystemEntry"/> represents the given <see cref="ISystem{T}"/> in the <see cref="Group{T}"/> with all its performance statistics.
     /// </summary>
-    private readonly struct SystemEntry : IDisposable
+    private readonly struct SystemEntry
     {
         public readonly ISystem<T> System;
-
-        public void Dispose()
-        {
-            System.Dispose();
-        }
 
         public SystemEntry(ISystem<T> system)
         {

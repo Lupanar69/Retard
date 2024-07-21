@@ -4,7 +4,7 @@ using Retard.Core.Models;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.ViewModels.Scenes;
 using Retard.Engine.ViewModels.Input;
-using E = Retard.Engine.ViewModels.Engine;
+using E = Retard.Engine.ViewModels.GameEngine;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -47,7 +47,7 @@ namespace Retard.Tests.ViewModels.Scenes
         public TestScene1()
         {
             this._debugTex = E.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
-            this.Controls = new();
+            this.Controls = new InputControls();
             this.Controls.GetButtonEvent("Test/Numpad7").Started += this.RemoveActiveAndOverlaidScenesCallback;
             this.Controls.GetButtonEvent("Test/Numpad1").Started += this.SetSceneAsActiveCallback;
         }

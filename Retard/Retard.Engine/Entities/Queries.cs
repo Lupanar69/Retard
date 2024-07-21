@@ -19,7 +19,7 @@ namespace Retard.Core.Entities
     /// <summary>
     /// Regroupe les queries Arch pouvant être parallélisées
     /// </summary>
-    public static partial class Queries
+    internal static partial class Queries
     {
         #region Input Bindings
 
@@ -32,7 +32,7 @@ namespace Retard.Core.Entities
         /// <param name="returnValuesBU">Les valeurs du binding à retourner</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ProcessButtonStateInputBindings(
+        internal static void ProcessButtonStateInputBindings(
             in InputBindingKeySequenceIDsBU idsBU,
             in InputBindingKeySequenceTypesBU typesBU,
             in InputBindingKeySequenceStatesBU statesBU,
@@ -128,7 +128,7 @@ namespace Retard.Core.Entities
         /// <param name="returnValuesBU">Les valeurs du binding à retourner</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ProcessVector1DKeysInputBindings(
+        internal static void ProcessVector1DKeysInputBindings(
             in InputBindingVector1DKeysIDsCD idsCD,
             in InputBindingVector1DKeysTypesCD typesCD,
             ref InputVector1DValuesBU returnValuesBU)
@@ -272,7 +272,7 @@ namespace Retard.Core.Entities
         /// <param name="returnValuesBU">Les valeurs du binding à retourner</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ProcessVector2DKeysInputBindings(
+        internal static void ProcessVector2DKeysInputBindings(
             in InputBindingVector2DKeysIDsCD idsCD,
             in InputBindingVector2DKeysTypesCD typesCD,
             ref InputVector2DValuesBU returnValuesBU)
@@ -540,7 +540,7 @@ namespace Retard.Core.Entities
         /// <param name="returnValuesBU">Les valeurs du binding à retourner</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ProcessVector1DTriggerInputBindings(
+        internal static void ProcessVector1DTriggerInputBindings(
             in InputBindingDeadZoneCD deadZoneCD,
             in InputBindingTriggerTypeCD triggerTypeCD,
             ref InputVector1DValuesBU returnValuesBU)
@@ -583,7 +583,7 @@ namespace Retard.Core.Entities
         /// <param name="returnValuesBU">Les valeurs du binding à retourner</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ProcessVector2DJoystickInputBindings(
+        internal static void ProcessVector2DJoystickInputBindings(
             in InputBindingDeadZoneCD deadZoneCD,
             in InputBindingJoystickTypeCD joystickTypeCD,
             ref InputVector2DValuesBU returnValuesBU)
@@ -615,7 +615,7 @@ namespace Retard.Core.Entities
         [Query]
         [All(typeof(InputBindingJoystickXAxisTag)), None(typeof(InputBindingJoystickYAxisTag))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ProcessVector1DJoystickXInputBindings(
+        internal static void ProcessVector1DJoystickXInputBindings(
             in InputBindingDeadZoneCD deadZoneCD,
             in InputBindingJoystickTypeCD joystickTypeCD,
             ref InputVector1DValuesBU returnValuesBU)
@@ -648,7 +648,7 @@ namespace Retard.Core.Entities
         [Query]
         [All(typeof(InputBindingJoystickYAxisTag)), None(typeof(InputBindingJoystickXAxisTag))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ProcessVector1DJoystickYInputBindings(
+        internal static void ProcessVector1DJoystickYInputBindings(
             in InputBindingDeadZoneCD deadZoneCD,
             in InputBindingJoystickTypeCD joystickTypeCD,
             ref InputVector1DValuesBU returnValuesBU)
@@ -684,7 +684,7 @@ namespace Retard.Core.Entities
         /// <param name="actionValues">La valeur de l'InputAction pour chaque contrôleur</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ProcessButtonStateInputActions(
+        internal static void ProcessButtonStateInputActions(
             [Data] World w,
             in Entity actionE,
             in InputActionIDCD actionID,
@@ -767,7 +767,7 @@ namespace Retard.Core.Entities
         [Query]
         [All(typeof(InputActionVector1DTag))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ProcessVector1DInputActions(
+        internal static void ProcessVector1DInputActions(
             [Data] World w,
             [Data] int nbControllers,
             in Entity actionE,
@@ -809,7 +809,7 @@ namespace Retard.Core.Entities
         [Query]
         [All(typeof(InputActionVector2DTag))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ProcessVector2DInputActions(
+        internal static void ProcessVector2DInputActions(
             [Data] World w,
             [Data] int nbControllers,
             in Entity actionE,
@@ -853,7 +853,7 @@ namespace Retard.Core.Entities
         /// <param name="rect">Les dimensions du sprite dans le SpriteAtlas</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void UpdateAnimatedSpriteRect(
+        internal static void UpdateAnimatedSpriteRect(
             [Data] in SpriteAtlas spriteAtlas,
             in SpriteFrameCD frame,
             ref SpriteRectCD rect)
@@ -869,7 +869,7 @@ namespace Retard.Core.Entities
         /// <param name="rect">Les dimensions du sprite dans le SpriteAtlas</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void DrawSprites(
+        internal static void DrawSprites(
             [Data] in SpriteAtlas spriteAtlas,
             [Data] in SpriteBatch spriteBatch,
             in SpritePositionCD pos,
@@ -890,7 +890,7 @@ namespace Retard.Core.Entities
         /// <param name="speed">La vitesse de l'animation</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void UpdateAnimatedSpriteFrame(ref SpriteFrameCD frame,
+        internal static void UpdateAnimatedSpriteFrame(ref SpriteFrameCD frame,
             ref AnimatedSpriteRelativeFrameCD relativeFrame,
             in AnimatedSpriteAnimationCD animation,
             ref AnimatedSpriteSpeedCD speed)
@@ -904,6 +904,10 @@ namespace Retard.Core.Entities
                 frame.Value = animation.StartFrame + relativeFrame.Value;
             }
         }
+
+        #endregion
+
+        #region Cameras
 
         #endregion
     }

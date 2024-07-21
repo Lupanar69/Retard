@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Retard.Core.ViewModels.App;
+using Retard.Core.ViewModels.Controllers;
 using Retard.Core.ViewModels.Scenes;
+using Retard.Engine.ViewModels.Input;
 using Retard.Tests.ViewModels.Scenes;
-using E = Retard.Engine.ViewModels.Engine;
 
 namespace Retard.Core
 {
@@ -11,6 +13,25 @@ namespace Retard.Core
     /// </summary>
     public static class GameEntryPoint
     {
+        #region Variables statiques
+
+        /// <summary>
+        /// Pour s'abonner aux inputs
+        /// </summary>
+        private static InputControls _controls;
+
+        /// <summary>
+        /// Le contrôleur de la caméra du jeu
+        /// </summary>
+        private static OrthographicCameraController _cameraController;
+
+        /// <summary>
+        /// La caméra du jeu
+        /// </summary>
+        private static OrthographicCamera _camera;
+
+        #endregion
+
         #region Méthodes statiques publiques
 
         /// <summary>
@@ -27,17 +48,19 @@ namespace Retard.Core
         }
 
         /// <summary>
-        /// Crée les scènes du jeu
+        /// Démarre le jeu
         /// </summary>
-        public static void CreateScenes()
+        /// <param name="game">Le jeu</param>
+        public static void Start(Game game)
         {
-            SceneManager.AddSceneToPool(new OrthographicCameraScene(E.Camera));
+            GameEntryPoint._controls = new InputControls();
+            GameEntryPoint._controls.GetButtonEvent("Exit").Started += (_) => { game.Exit(); };
 
-#if TESTS
-            SceneManager.AddSceneToPool(new SpriteDrawTestScene(E.Camera, new Point(100), Constants.SPRITE_SIZE_PIXELS));
-            SceneManager.SetSceneAsActive<SpriteDrawTestScene>();
-#endif
-            SceneManager.SetSceneAsActive<OrthographicCameraScene>();
+            GameEntryPoint._camera = new OrthographicCamera(game.GraphicsDevice);
+            GameEntryPoint._cameraController = new OrthographicCameraController(GameEntryPoint._camera, GameEntryPoint._controls);
+            GameEntryPoint._controls.Enable();
+
+            GameEntryPoint.CreateScenes();
         }
 
         /// <summary>
@@ -47,6 +70,21 @@ namespace Retard.Core
         public static void Update(GameTime gameTime)
         {
 
+        }
+
+        #endregion
+
+        #region Méthodes statiques privées
+
+        /// <summary>
+        /// Crée les scènes du jeu
+        /// </summary>
+        private static void CreateScenes()
+        {
+#if TESTS
+            SceneManager.AddSceneToPool(new SpriteDrawTestScene(GameEntryPoint._camera, new Point(100), Constants.SPRITE_SIZE_PIXELS));
+            SceneManager.SetSceneAsActive<SpriteDrawTestScene>();
+#endif
         }
 
         #endregion

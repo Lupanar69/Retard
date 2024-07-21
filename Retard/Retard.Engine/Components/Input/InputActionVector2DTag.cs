@@ -3,7 +3,7 @@
     /// <summary>
     /// Tag pour les InputActions de type Vector2D
     /// </summary>
-    public struct InputActionVector2DTag
+    public readonly struct InputActionVector2DTag
     {
 
     }

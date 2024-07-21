@@ -3,12 +3,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended;
 using Retard.Core.Models;
 using Retard.Core.ViewModels.App;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
-using Retard.Engine.ViewModels.Input;
+using Retard.Engine.ViewModels.Camera;
 
 namespace Retard.Engine.ViewModels
 {
@@ -16,29 +15,24 @@ namespace Retard.Engine.ViewModels
     /// Chargée d'initialiser et màj tous les systèmes nécessaires
     /// au fonctionnement du jeu
     /// </summary>
-    public static class Engine
+    public static class GameEngine
     {
         #region Propriétés
 
         /// <summary>
         /// Pour charger les ressources du jeu
         /// </summary>
-        public static ContentManager Content => Engine._content;
+        public static ContentManager Content => GameEngine._content;
 
         /// <summary>
         /// Pour afficher les sprites à l'écran
         /// </summary>
-        public static SpriteBatch SpriteBatch => Engine._spriteBatch;
-
-        /// <summary>
-        /// La caméra du jeu
-        /// </summary>
-        public static OrthographicCamera Camera => Engine._camera;
+        public static SpriteBatch SpriteBatch => GameEngine._spriteBatch;
 
         /// <summary>
         /// Le monde contenant les entités
         /// </summary>
-        public static World World => Engine._world;
+        public static World World => GameEngine._world;
 
         #endregion
 
@@ -55,19 +49,9 @@ namespace Retard.Engine.ViewModels
         private static SpriteBatch _spriteBatch;
 
         /// <summary>
-        /// La caméra du jeu
-        /// </summary>
-        private static OrthographicCamera _camera;
-
-        /// <summary>
         /// Le monde contenant les entités
         /// </summary>
         private static World _world;
-
-        /// <summary>
-        /// Pour s'abonner aux inputs
-        /// </summary>
-        private static InputControls _controls;
 
         #endregion
 
@@ -76,7 +60,7 @@ namespace Retard.Engine.ViewModels
         /// <summary>
         /// Initialise le jeu
         /// </summary>
-        /// <param name="game">L'application</param>
+        /// <param name="game">Le jeu</param>
         public static void Initialize(Game game)
         {
             game.Content.RootDirectory = "Content";
@@ -88,23 +72,22 @@ namespace Retard.Engine.ViewModels
 
             // Initialise les components
 
-            Engine._content = game.Content;
-            Engine._spriteBatch = new SpriteBatch(game.GraphicsDevice);
-            Engine._camera = new OrthographicCamera(game.GraphicsDevice);
-            Engine._world = World.Create();
+            GameEngine._content = game.Content;
+            GameEngine._spriteBatch = new SpriteBatch(game.GraphicsDevice);
+            GameEngine._world = World.Create();
 
             // Initialise les inputs
 
             InputManager.InitializeSchemes(new KeyboardInput(), new MouseInput(), new GamePadInput(GamePad.MaximumGamePadCount));
-            InputManager.InitializeSystems(Engine._world);
-
-            Engine._controls = new InputControls();
-            Engine._controls.GetButtonEvent("Exit").Started += (_) => { game.Exit(); };
-            Engine._controls.Enable();
+            InputManager.InitializeSystems(GameEngine._world);
 
             // Initialise le SceneManager
 
-            SceneManager.Initialize(Engine._world, Engine._spriteBatch);
+            SceneManager.Initialize(GameEngine._world, GameEngine._spriteBatch);
+
+            // Initialise le CameraManager
+
+            CameraManager.Initialize(GameEngine._world);
         }
 
         /// <summary>
@@ -122,6 +105,10 @@ namespace Retard.Engine.ViewModels
             // Màj les inputs
 
             InputManager.Update();
+
+            // Màj les caméras
+
+            CameraManager.Update();
 
             // Màj les scènes
 

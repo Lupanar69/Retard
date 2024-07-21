@@ -25,22 +25,22 @@ namespace Retard.Core.ViewModels.Input
         /// <summary>
         /// Permet d'accéder aux events sans type
         /// </summary>
-        public static Resources<Action<int>> ActionResources { get; private set; }
+        internal static Resources<Action<int>> ActionResources { get; private set; }
 
         /// <summary>
         /// Permet d'accéder aux events de type Vector1D
         /// </summary>
-        public static Resources<Action<int, float>> ActionVector1DResources { get; private set; }
+        internal static Resources<Action<int, float>> ActionVector1DResources { get; private set; }
 
         /// <summary>
         /// Permet d'accéder aux events de type Vector2D
         /// </summary>
-        public static Resources<Action<int, Vector2>> ActionVector2DResources { get; private set; }
+        internal static Resources<Action<int, Vector2>> ActionVector2DResources { get; private set; }
 
         /// <summary>
         /// Regroupe les handles de chaque InputAction
         /// </summary>
-        public static InputControls Handles { get; set; }
+        internal static InputControls Handles { get; set; }
 
         #endregion
 
@@ -73,122 +73,6 @@ namespace Retard.Core.ViewModels.Input
 
         #region Méthodes statiques publiques
 
-        #region Init
-
-        /// <summary>
-        /// Crée les InputSchemes pour chaque type de contrôleur souhaité
-        /// </summary>
-        /// <param name="schemes">Les types de chaque contrôleur</param>
-        public static void InitializeSchemes(params IInputScheme[] schemes)
-        {
-            InputManager._inputSchemes = new Dictionary<Type, IInputScheme>(schemes.Length);
-
-            for (int i = 0; i < schemes.Length; i++)
-            {
-                InputManager._inputSchemes.Add(schemes[i].GetType(), schemes[i]);
-            }
-        }
-
-        /// <summary>
-        /// Crée les systèmes ECS gérant les entrées
-        /// </summary>
-        /// <param name="world">Le monde contenant les entités</param>
-        public static void InitializeSystems(World world)
-        {
-            InputManager._updateSystems.Add(new InputSystem(world));
-            InputManager._updateSystems.Initialize();
-        }
-
-        /// <summary>
-        /// Crée les InputSchemes pour chaque type de contrôleur souhaité
-        /// </summary>
-        /// <param name="buttonIDs">La liste des IDs des actions de type ButtonState</param>
-        /// <param name="vector1DIDs">La liste des IDs des actions de type Vector1D</param>
-        /// <param name="vector2DIDs">La liste des IDs des actions de type Vector2D</param>
-        public static void InitializeInputActionEvents(UnsafeList<NativeString> buttonIDs, UnsafeList<NativeString> vector1DIDs, UnsafeList<NativeString> vector2DIDs)
-        {
-            InputManager.ActionResources = new(Math.Max(1, buttonIDs.Count * 3));
-            InputManager.ActionVector1DResources = new(Math.Max(1, vector1DIDs.Count));
-            InputManager.ActionVector2DResources = new(Math.Max(1, vector2DIDs.Count));
-
-            InputManager.Handles = new InputControls(buttonIDs, vector1DIDs, vector2DIDs);
-        }
-
-        #endregion
-
-        #region Update
-
-        /// <summary>
-        /// Capture l'état des inputs lors de la frame actuelle
-        /// </summary>
-        public static void Update()
-        {
-            foreach (KeyValuePair<Type, IInputScheme> pair in InputManager._inputSchemes)
-            {
-                pair.Value.Update();
-            }
-
-            InputManager._updateSystems.Update();
-        }
-
-        /// <summary>
-        /// Capture l'état des inputs lors de la frame précédente
-        /// A appeler en fin d'Update pour ne pas écraser le précédent état
-        /// avant les comparaisons
-        /// </summary>
-        public static void AfterUpdate()
-        {
-            foreach (KeyValuePair<Type, IInputScheme> pair in InputManager._inputSchemes)
-            {
-                pair.Value.AfterUpdate();
-            }
-        }
-
-        #endregion
-
-        #region Schemes
-
-        /// <summary>
-        /// Récupère le contrôleur du type souhaité
-        /// </summary>
-        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
-        /// <returns>Le contrôleur souhaité</returns>
-        public static T GetScheme<T>() where T : IInputScheme, new()
-        {
-            return (T)InputManager._inputSchemes[typeof(T)];
-        }
-
-        /// <summary>
-        /// Indique si le contrôleur du type souhaité existe et le retourne si c'est le cas
-        /// </summary>
-        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
-        /// <returns><see langword="true"/> si le contrôleur souhaité existe</returns>
-        public static bool TryGetScheme<T>(out T scheme) where T : IInputScheme, new()
-        {
-            if (InputManager.HasScheme<T>())
-            {
-                scheme = InputManager.GetScheme<T>();
-                return true;
-            }
-
-            scheme = default;
-            return false;
-        }
-
-        /// <summary>
-        /// Indique si le type d'entrée est disponible pour ce jeu
-        /// </summary>
-        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
-        /// <returns><see langword="true"/> si le contrôleur souhaité existe</returns>
-        public static bool HasScheme<T>() where T : IInputScheme, new()
-        {
-            return InputManager._inputSchemes.ContainsKey(typeof(T));
-        }
-
-        #endregion
-
-        #region InputActions
-
         /// <summary>
         /// Récupère les événements liés un InputAction de type ButtonState à partir de son ID.
         /// </summary>
@@ -219,13 +103,119 @@ namespace Retard.Core.ViewModels.Input
             return ref InputManager.Handles.GetVector2DEvent(key);
         }
 
+        #endregion
+
+        #region Méthodes statiques internes
+
+        /// <summary>
+        /// Crée les InputSchemes pour chaque type de contrôleur souhaité
+        /// </summary>
+        /// <param name="schemes">Les types de chaque contrôleur</param>
+        internal static void InitializeSchemes(params IInputScheme[] schemes)
+        {
+            InputManager._inputSchemes = new Dictionary<Type, IInputScheme>(schemes.Length);
+
+            for (int i = 0; i < schemes.Length; i++)
+            {
+                InputManager._inputSchemes.Add(schemes[i].GetType(), schemes[i]);
+            }
+        }
+
+        /// <summary>
+        /// Crée les systèmes ECS gérant les entrées
+        /// </summary>
+        /// <param name="world">Le monde contenant les entités</param>
+        internal static void InitializeSystems(World world)
+        {
+            InputManager._updateSystems.Add(new InputSystem(world));
+            InputManager._updateSystems.Initialize();
+        }
+
+        /// <summary>
+        /// Crée les InputSchemes pour chaque type de contrôleur souhaité
+        /// </summary>
+        /// <param name="buttonIDs">La liste des IDs des actions de type ButtonState</param>
+        /// <param name="vector1DIDs">La liste des IDs des actions de type Vector1D</param>
+        /// <param name="vector2DIDs">La liste des IDs des actions de type Vector2D</param>
+        internal static void InitializeInputActionEvents(UnsafeList<NativeString> buttonIDs, UnsafeList<NativeString> vector1DIDs, UnsafeList<NativeString> vector2DIDs)
+        {
+            InputManager.ActionResources = new(Math.Max(1, buttonIDs.Count * 3));
+            InputManager.ActionVector1DResources = new(Math.Max(1, vector1DIDs.Count));
+            InputManager.ActionVector2DResources = new(Math.Max(1, vector2DIDs.Count));
+
+            InputManager.Handles = new InputControls(buttonIDs, vector1DIDs, vector2DIDs);
+        }
+
+        /// <summary>
+        /// Capture l'état des inputs lors de la frame actuelle
+        /// </summary>
+        internal static void Update()
+        {
+            foreach (KeyValuePair<Type, IInputScheme> pair in InputManager._inputSchemes)
+            {
+                pair.Value.Update();
+            }
+
+            InputManager._updateSystems.Update();
+        }
+
+        /// <summary>
+        /// Capture l'état des inputs lors de la frame précédente
+        /// A appeler en fin d'Update pour ne pas écraser le précédent état
+        /// avant les comparaisons
+        /// </summary>
+        internal static void AfterUpdate()
+        {
+            foreach (KeyValuePair<Type, IInputScheme> pair in InputManager._inputSchemes)
+            {
+                pair.Value.AfterUpdate();
+            }
+        }
+
+        /// <summary>
+        /// Récupère le contrôleur du type souhaité
+        /// </summary>
+        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
+        /// <returns>Le contrôleur souhaité</returns>
+        internal static T GetScheme<T>() where T : IInputScheme, new()
+        {
+            return (T)InputManager._inputSchemes[typeof(T)];
+        }
+
+        /// <summary>
+        /// Indique si le contrôleur du type souhaité existe et le retourne si c'est le cas
+        /// </summary>
+        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
+        /// <returns><see langword="true"/> si le contrôleur souhaité existe</returns>
+        internal static bool TryGetScheme<T>(out T scheme) where T : IInputScheme, new()
+        {
+            if (InputManager.HasScheme<T>())
+            {
+                scheme = InputManager.GetScheme<T>();
+                return true;
+            }
+
+            scheme = default;
+            return false;
+        }
+
+        /// <summary>
+        /// Indique si le type d'entrée est disponible pour ce jeu
+        /// </summary>
+        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
+        /// <returns><see langword="true"/> si le contrôleur souhaité existe</returns>
+        internal static bool HasScheme<T>() where T : IInputScheme, new()
+        {
+            return InputManager._inputSchemes.ContainsKey(typeof(T));
+        }
+
         /// <summary>
         /// Retourne l'état de la touche
         /// </summary>
         /// <param name="mouseKey">La touche de la souris à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        public static InputKeySequenceState GetMouseKeyState(MouseKey mouseKey)
+        internal static InputKeySequenceState GetMouseKeyState(MouseKey mouseKey)
         {
             MouseInput mouseInput = InputManager.GetScheme<MouseInput>();
 
@@ -281,7 +271,7 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="keyboardKey">La touche du clavier à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        public static InputKeySequenceState GetKeyboardKeyState(Keys keyboardKey)
+        internal static InputKeySequenceState GetKeyboardKeyState(Keys keyboardKey)
         {
             KeyboardInput keyboardInput = InputManager.GetScheme<KeyboardInput>();
 
@@ -300,7 +290,7 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="playerIndex">L'ID de la manette</param>
         /// <param name="gamePadKey">La touche de la manette à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
-        public static InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey)
+        internal static InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey)
         {
             GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
 
@@ -320,7 +310,7 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="gamePadKey">La touche de la manette à evaluer</param>
         /// <param name="gamePadInput">Les contrôles de la manette</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
-        public static InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey, GamePadInput gamePadInput)
+        internal static InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey, GamePadInput gamePadInput)
         {
             return gamePadInput.IsButtonPressed(playerIndex, gamePadKey)
                                         ? InputKeySequenceState.Pressed
@@ -338,7 +328,7 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="joystickKey">La touche de la manette à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        public static InputKeySequenceState GetJoystickKeyState(int playerIndex, JoystickKey joystickKey)
+        internal static InputKeySequenceState GetJoystickKeyState(int playerIndex, JoystickKey joystickKey)
         {
             GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
             Vector2 leftAxis = gamePadInput.GetLeftThumbstickAxis(playerIndex);
@@ -476,8 +466,6 @@ namespace Retard.Core.ViewModels.Input
                 _ => throw new NotImplementedException($"JoystickKey non implémenté ({joystickKey})"),
             };
         }
-
-        #endregion
 
         #endregion
     }

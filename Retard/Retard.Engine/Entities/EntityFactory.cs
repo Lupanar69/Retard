@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Retard.Core.Components.Input;
 using Retard.Core.Components.Sprites;
+using Retard.Engine.Components.Camera;
 using Retard.Engine.Components.Input;
 using Retard.Engine.Models;
 using Retard.Engine.Models.Assets.Input;
@@ -17,12 +18,6 @@ namespace Retard.Core.Entities
     /// </summary>
     public static class EntityFactory
     {
-        /* NOTE : 
-         * On les crée sans archétype car d'après la doc,
-         * c'est pus lent d'utiliser l'archétype et d'appeler Set() manuellement
-         * pour chaque entité
-         */
-
         #region Input
 
         /// <summary>
@@ -321,6 +316,60 @@ namespace Retard.Core.Entities
                     new SpriteColorCD { Value = Color.White }
                     );
             }
+        }
+
+        #endregion
+
+        #region Caméras
+
+        /// <summary>
+        /// Crée une entité représentant une caméra orthographique
+        /// </summary>
+        /// <param name="world">Le monde contenant les entités</param>
+        /// <param name="position">La position de la caméra en pixels</param>
+        /// <param name="origin">Le point d'origine de la caméra</param>
+        /// <param name="playerID">L'ID du contrôleur pouvant manipuler cette caméra</param>
+        /// <param name="rotation">La rotation de la caméra sur l'axe Z</param>
+        /// <returns>L'entité de la caméra</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity CreateOrthographicCameraEntity(World world, Vector2 position, Vector2 origin, int playerID = 0, float rotation = 0f)
+        {
+            return EntityFactory.CreateOrthographicCameraEntity
+                (world,
+                playerID,
+                position,
+                origin,
+                rotation,
+                new Vector3(1f, 0f, float.MaxValue),
+                new Vector3(1f, 0f, float.MaxValue));
+        }
+
+        /// <summary>
+        /// Crée une entité représentant une caméra orthographique
+        /// </summary>
+        /// <param name="world">Le monde contenant les entités</param>
+        /// <param name="playerID">L'ID du contrôleur pouvant manipuler cette caméra</param>
+        /// <param name="position">La position de la caméra en pixels</param>
+        /// <param name="origin">Le point d'origine de la caméra</param>
+        /// <param name="rotation">La rotation de la caméra sur l'axe Z</param>
+        /// <param name="zoomValues">Les valeurs du zoom (X : valeur de base, Y et Z : min et max)</param>
+        /// <param name="pitchValues">Les valeurs du pitch (X : valeur de base, Y et Z : min et max)</param>
+        /// <returns>L'entité de la caméra</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity CreateOrthographicCameraEntity(World world, int playerID, Vector2 position, Vector2 origin, float rotation, Vector3 zoomValues, Vector3 pitchValues)
+        {
+            return world.Create
+                (
+                    new CameraOrthographicTag(),
+                    new Camera2DBoundingRectangleCD(),
+                    new Camera2DViewMatrixCD(),
+                    new CameraPlayerControllerIDCD { Value = playerID },
+                    new Camera2DPositionCD { Value = position },
+                    new Camera2DOriginCD { Value = origin },
+                    new Camera2DRotationCD { Value = rotation },
+                    new CameraZoomCD { Zoom = zoomValues.X, MinimumZoom = zoomValues.Y, MaximumZoom = zoomValues.Z },
+                    new Camera2DPitchCD { Pitch = pitchValues.X, MinimumPitch = pitchValues.Y, MaximumPitch = pitchValues.Z }
+                );
         }
 
         #endregion

@@ -58,13 +58,6 @@ namespace Retard.Core.ViewModels.Controllers
             GameState.OnFocusLostEvent += (_, _) => controls.Disable();
         }
 
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~OrthographicCameraController()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
-
         #endregion
 
         #region Méthodes privées
@@ -94,7 +87,6 @@ namespace Retard.Core.ViewModels.Controllers
                 Vector2 camPos = this.Camera.Position;
                 camPos = new Vector2((int)camPos.X, (int)camPos.Y);
                 this.Camera.Position = camPos;
-
             }
         }
 

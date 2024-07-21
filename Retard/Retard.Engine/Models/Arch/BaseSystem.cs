@@ -1,5 +1,4 @@
-﻿using System;
-using Arch.Core;
+﻿using Arch.Core;
 
 namespace Retard.Core.Models.Arch
 {
@@ -13,7 +12,7 @@ namespace Retard.Core.Models.Arch
         /// <summary>
         ///     The world instance. 
         /// </summary>
-        public World World { get; set; }
+        public World World { get; init; }
 
         #endregion
 
@@ -44,12 +43,6 @@ namespace Retard.Core.Models.Arch
         /// <inheritdoc />
         public virtual void AfterUpdate() { }
 
-        /// <inheritdoc />
-        public virtual void Dispose()
-        {
-            GC.SuppressFinalize(this);
-        }
-
         #endregion
     }
 
@@ -64,7 +57,7 @@ namespace Retard.Core.Models.Arch
         /// <summary>
         ///     The world instance. 
         /// </summary>
-        public World World { get; private set; }
+        public World World { get; init; }
 
         #endregion
 
@@ -92,9 +85,5 @@ namespace Retard.Core.Models.Arch
 
         /// <inheritdoc />
         public virtual void AfterUpdate(in T t) { }
-
-        /// <inheritdoc />
-        public virtual void Dispose() { GC.SuppressFinalize(this); }
     }
-
 }

@@ -1,20 +1,19 @@
 ﻿using Arch.Core;
-using Retard.Core.Entities;
 using Retard.Core.Models.Arch;
 
-namespace Retard.Core.Systems.Sprite
+namespace Retard.Engine.Systems.Camera
 {
     /// <summary>
-    /// Màj les frames des des sprites animés
+    /// Chargé de màj les caméras du jeu
     /// </summary>
-    public readonly struct AnimatedSpriteUpdateSystem : ISystemWorld
+    public readonly struct CameraSystem : ISystemWorld
     {
         #region Propriétés
 
         /// <summary>
         /// Le monde contenant les entités
         /// </summary>
-        public readonly World World { get; init; }
+        public World World { get; init; }
 
         #endregion
 
@@ -24,7 +23,7 @@ namespace Retard.Core.Systems.Sprite
         /// Constructeur
         /// </summary>
         /// <param name="world">Le monde contenant les entités des sprites</param>
-        public AnimatedSpriteUpdateSystem(World world)
+        public CameraSystem(World world)
         {
             this.World = world;
         }
@@ -34,12 +33,16 @@ namespace Retard.Core.Systems.Sprite
         #region Méthodes publiques
 
         /// <summary>
-        /// <inheritdoc/>
+        /// Màj à chaque frame
         /// </summary>
         public void Update()
         {
-            Queries.UpdateAnimatedSpriteFrameQuery(this.World);
+
         }
+
+        #endregion
+
+        #region Méthodes privées
 
         #endregion
     }

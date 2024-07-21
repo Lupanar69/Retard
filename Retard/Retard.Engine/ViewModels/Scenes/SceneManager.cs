@@ -58,18 +58,7 @@ namespace Retard.Core.ViewModels.Scenes
 
         #endregion
 
-        #region Méthodes publiques
-
-        /// <summary>
-        /// Initialise le SceneManager
-        /// </summary>
-        /// <param name="world">Le monde contenant les entités</param>
-        /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
-        public static void Initialize(World world, SpriteBatch spriteBatch)
-        {
-            SceneManager.World = world;
-            SceneManager.SpriteBatch = spriteBatch;
-        }
+        #region Méthodes statiques publiques
 
         /// <summary>
         /// Ajoute une nouvelle scène à l'ObjectPool des scènes
@@ -152,11 +141,26 @@ namespace Retard.Core.ViewModels.Scenes
             SceneManager.SetScenesControlsActiveState();
         }
 
+        #endregion
+
+        #region Méthodes statiques internes
+
+        /// <summary>
+        /// Initialise le SceneManager
+        /// </summary>
+        /// <param name="world">Le monde contenant les entités</param>
+        /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
+        internal static void Initialize(World world, SpriteBatch spriteBatch)
+        {
+            SceneManager.World = world;
+            SceneManager.SpriteBatch = spriteBatch;
+        }
+
         /// <summary>
         /// Màj les entrées lues par chaque scène
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        public static void UpdateInput(GameTime gameTime)
+        internal static void UpdateInput(GameTime gameTime)
         {
             for (int i = SceneManager._activeScenes.Count - 1; i >= 0; --i)
             {
@@ -174,7 +178,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// Màj la logique de chaque scène
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        public static void Update(GameTime gameTime)
+        internal static void Update(GameTime gameTime)
         {
             for (int i = SceneManager._activeScenes.Count - 1; i >= 0; --i)
             {
@@ -192,7 +196,7 @@ namespace Retard.Core.ViewModels.Scenes
         /// Affiche le contenu des scènes à l'écran
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        public static void Draw(GameTime gameTime)
+        internal static void Draw(GameTime gameTime)
         {
             int startDrawIndex = 0;
 
@@ -212,7 +216,7 @@ namespace Retard.Core.ViewModels.Scenes
 
         #endregion
 
-        #region Méthodes privées
+        #region Méthodes statiques privées
 
         /// <summary>
         /// Active ou désactive les InputControls des scènes

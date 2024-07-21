@@ -10,14 +10,14 @@ namespace Retard.Core.Systems.Sprite
     /// <summary>
     /// Affiche les sprites à l'écran
     /// </summary>
-    public struct SpriteDrawSystem : ISystemWorld
+    public readonly struct SpriteDrawSystem : ISystemWorld
     {
         #region Propriétés
 
         /// <summary>
         /// Le monde contenant les entités
         /// </summary>
-        public World World { get; set; }
+        public readonly World World { get; init; }
 
         #endregion
 
@@ -62,7 +62,7 @@ namespace Retard.Core.Systems.Sprite
         #region Méthodes publiques
 
         /// <summary>
-        /// Màj à chaque frame
+        /// <inheritdoc/>
         /// </summary>
         public void Update()
         {
@@ -73,14 +73,6 @@ namespace Retard.Core.Systems.Sprite
             Queries.DrawSpritesQuery(this.World, in this._spriteAtlas, in this._spriteBatch);
 
             _spriteBatch.End();
-        }
-
-        /// <summary>
-        /// Libère les allocations
-        /// </summary>
-        public void Dispose()
-        {
-
         }
 
         #endregion

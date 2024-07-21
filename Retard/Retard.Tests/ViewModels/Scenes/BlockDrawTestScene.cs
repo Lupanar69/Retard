@@ -4,7 +4,7 @@ using Retard.Core.Models;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.ViewModels.Scenes;
 using Retard.Engine.ViewModels.Input;
-using E = Retard.Engine.ViewModels.Engine;
+using E = Retard.Engine.ViewModels.GameEngine;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -49,7 +49,7 @@ namespace Retard.Tests.ViewModels.Scenes
             this.ConsumeDraw = true;
             this._debugTex = E.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
 
-            this.Controls = new();
+            this.Controls = new InputControls();
             this.Controls.GetButtonEvent("Test/Enter").Started += this.RemoveActiveSceneCallback;
         }
 

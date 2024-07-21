@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Retard.Core;
-using E = Retard.Engine.ViewModels.Engine;
+using Retard.Engine.ViewModels;
 
 namespace Retard.Client
 {
@@ -20,11 +20,11 @@ namespace Retard.Client
 
             // Initialise le moteur
 
-            E.Initialize(this);
+            GameEngine.Initialize(this);
 
             // Initialise les scènes utilisées par le jeu
 
-            GameEntryPoint.CreateScenes();
+            GameEntryPoint.Start(this);
         }
 
         #endregion
@@ -37,11 +37,11 @@ namespace Retard.Client
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
         protected override void Update(GameTime gameTime)
         {
-            E.Update(this, gameTime);
+            GameEngine.Update(this, gameTime);
 
             GameEntryPoint.Update(gameTime);
 
-            E.AfterUpdate();
+            GameEngine.AfterUpdate();
 
             base.Update(gameTime);
         }
@@ -52,7 +52,7 @@ namespace Retard.Client
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
         protected override void Draw(GameTime gameTime)
         {
-            E.Draw(this.GraphicsDevice, gameTime);
+            GameEngine.Draw(this.GraphicsDevice, gameTime);
 
             base.Draw(gameTime);
         }

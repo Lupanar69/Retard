@@ -15,14 +15,14 @@ namespace Retard.Core.Systems.Input
     /// <summary>
     /// Affiche les sprites à l'écran
     /// </summary>
-    public struct InputSystem : ISystemWorld
+    public readonly struct InputSystem : ISystemWorld
     {
         #region Propriétés
 
         /// <summary>
         /// Le monde contenant les entités
         /// </summary>
-        public World World { get; set; }
+        public readonly World World { get; init; }
 
         #endregion
 
@@ -59,7 +59,7 @@ namespace Retard.Core.Systems.Input
         #region Méthodes publiques
 
         /// <summary>
-        /// Màj à chaque frame
+        /// <inheritdoc/>
         /// </summary>
         public void Update()
         {
@@ -78,14 +78,6 @@ namespace Retard.Core.Systems.Input
             Queries.ProcessButtonStateInputActionsQuery(this.World, this.World);
             Queries.ProcessVector1DInputActionsQuery(this.World, this.World, this._nbMaxControllers);
             Queries.ProcessVector2DInputActionsQuery(this.World, this.World, this._nbMaxControllers);
-        }
-
-        /// <summary>
-        /// Libère les allocations
-        /// </summary>
-        public void Dispose()
-        {
-
         }
 
         #endregion

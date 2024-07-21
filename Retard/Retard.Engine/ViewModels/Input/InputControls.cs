@@ -87,8 +87,8 @@ namespace Retard.Engine.ViewModels.Input
             {
                 NativeString rKey = inputControls._buttonStateHandlesIDs[i];
                 int leftIndexOf = this._buttonStateHandlesIDs.IndexOf(rKey);
-                ref InputActionButtonStateHandles lHandles = ref this._buttonStateHandles[leftIndexOf];
-                ref InputActionButtonStateHandles rHandles = ref inputControls._buttonStateHandles[i];
+                ref readonly InputActionButtonStateHandles lHandles = ref this._buttonStateHandles[leftIndexOf];
+                ref readonly InputActionButtonStateHandles rHandles = ref inputControls._buttonStateHandles[i];
                 lHandles.Started += rHandles.Started;
                 lHandles.Performed += rHandles.Performed;
                 lHandles.Finished += rHandles.Finished;
@@ -98,8 +98,8 @@ namespace Retard.Engine.ViewModels.Input
             {
                 NativeString rKey = inputControls._vector1DHandlesIDs[i];
                 int leftIndexOf = this._vector1DHandlesIDs.IndexOf(rKey);
-                ref InputActionVector1DHandles lHandles = ref this._vector1DHandles[leftIndexOf];
-                ref InputActionVector1DHandles rHandles = ref inputControls._vector1DHandles[i];
+                ref readonly InputActionVector1DHandles lHandles = ref this._vector1DHandles[leftIndexOf];
+                ref readonly InputActionVector1DHandles rHandles = ref inputControls._vector1DHandles[i];
                 lHandles.Performed += rHandles.Performed;
             }
 
@@ -107,8 +107,8 @@ namespace Retard.Engine.ViewModels.Input
             {
                 NativeString rKey = inputControls._vector2DHandlesIDs[i];
                 int leftIndexOf = this._vector2DHandlesIDs.IndexOf(rKey);
-                ref InputActionVector2DHandles lHandles = ref this._vector2DHandles[leftIndexOf];
-                ref InputActionVector2DHandles rHandles = ref inputControls._vector2DHandles[i];
+                ref readonly InputActionVector2DHandles lHandles = ref this._vector2DHandles[leftIndexOf];
+                ref readonly InputActionVector2DHandles rHandles = ref inputControls._vector2DHandles[i];
                 lHandles.Performed += rHandles.Performed;
             }
         }
@@ -286,8 +286,8 @@ namespace Retard.Engine.ViewModels.Input
                 }
 
                 int leftIndexOf = left._buttonStateHandlesIDs.IndexOf(rKey);
-                ref InputActionButtonStateHandles lHandles = ref left._buttonStateHandles[leftIndexOf];
-                ref InputActionButtonStateHandles rHandles = ref right._buttonStateHandles[i];
+                ref readonly InputActionButtonStateHandles lHandles = ref left._buttonStateHandles[leftIndexOf];
+                ref readonly InputActionButtonStateHandles rHandles = ref right._buttonStateHandles[i];
                 lHandles.Started += rHandles.Started;
                 lHandles.Performed += rHandles.Performed;
                 lHandles.Finished += rHandles.Finished;
@@ -308,8 +308,8 @@ namespace Retard.Engine.ViewModels.Input
                 }
 
                 int leftIndexOf = left._vector1DHandlesIDs.IndexOf(rKey);
-                ref InputActionVector1DHandles lHandles = ref left._vector1DHandles[leftIndexOf];
-                ref InputActionVector1DHandles rHandles = ref right._vector1DHandles[i];
+                ref readonly InputActionVector1DHandles lHandles = ref left._vector1DHandles[leftIndexOf];
+                ref readonly InputActionVector1DHandles rHandles = ref right._vector1DHandles[i];
                 lHandles.Performed += rHandles.Performed;
             }
 
@@ -328,8 +328,8 @@ namespace Retard.Engine.ViewModels.Input
                 }
 
                 int leftIndexOf = left._vector2DHandlesIDs.IndexOf(rKey);
-                ref InputActionVector2DHandles lHandles = ref left._vector2DHandles[leftIndexOf];
-                ref InputActionVector2DHandles rHandles = ref right._vector2DHandles[i];
+                ref readonly InputActionVector2DHandles lHandles = ref left._vector2DHandles[leftIndexOf];
+                ref readonly InputActionVector2DHandles rHandles = ref right._vector2DHandles[i];
                 lHandles.Performed += rHandles.Performed;
             }
 
@@ -350,8 +350,8 @@ namespace Retard.Engine.ViewModels.Input
 
                 if (leftIndexOf != -1)
                 {
-                    ref InputActionButtonStateHandles lHandles = ref left._buttonStateHandles[leftIndexOf];
-                    ref InputActionButtonStateHandles rHandles = ref right._buttonStateHandles[i];
+                    ref readonly InputActionButtonStateHandles lHandles = ref left._buttonStateHandles[leftIndexOf];
+                    ref readonly InputActionButtonStateHandles rHandles = ref right._buttonStateHandles[i];
                     lHandles.Started -= rHandles.Started;
                     lHandles.Performed -= rHandles.Performed;
                     lHandles.Finished -= rHandles.Finished;
@@ -364,8 +364,8 @@ namespace Retard.Engine.ViewModels.Input
 
                 if (leftIndexOf != -1)
                 {
-                    ref InputActionVector1DHandles lHandles = ref left._vector1DHandles[leftIndexOf];
-                    ref InputActionVector1DHandles rHandles = ref right._vector1DHandles[i];
+                    ref readonly InputActionVector1DHandles lHandles = ref left._vector1DHandles[leftIndexOf];
+                    ref readonly InputActionVector1DHandles rHandles = ref right._vector1DHandles[i];
                     lHandles.Performed -= rHandles.Performed;
                 }
             }
@@ -376,8 +376,8 @@ namespace Retard.Engine.ViewModels.Input
 
                 if (leftIndexOf != -1)
                 {
-                    ref InputActionVector2DHandles lHandles = ref left._vector2DHandles[i];
-                    ref InputActionVector2DHandles rHandles = ref right._vector2DHandles[i];
+                    ref readonly InputActionVector2DHandles lHandles = ref left._vector2DHandles[i];
+                    ref readonly InputActionVector2DHandles rHandles = ref right._vector2DHandles[i];
                     lHandles.Performed -= rHandles.Performed;
                 }
             }

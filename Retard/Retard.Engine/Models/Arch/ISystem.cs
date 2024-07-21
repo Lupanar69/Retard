@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Retard.Core.Models.Arch;
+﻿namespace Retard.Core.Models.Arch;
 
 /// <summary>
 ///     An interface providing several methods for a system. 
 /// </summary>
-public interface ISystem : IDisposable
+public interface ISystem
 {
     /// <summary>
     ///     Initializes a system, before its first ever run.
@@ -32,7 +30,7 @@ public interface ISystem : IDisposable
 ///     An interface providing several methods for a system. 
 /// </summary>
 /// <typeparam name="T">The type passed to each method. For example a delta time or some other data.</typeparam>
-public interface ISystem<T> : IDisposable
+public interface ISystem<T>
 {
     /// <summary>
     ///     Initializes a system, before its first ever run.

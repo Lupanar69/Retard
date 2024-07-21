@@ -17,12 +17,12 @@ namespace Retard.Core.ViewModels.App
         /// <summary>
         /// Appelé quand la résolution de la fenêtre est changée manuellement
         /// </summary>
-        public static EventHandler<Point> OnClientSizeChangedEvent = delegate { };
+        public static readonly EventHandler<Point> OnClientSizeChangedEvent = delegate { };
 
         /// <summary>
         /// Appelé quand la résolution de la fenêtre est changée par code
         /// </summary>
-        public static EventHandler<Point> OnViewportResolutionSetEvent = delegate { };
+        public static readonly EventHandler<Point> OnViewportResolutionSetEvent = delegate { };
 
         #endregion
 

@@ -10,5 +10,5 @@ public interface IWorld
     /// <summary>
     ///     The world instance. 
     /// </summary>
-    World World { get; set; }
+    World World { get; init; }
 }
