@@ -7,7 +7,6 @@ using Retard.Core.Models;
 using Retard.Core.ViewModels.App;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
-using Retard.Engine.ViewModels.Camera;
 
 namespace Retard.Engine.ViewModels
 {
@@ -84,10 +83,6 @@ namespace Retard.Engine.ViewModels
             // Initialise le SceneManager
 
             SceneManager.Initialize(GameEngine._world, GameEngine._spriteBatch);
-
-            // Initialise le CameraManager
-
-            CameraManager.Initialize(GameEngine._world);
         }
 
         /// <summary>
@@ -105,10 +100,6 @@ namespace Retard.Engine.ViewModels
             // Màj les inputs
 
             InputManager.Update();
-
-            // Màj les caméras
-
-            CameraManager.Update();
 
             // Màj les scènes
 

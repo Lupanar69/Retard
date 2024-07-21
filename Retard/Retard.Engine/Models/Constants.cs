@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Retard.Core.Models
+namespace Retard.Engine.Models
 {
     /// <summary>
     /// Les constantes partagées dans tout le projet
@@ -56,15 +56,6 @@ namespace Retard.Core.Models
         /// Le chemin d'accès aux textures du projet
         /// </summary>
         public const string TEXTURES_DIR_PATH = "Resources/Textures/";
-
-#if TESTS
-
-        /// <summary>
-        /// Le chemin d'accès aux textures de débogage du projet
-        /// </summary>
-        public const string TEXTURES_DIR_PATH_DEBUG = "Resources/Textures/Test/";
-
-#endif
 
         #endregion
 

@@ -1,17 +1,16 @@
 ﻿using System.Runtime.CompilerServices;
+using Arch.Core;
 using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Retard.Core.Components.Sprites;
 using Retard.Core.Entities;
-using Retard.Core.Models;
 using Retard.Core.Models.Arch;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.Models.Assets.Sprites;
 using Retard.Core.Systems.Sprite;
 using Retard.Engine.ViewModels.Input;
-using E = Retard.Engine.ViewModels.GameEngine;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -80,10 +79,13 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Constructeur
         /// </summary>
+        /// <param name="world">Le monde contenant les entités</param>
+        /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
         /// <param name="camera">La caméra du jeu</param>
+        /// <param name="debugTex">La texture de debug</param>
         /// <param name="size">La taille de la carte à dessiner</param>
         /// <param name="spriteResolution">La résolution d'un sprite en pixels</param>
-        public SpriteDrawTestScene(OrthographicCamera camera, Point size, int spriteResolution)
+        public SpriteDrawTestScene(World world, SpriteBatch spriteBatch, OrthographicCamera camera, Texture2D debugTex, Point size, int spriteResolution)
         {
             this._camera = camera;
             this._size = size;
@@ -91,26 +93,21 @@ namespace Retard.Tests.ViewModels.Scenes
 
             // Charge les textures
 
-            Texture2D debugTex = E.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
             this._spriteAtlas = new SpriteAtlas(debugTex, 4, 4);
 
             // Initialise les systèmes
 
-            E.World.Reserve(_spriteArchetype, this._size.X * this._size.Y);
+            world.Reserve(_spriteArchetype, this._size.X * this._size.Y);
             this._updateSystems = new Group("Update Systems");
             this._drawSystems = new Group("Draw Systems");
 
-            this._drawSystems.Add(new SpriteDrawSystem(E.World, E.SpriteBatch, this._spriteAtlas, this._camera));
-            this._updateSystems.Add(new AnimatedSpriteUpdateSystem(E.World));
+            this._drawSystems.Add(new SpriteDrawSystem(world, spriteBatch, this._spriteAtlas, this._camera));
+            this._updateSystems.Add(new AnimatedSpriteUpdateSystem(world));
 
             this._updateSystems.Initialize();
             this._drawSystems.Initialize();
 
-            // Inputs
-
-            //this.Controls = new InputControls();
-            //this.Controls.GetButtonEvent("Test/Space").Started += this.CreateSpriteEntities;
-            this.CreateSpriteEntities(0);
+            this.CreateSpriteEntities(world);
         }
 
         #endregion
@@ -137,15 +134,15 @@ namespace Retard.Tests.ViewModels.Scenes
         /// Crée les entités des sprites
         /// pour tester les systèmes d'affihage
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void CreateSpriteEntities(int _)
+        /// <param name="world">Le monde contenant les entités</param>
+        private void CreateSpriteEntities(World world)
         {
             using UnsafeArray<Rectangle> rects = this.GetSpritesRects();
             using UnsafeArray<Vector2> positions = this.GetSpritesPositions();
 
             // Crée tous les sprites en un seul appel
 
-            EntityFactory.CreateSpriteEntities(E.World, positions, rects);
+            EntityFactory.CreateSpriteEntities(world, positions, rects);
         }
 
         /// <summary>

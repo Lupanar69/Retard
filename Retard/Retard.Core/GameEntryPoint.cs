@@ -1,8 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using Retard.Core.Models;
 using Retard.Core.ViewModels.App;
 using Retard.Core.ViewModels.Controllers;
 using Retard.Core.ViewModels.Scenes;
+using Retard.Engine.ViewModels;
 using Retard.Engine.ViewModels.Input;
 using Retard.Tests.ViewModels.Scenes;
 
@@ -82,7 +85,15 @@ namespace Retard.Core
         private static void CreateScenes()
         {
 #if TESTS
-            SceneManager.AddSceneToPool(new SpriteDrawTestScene(GameEntryPoint._camera, new Point(100), Constants.SPRITE_SIZE_PIXELS));
+            SceneManager.AddSceneToPool(new SpriteDrawTestScene
+                (
+                GameEngine.World,
+                GameEngine.SpriteBatch,
+                GameEntryPoint._camera,
+                GameEngine.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2"),
+                new Point(100),
+                Constants.SPRITE_SIZE_PIXELS));
+
             SceneManager.SetSceneAsActive<SpriteDrawTestScene>();
 #endif
         }

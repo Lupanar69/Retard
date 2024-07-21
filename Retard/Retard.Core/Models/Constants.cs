@@ -6,7 +6,7 @@ using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.Models.DTOs.App;
 using Retard.Engine.Models.DTOs.Input;
 
-namespace Retard.Core
+namespace Retard.Core.Models
 {
     /// <summary>
     /// Les constantes partagées dans tout le projet
@@ -153,6 +153,19 @@ namespace Retard.Core
         /// La résolution des sprites du jeu en pixels
         /// </summary>
         public const int SPRITE_SIZE_PIXELS = 32;
+
+        #endregion
+
+        #region Paths
+
+#if TESTS
+
+        /// <summary>
+        /// Le chemin d'accès aux textures de débogage du projet
+        /// </summary>
+        public const string TEXTURES_DIR_PATH_DEBUG = "Resources/Textures/Test/";
+
+#endif
 
         #endregion
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Retard.Core.Models;
+using Retard.Engine.Models;
 
 namespace Retard.Core.ViewModels.App
 {

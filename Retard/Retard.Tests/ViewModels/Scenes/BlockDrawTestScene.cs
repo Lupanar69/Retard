@@ -1,10 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Retard.Core.Models;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.ViewModels.Scenes;
 using Retard.Engine.ViewModels.Input;
-using E = Retard.Engine.ViewModels.GameEngine;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -33,6 +31,11 @@ namespace Retard.Tests.ViewModels.Scenes
         #region Variables d'instance
 
         /// <summary>
+        /// Pour afficher les sprites à l'écran
+        /// </summary>
+        private readonly SpriteBatch _spriteBatch;
+
+        /// <summary>
         /// Texture de test
         /// </summary>
         private readonly Texture2D _debugTex;
@@ -44,11 +47,14 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Constructeur
         /// </summary>
-        public BlockDrawTestScene()
+        /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
+        /// <param name="debugTex">La texture de debug</param>
+        public BlockDrawTestScene(SpriteBatch spriteBatch, Texture2D debugTex)
         {
-            this.ConsumeDraw = true;
-            this._debugTex = E.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2");
+            this._debugTex = debugTex;
+            this._spriteBatch = spriteBatch;
 
+            this.ConsumeDraw = true;
             this.Controls = new InputControls();
             this.Controls.GetButtonEvent("Test/Enter").Started += this.RemoveActiveSceneCallback;
         }
@@ -60,11 +66,11 @@ namespace Retard.Tests.ViewModels.Scenes
         ///<inheritdoc/>
         public void OnDraw(GameTime gameTime)
         {
-            E.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
+            this._spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
 
-            E.SpriteBatch.Draw(this._debugTex, Vector2.Zero, Color.White);
+            this._spriteBatch.Draw(this._debugTex, Vector2.Zero, Color.White);
 
-            E.SpriteBatch.End();
+            this._spriteBatch.End();
         }
 
         #endregion
