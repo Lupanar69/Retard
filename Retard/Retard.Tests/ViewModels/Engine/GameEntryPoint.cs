@@ -5,11 +5,11 @@ using Retard.Core.Models;
 using Retard.Core.ViewModels.App;
 using Retard.Core.ViewModels.Controllers;
 using Retard.Core.ViewModels.Scenes;
-using Retard.Engine.ViewModels;
+using Retard.Engine.ViewModels.Engine;
 using Retard.Engine.ViewModels.Input;
 using Retard.Tests.ViewModels.Scenes;
 
-namespace Retard.Core
+namespace Retard.Tests.ViewModels.Engine
 {
     /// <summary>
     /// Le point d'entrée du jeu
@@ -56,14 +56,14 @@ namespace Retard.Core
         /// <param name="game">Le jeu</param>
         public static void Start(Game game)
         {
-            GameEntryPoint._controls = new InputControls();
-            GameEntryPoint._controls.GetButtonEvent("Exit").Started += (_) => { game.Exit(); };
+            _controls = new InputControls();
+            _controls.GetButtonEvent("Exit").Started += (_) => { game.Exit(); };
 
-            GameEntryPoint._camera = new OrthographicCamera(game.GraphicsDevice);
-            GameEntryPoint._cameraController = new OrthographicCameraController(GameEntryPoint._camera, GameEntryPoint._controls);
-            GameEntryPoint._controls.Enable();
+            _camera = new OrthographicCamera(game.GraphicsDevice);
+            _cameraController = new OrthographicCameraController(_camera, _controls);
+            _controls.Enable();
 
-            GameEntryPoint.CreateScenes();
+            CreateScenes();
         }
 
         /// <summary>
@@ -87,10 +87,10 @@ namespace Retard.Core
 #if TESTS
             SceneManager.AddSceneToPool(new SpriteDrawTestScene
                 (
-                GameEngine.World,
-                GameEngine.SpriteBatch,
-                GameEntryPoint._camera,
-                GameEngine.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2"),
+                BaseEngine.World,
+                BaseEngine.SpriteBatch,
+                _camera,
+                BaseEngine.Content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}tiles_test2"),
                 new Point(100),
                 Constants.SPRITE_SIZE_PIXELS));
 

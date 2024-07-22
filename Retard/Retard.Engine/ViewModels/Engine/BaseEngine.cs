@@ -8,30 +8,30 @@ using Retard.Core.ViewModels.App;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
 
-namespace Retard.Engine.ViewModels
+namespace Retard.Engine.ViewModels.Engine
 {
     /// <summary>
     /// Chargée d'initialiser et màj tous les systèmes nécessaires
     /// au fonctionnement du jeu
     /// </summary>
-    public static class GameEngine
+    public static class BaseEngine
     {
         #region Propriétés
 
         /// <summary>
         /// Pour charger les ressources du jeu
         /// </summary>
-        public static ContentManager Content => GameEngine._content;
+        public static ContentManager Content => _content;
 
         /// <summary>
         /// Pour afficher les sprites à l'écran
         /// </summary>
-        public static SpriteBatch SpriteBatch => GameEngine._spriteBatch;
+        public static SpriteBatch SpriteBatch => _spriteBatch;
 
         /// <summary>
         /// Le monde contenant les entités
         /// </summary>
-        public static World World => GameEngine._world;
+        public static World World => _world;
 
         #endregion
 
@@ -71,18 +71,18 @@ namespace Retard.Engine.ViewModels
 
             // Initialise les components
 
-            GameEngine._content = game.Content;
-            GameEngine._spriteBatch = new SpriteBatch(game.GraphicsDevice);
-            GameEngine._world = World.Create();
+            _content = game.Content;
+            _spriteBatch = new SpriteBatch(game.GraphicsDevice);
+            _world = World.Create();
 
             // Initialise les inputs
 
             InputManager.InitializeSchemes(new KeyboardInput(), new MouseInput(), new GamePadInput(GamePad.MaximumGamePadCount));
-            InputManager.InitializeSystems(GameEngine._world);
+            InputManager.InitializeSystems(_world);
 
             // Initialise le SceneManager
 
-            SceneManager.Initialize(GameEngine._world, GameEngine._spriteBatch);
+            SceneManager.Initialize(_world, _spriteBatch);
         }
 
         /// <summary>
