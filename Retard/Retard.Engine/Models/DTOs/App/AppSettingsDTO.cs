@@ -6,7 +6,7 @@ namespace Retard.Engine.Models.DTOs.App
     /// <summary>
     /// Représente les données des paramètres du jeu
     /// </summary>
-    public sealed class AppSettingsDTO
+    public sealed class AppSettingsDTO : DataTransferObject
     {
         #region Propriétés
 

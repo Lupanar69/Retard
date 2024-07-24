@@ -6,9 +6,7 @@ using Retard.Core.Entities;
 using Retard.Core.Models.Arch;
 using Retard.Core.Models.ValueTypes;
 using Retard.Core.ViewModels.Input;
-using Retard.Engine.Models;
 using Retard.Engine.Models.DTOs.Input;
-using Retard.Engine.ViewModels.Utilities;
 
 namespace Retard.Core.Systems.Input
 {
@@ -41,16 +39,13 @@ namespace Retard.Core.Systems.Input
         /// Constructeur
         /// </summary>
         /// <param name="world">Le monde contenant les entités des sprites</param>
-        public InputSystem(World world)
+        /// <param name="inputConfig">Les données du fichier de config des entrées du joueur</param>
+        public InputSystem(World world, InputConfigDTO inputConfig)
         {
             this.World = world;
             this._nbMaxControllers = InputManager.TryGetScheme(out GamePadInput gamePadInput) ? gamePadInput.NbMaxGamePads : 1;
 
-            string customInputConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.CUSTOM_INPUT_CONFIG_PATH}";
-            string json = JsonUtilities.ReadFile(customInputConfigPath);
-            var config = JsonUtilities.DeserializeObject<InputConfigDTO>(json);
-
-            InputSystem.CreateInputEntities(this.World, config, this._nbMaxControllers);
+            InputSystem.CreateInputEntities(this.World, inputConfig, this._nbMaxControllers);
             InputSystem.CreateInputActionEvents(this.World);
         }
 

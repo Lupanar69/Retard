@@ -5,7 +5,7 @@ namespace Retard.Engine.Models.DTOs.Input
     /// <summary>
     /// Représente les données d'un InputAction
     /// </summary>
-    public sealed class InputActionDTO
+    public sealed class InputActionDTO : DataTransferObject
     {
         #region Propriétés
 

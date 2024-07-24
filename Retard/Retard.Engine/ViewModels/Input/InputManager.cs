@@ -10,6 +10,7 @@ using Retard.Core.Models.ValueTypes;
 using Retard.Core.Systems.Input;
 using Retard.Engine.Models;
 using Retard.Engine.Models.Assets.Input;
+using Retard.Engine.Models.DTOs.Input;
 using Retard.Engine.ViewModels.Input;
 
 namespace Retard.Core.ViewModels.Input
@@ -18,7 +19,7 @@ namespace Retard.Core.ViewModels.Input
     /// Passerelle entre les entrées du joueur
     /// et les commandes à exécuter
     /// </summary>
-    public static class InputManager
+    public struct InputManager
     {
         #region Propriétés
 
@@ -44,12 +45,7 @@ namespace Retard.Core.ViewModels.Input
 
         #endregion
 
-        #region Variables d'instance
-
-        /// <summary>
-        /// Les systèmes ECS à màj dans Update()
-        /// </summary>
-        private static readonly Group _updateSystems;
+        #region Variables statiques
 
         /// <summary>
         /// La liste des types d'entrées autorisées pour ce jeu
@@ -59,19 +55,45 @@ namespace Retard.Core.ViewModels.Input
 
         #endregion
 
+        #region Variables d'instance
+
+        /// <summary>
+        /// Les systèmes ECS à màj dans Update()
+        /// </summary>
+        private readonly Group _updateSystems;
+
+        #endregion
+
         #region Constructeur
 
         /// <summary>
         /// Constructeur
         /// </summary>
-        static InputManager()
+        /// <param name="inputSchemes">Les types de contrôles acceptées par le moteur</param>
+        public InputManager(params IInputScheme[] inputSchemes)
         {
-            InputManager._updateSystems = new Group("Update Systems");
+            this._updateSystems = new Group("Update Systems");
+            InputManager._inputSchemes = new Dictionary<Type, IInputScheme>(inputSchemes.Length);
+
+            for (int i = 0; i < inputSchemes.Length; ++i)
+            {
+                InputManager._inputSchemes.Add(inputSchemes[i].GetType(), inputSchemes[i]);
+            }
         }
 
         #endregion
 
-        #region Méthodes statiques publiques
+        #region Méthodes publiques
+
+        /// <summary>
+        /// Crée les systèmes ECS gérant les entrées
+        /// </summary>
+        /// <param name="world">Le monde contenant les entités</param>
+        public void InitializeSystems(World world, InputConfigDTO inputConfig)
+        {
+            this._updateSystems.Add(new InputSystem(world, inputConfig));
+            this._updateSystems.Initialize();
+        }
 
         /// <summary>
         /// Récupère les événements liés un InputAction de type ButtonState à partir de son ID.
@@ -105,31 +127,7 @@ namespace Retard.Core.ViewModels.Input
 
         #endregion
 
-        #region Méthodes statiques internes
-
-        /// <summary>
-        /// Crée les InputSchemes pour chaque type de contrôleur souhaité
-        /// </summary>
-        /// <param name="schemes">Les types de chaque contrôleur</param>
-        internal static void InitializeSchemes(params IInputScheme[] schemes)
-        {
-            InputManager._inputSchemes = new Dictionary<Type, IInputScheme>(schemes.Length);
-
-            for (int i = 0; i < schemes.Length; i++)
-            {
-                InputManager._inputSchemes.Add(schemes[i].GetType(), schemes[i]);
-            }
-        }
-
-        /// <summary>
-        /// Crée les systèmes ECS gérant les entrées
-        /// </summary>
-        /// <param name="world">Le monde contenant les entités</param>
-        internal static void InitializeSystems(World world)
-        {
-            InputManager._updateSystems.Add(new InputSystem(world));
-            InputManager._updateSystems.Initialize();
-        }
+        #region Méthodes internes
 
         /// <summary>
         /// Crée les InputSchemes pour chaque type de contrôleur souhaité
@@ -149,14 +147,14 @@ namespace Retard.Core.ViewModels.Input
         /// <summary>
         /// Capture l'état des inputs lors de la frame actuelle
         /// </summary>
-        internal static void Update()
+        internal void Update()
         {
             foreach (KeyValuePair<Type, IInputScheme> pair in InputManager._inputSchemes)
             {
                 pair.Value.Update();
             }
 
-            InputManager._updateSystems.Update();
+            this._updateSystems.Update();
         }
 
         /// <summary>
@@ -164,7 +162,7 @@ namespace Retard.Core.ViewModels.Input
         /// A appeler en fin d'Update pour ne pas écraser le précédent état
         /// avant les comparaisons
         /// </summary>
-        internal static void AfterUpdate()
+        internal void AfterUpdate()
         {
             foreach (KeyValuePair<Type, IInputScheme> pair in InputManager._inputSchemes)
             {

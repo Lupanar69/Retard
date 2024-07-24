@@ -6,7 +6,7 @@ namespace Retard.Engine.Models.DTOs.Input
     /// <summary>
     /// Représente les données d'un InputBinding
     /// </summary>
-    public sealed class InputBindingDTO
+    public sealed class InputBindingDTO : DataTransferObject
     {
         #region Propriétés
 

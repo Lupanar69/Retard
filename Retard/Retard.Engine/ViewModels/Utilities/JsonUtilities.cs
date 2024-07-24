@@ -57,7 +57,6 @@ namespace Retard.Engine.ViewModels.Utilities
             {
                 throw ex;
             }
-
         }
 
         /// <summary>

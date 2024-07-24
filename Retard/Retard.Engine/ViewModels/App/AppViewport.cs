@@ -1,28 +1,24 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Retard.Engine.Models;
-using Retard.Engine.Models.App;
-using Retard.Engine.Models.DTOs.App;
-using Retard.Engine.ViewModels.Utilities;
 
 namespace Retard.Core.ViewModels.App
 {
     /// <summary>
     /// Gère les paramètres de la fenêtre du jeu
     /// </summary>
-    public static class AppViewport
+    public struct AppViewport : IDisposable
     {
         #region Evénements
 
         /// <summary>
         /// Appelé quand la résolution de la fenêtre est changée manuellement
         /// </summary>
-        public static readonly EventHandler<Point> OnClientSizeChangedEvent = delegate { };
+        public readonly EventHandler<Point> OnClientSizeChangedEvent = delegate { };
 
         /// <summary>
         /// Appelé quand la résolution de la fenêtre est changée par code
         /// </summary>
-        public static readonly EventHandler<Point> OnViewportResolutionSetEvent = delegate { };
+        public readonly EventHandler<Point> OnViewportResolutionSetEvent = delegate { };
 
         #endregion
 
@@ -39,40 +35,46 @@ namespace Retard.Core.ViewModels.App
 
         #endregion
 
-        #region Variables statiques
+        #region Variables d'instance
 
         /// <summary>
         /// Permet de modifier les paramètres du jeu
         /// </summary>
-        private static Game _game;
+        private readonly Game _game;
 
         /// <summary>
         /// Permet de modifier les paramètres de la fenêtre
         /// </summary>
-        private static GraphicsDeviceManager _graphicsDeviceManager;
+        private readonly GraphicsDeviceManager _graphicsDeviceManager;
 
         #endregion
 
-        #region Méthodes statiques publiques
+        #region Constructeur
 
         /// <summary>
         /// Initialise le script et la fenêtre
         /// </summary>
         /// <param name="game">Le script de lancement du jeu</param>
-        public static void Initialize(Game game)
+        /// <param name="graphicsDeviceManager">Configurateur des paramètres de la fenêtre du jeu</param>
+        public AppViewport(Game game, GraphicsDeviceManager graphicsDeviceManager)
         {
-            AppViewport._game = game;
-            AppViewport._graphicsDeviceManager = new GraphicsDeviceManager(game);
+            this._game = game;
+            this._graphicsDeviceManager = graphicsDeviceManager;
+            AppViewport.WindowResolution = new Point(game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
 
-            string customAppSettingsConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.CUSTOM_APP_SETTINGS_CONFIG_PATH}";
-            string json = JsonUtilities.ReadFile(customAppSettingsConfigPath);
-            var config = JsonUtilities.DeserializeObject<AppSettingsDTO>(json);
-            WindowSettings ws = config.WindowSettings;
+            game.Window.ClientSizeChanged += this.OnClientSizeChangedCallback;
+        }
 
-            AppViewport.SetViewportResolution(ws.WindowSize, ws.FullScreen);
-            AppViewport.SetGameProperties(ws.MouseVisible, ws.AllowUserResizing);
+        #endregion
 
-            game.Window.ClientSizeChanged += AppViewport.OnClientSizeChangedCallback;
+        #region Méthodes publiques
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public void Dispose()
+        {
+            this._game.Window.ClientSizeChanged -= this.OnClientSizeChangedCallback;
         }
 
         /// <summary>
@@ -80,15 +82,15 @@ namespace Retard.Core.ViewModels.App
         /// </summary>
         /// <param name="windowResolution">La nouvelle résolution de la fenêtre</param>
         /// <param name="fullScreen"><see langword="true"/> pour passer la fenêtre en plein écran</param>
-        public static void SetViewportResolution(Point windowResolution, bool fullScreen)
+        public void SetViewportResolution(Point windowResolution, bool fullScreen)
         {
-            AppViewport._graphicsDeviceManager.PreferredBackBufferWidth = windowResolution.X;
-            AppViewport._graphicsDeviceManager.PreferredBackBufferHeight = windowResolution.Y;
-            AppViewport._graphicsDeviceManager.IsFullScreen = fullScreen;
-            AppViewport._graphicsDeviceManager.ApplyChanges();
+            this._graphicsDeviceManager.PreferredBackBufferWidth = windowResolution.X;
+            this._graphicsDeviceManager.PreferredBackBufferHeight = windowResolution.Y;
+            this._graphicsDeviceManager.IsFullScreen = fullScreen;
+            this._graphicsDeviceManager.ApplyChanges();
 
             AppViewport.WindowResolution = windowResolution;
-            AppViewport.OnViewportResolutionSetEvent?.Invoke(null, windowResolution);
+            this.OnViewportResolutionSetEvent?.Invoke(null, windowResolution);
         }
 
         /// <summary>
@@ -96,25 +98,25 @@ namespace Retard.Core.ViewModels.App
         /// </summary>
         /// <param name="mouseVisible"><see langword="true"/> si la souris doit rester visible</param>
         /// <param name="allowUserResizing"><see langword="true"/> si le joueur peut redimensionner la fenêtre manuellement</param>
-        public static void SetGameProperties(bool mouseVisible = true, bool allowUserResizing = true)
+        public void SetGameProperties(bool mouseVisible = true, bool allowUserResizing = true)
         {
-            AppViewport._game.IsMouseVisible = mouseVisible;
-            AppViewport._game.Window.AllowUserResizing = allowUserResizing;
+            this._game.IsMouseVisible = mouseVisible;
+            this._game.Window.AllowUserResizing = allowUserResizing;
         }
 
         #endregion
 
-        #region Méthodes statiques privées
+        #region Méthodes privées
 
         /// <summary>
         /// Appelé quand la résolution de la fenêtre est changée manuellement
         /// </summary>
         /// <param name="sender">l'app</param>
         /// <param name="e">vide</param>
-        private static void OnClientSizeChangedCallback(object sender, EventArgs e)
+        private void OnClientSizeChangedCallback(object sender, EventArgs e)
         {
-            AppViewport.WindowResolution = new Point(AppViewport._game.GraphicsDevice.Viewport.Width, AppViewport._game.GraphicsDevice.Viewport.Height);
-            AppViewport.OnClientSizeChangedEvent?.Invoke(null, AppViewport.WindowResolution);
+            AppViewport.WindowResolution = new Point(this._game.GraphicsDevice.Viewport.Width, this._game.GraphicsDevice.Viewport.Height);
+            this.OnClientSizeChangedEvent?.Invoke(null, AppViewport.WindowResolution);
         }
 
         #endregion

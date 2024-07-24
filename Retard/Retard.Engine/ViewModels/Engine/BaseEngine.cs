@@ -1,9 +1,11 @@
-﻿using Arch.Core;
+﻿using System.Collections.Generic;
+using Arch.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models;
+using Retard.Core.Models.Assets.Input;
+using Retard.Core.Models.ValueTypes;
 using Retard.Core.ViewModels.App;
 using Retard.Core.ViewModels.Input;
 using Retard.Core.ViewModels.Scenes;
@@ -14,119 +16,134 @@ namespace Retard.Engine.ViewModels.Engine
     /// Chargée d'initialiser et màj tous les systèmes nécessaires
     /// au fonctionnement du jeu
     /// </summary>
-    public static class BaseEngine
+    public abstract class BaseEngine
     {
-        #region Propriétés
+        #region Variables d'instance
 
         /// <summary>
         /// Pour charger les ressources du jeu
         /// </summary>
-        public static ContentManager Content => _content;
+        protected readonly ContentManager _content;
 
         /// <summary>
         /// Pour afficher les sprites à l'écran
         /// </summary>
-        public static SpriteBatch SpriteBatch => _spriteBatch;
+        protected readonly SpriteBatch _spriteBatch;
 
         /// <summary>
         /// Le monde contenant les entités
         /// </summary>
-        public static World World => _world;
+        protected readonly World _world;
+
+        /// <summary>
+        /// Passerelle entre les entrées du joueur et les commandes à effectuer
+        /// </summary>
+        protected readonly InputManager _inputManager;
+
+        /// <summary>
+        /// Gère l'ajout, màj et suppression des scènes
+        /// </summary>
+        protected readonly SceneManager _sceneManager;
+
+        /// <summary>
+        /// Gère les paramètres de la fenêtre de jeu
+        /// </summary>
+        protected readonly AppViewport _appViewport;
+
+        /// <summary>
+        /// Gère les paramètres de la fenêtre de jeu
+        /// </summary>
+        protected readonly AppPerformance _appPerformance;
 
         #endregion
 
-        #region Variables statiques
+        #region Constructeur
 
         /// <summary>
-        /// Pour charger les ressources du jeu
-        /// </summary>
-        private static ContentManager _content;
-
-        /// <summary>
-        /// Pour afficher les sprites à l'écran
-        /// </summary>
-        private static SpriteBatch _spriteBatch;
-
-        /// <summary>
-        /// Le monde contenant les entités
-        /// </summary>
-        private static World _world;
-
-        #endregion
-
-        #region Méthodes statiques publiques
-
-        /// <summary>
-        /// Initialise le jeu
+        /// Constructeur
         /// </summary>
         /// <param name="game">Le jeu</param>
-        public static void Initialize(Game game)
+        /// <param name="graphicsDeviceManager">Configurateur des paramètres de la fenêtre du jeu</param>
+        /// <param name="inputSchemes">Les types de contrôles acceptées par le moteur</param>
+        public BaseEngine(Game game, GraphicsDeviceManager graphicsDeviceManager, params IInputScheme[] inputSchemes)
         {
-            game.Content.RootDirectory = "Content";
+            // Initialise les components
+
             game.Activated += GameState.OnFocusEvent;
             game.Deactivated += GameState.OnFocusLostEvent;
 
-            AppViewport.Initialize(game);
-            AppPerformance.Initialize(game);
-
-            // Initialise les components
-
-            _content = game.Content;
-            _spriteBatch = new SpriteBatch(game.GraphicsDevice);
-            _world = World.Create();
+            this._appViewport = new AppViewport(game, graphicsDeviceManager);
+            this._appPerformance = new AppPerformance(game);
+            this._content = game.Content;
+            this._spriteBatch = new SpriteBatch(game.GraphicsDevice);
+            this._world = World.Create();
 
             // Initialise les inputs
 
-            InputManager.InitializeSchemes(new KeyboardInput(), new MouseInput(), new GamePadInput(GamePad.MaximumGamePadCount));
-            InputManager.InitializeSystems(_world);
+            this._inputManager = new InputManager(inputSchemes);
 
             // Initialise le SceneManager
 
-            SceneManager.Initialize(_world, _spriteBatch);
+            this._sceneManager = new SceneManager(1);
         }
+
+        #endregion
+
+        #region Méthodes publiques
+
+        /// <summary>
+        /// Charge le contenu externe du jeu
+        /// </summary>
+        public abstract void LoadContent();
+
+        /// <summary>
+        /// Crée les scènes du jeu
+        /// </summary>
+        /// <param name="textures2D">Les Textures2D du jeu</param>
+        protected abstract void CreateScenes(Dictionary<NativeString, Texture2D> textures2D);
 
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
         /// <param name="game">L'application</param>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        public static void Update(Game game, GameTime gameTime)
+        public void Update(Game game, GameTime gameTime)
         {
-            if (SceneManager.IsEmpty)
+            if (this._sceneManager.IsEmpty)
             {
                 game.Exit();
             }
 
             // Màj les inputs
 
-            InputManager.Update();
+            this._inputManager.Update();
 
             // Màj les scènes
 
-            SceneManager.UpdateInput(gameTime);
-            SceneManager.Update(gameTime);
+            this._sceneManager.UpdateInput(gameTime);
+            this._sceneManager.Update(gameTime);
         }
 
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
-        public static void AfterUpdate()
+        public void AfterUpdate()
         {
             // Appelé en dernier pour ne pas écraser le précédent KeyboardState
             // avant les comparaisons
 
-            InputManager.AfterUpdate();
+            this._inputManager.AfterUpdate();
         }
 
         /// <summary>
         /// Pour afficher des éléments à l'écran
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        public static void Draw(GraphicsDevice graphicsDevice, GameTime gameTime)
+        public void Draw(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
-            graphicsDevice.Clear(Color.Black);
+            graphicsDevice.Clear(Color.LightBlue);
 
-            SceneManager.Draw(gameTime);
+            this._sceneManager.Draw(gameTime);
         }
 
         #endregion

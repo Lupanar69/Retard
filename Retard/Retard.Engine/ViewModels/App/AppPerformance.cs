@@ -7,97 +7,110 @@ namespace Retard.Core.ViewModels.App
     /// <summary>
     /// Gère les performance du jeu
     /// </summary>
-    public static class AppPerformance
+    public struct AppPerformance : IDisposable
     {
-        #region Variables statiques
+        #region Variables d'instance
 
         /// <summary>
         /// Permet de modifier les paramètres du jeu
         /// </summary>
-        private static Game _game;
+        private readonly Game _game;
 
         /// <summary>
         /// Cached to restore the user defined framerate
         /// each time we focus back on the game window
         /// </summary>
-        private static int _userDefinedFocusedFrameRate = Constants.DEFAULT_FOCUSED_FRAMERATE;
+        private int _userDefinedFocusedFrameRate = Constants.DEFAULT_FOCUSED_FRAMERATE;
 
         /// <summary>
         /// Cached to restore the user defined framerate
         /// each time the game window is set in the background
         /// </summary>
-        private static int _userDefinedUnfocusedFrameRate = Constants.DEFAULT_UNFOCUSED_FRAMERATE;
+        private int _userDefinedUnfocusedFrameRate = Constants.DEFAULT_UNFOCUSED_FRAMERATE;
 
         /// <summary>
         /// <see langword="true"/> si la fenêtre a le focus
         /// </summary>
-        private static bool _windowHasFocus;
+        private bool _windowHasFocus = true;
 
         #endregion
 
-        #region Méthodes statiques publiques
+        #region Constructeur
 
         /// <summary>
-        /// Initialise le script
+        /// Constructeur
         /// </summary>
         /// <param name="game">Le script de lancement du jeu</param>
-        public static void Initialize(Game game)
+        public AppPerformance(Game game)
         {
-            AppPerformance._game = game;
-            game.Activated += AppPerformance.OnActivatedCallback;
-            game.Deactivated += AppPerformance.OnDeactivatedCallback;
+            this._game = game;
+            game.Activated += this.OnActivatedCallback;
+            game.Deactivated += this.OnDeactivatedCallback;
+        }
+
+        #endregion
+
+        #region Méthodes publiques
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public void Dispose()
+        {
+            this._game.Activated -= this.OnActivatedCallback;
+            this._game.Deactivated -= this.OnDeactivatedCallback;
         }
 
         /// <summary>
         /// Sets a new framerate for when the game is focused
         /// </summary>
         /// <param name="framerate">The new framerate to reach</param>
-        public static void SetFocusedFramerate(int framerate)
+        public void SetFocusedFramerate(int framerate)
         {
-            if (AppPerformance._windowHasFocus)
+            if (this._windowHasFocus)
             {
-                AppPerformance._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)framerate);
+                this._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)framerate);
             }
 
-            AppPerformance._userDefinedFocusedFrameRate = framerate;
+            this._userDefinedFocusedFrameRate = framerate;
         }
 
         /// <summary>
         /// Sets a new framerate for when the game runs in the background
         /// </summary>
         /// <param name="framerate">The new framerate to reach</param>
-        public static void SetUnfocusedFramerate(int framerate)
+        public void SetUnfocusedFramerate(int framerate)
         {
-            if (!AppPerformance._windowHasFocus)
+            if (!this._windowHasFocus)
             {
-                AppPerformance._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)framerate);
+                this._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)framerate);
             }
 
-            AppPerformance._userDefinedUnfocusedFrameRate = framerate;
+            this._userDefinedUnfocusedFrameRate = framerate;
         }
 
         /// <summary>
         /// Resets the framerates to their respective default values
         /// </summary>
-        public static void ResetUserDefinedFrameRates()
+        public void ResetUserDefinedFrameRates()
         {
-            AppPerformance._userDefinedFocusedFrameRate = Constants.DEFAULT_FOCUSED_FRAMERATE;
-            AppPerformance._userDefinedUnfocusedFrameRate = Constants.DEFAULT_UNFOCUSED_FRAMERATE;
+            this._userDefinedFocusedFrameRate = Constants.DEFAULT_FOCUSED_FRAMERATE;
+            this._userDefinedUnfocusedFrameRate = Constants.DEFAULT_UNFOCUSED_FRAMERATE;
         }
 
         #endregion
 
-        #region Méthodes statiques privées
+        #region Méthodes privées
 
         /// <summary>
         /// Appelée quand la fenêtre gagne le focus
         /// </summary>
         /// <param name="sender">l'app</param>
         /// <param name="e">vide</param>
-        private static void OnActivatedCallback(object sender, EventArgs e)
+        private void OnActivatedCallback(object sender, EventArgs e)
         {
-            AppPerformance._windowHasFocus = true;
-            AppPerformance._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)AppPerformance._userDefinedFocusedFrameRate);
+            this._windowHasFocus = true;
+            this._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)this._userDefinedFocusedFrameRate);
         }
 
         /// <summary>
@@ -105,10 +118,10 @@ namespace Retard.Core.ViewModels.App
         /// </summary>
         /// <param name="sender">l'app</param>
         /// <param name="e">vide</param>
-        private static void OnDeactivatedCallback(object sender, EventArgs e)
+        private void OnDeactivatedCallback(object sender, EventArgs e)
         {
-            AppPerformance._windowHasFocus = false;
-            AppPerformance._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)AppPerformance._userDefinedUnfocusedFrameRate);
+            this._windowHasFocus = false;
+            this._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)this._userDefinedUnfocusedFrameRate);
         }
 
         #endregion

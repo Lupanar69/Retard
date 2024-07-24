@@ -4,7 +4,7 @@
     /// Représente les données du fichier de configuration 
     /// des entrées du joueur
     /// </summary>
-    public sealed class InputConfigDTO
+    public sealed class InputConfigDTO : DataTransferObject
     {
         #region Propriétés
 
