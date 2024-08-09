@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using Retard.Core.Models.Assets.Input;
-using Retard.Core.ViewModels.Input;
+using Retard.Engine.ViewModels.Engine;
 using Retard.Tests.ViewModels.Engine;
 
 namespace Retard.Client
@@ -21,7 +19,7 @@ namespace Retard.Client
         /// <summary>
         /// Le moteur de jeu
         /// </summary>
-        private GameEngine _engine;
+        private BaseEngine _engine;
 
         #endregion
 
@@ -45,14 +43,7 @@ namespace Retard.Client
         /// </summary>
         protected override void Initialize()
         {
-            IInputScheme[] inputSchemes = new IInputScheme[3]
-            {
-                new MouseInput(),
-                new KeyboardInput(),
-                new GamePadInput(GamePad.MaximumGamePadCount)
-            };
-
-            this._engine = new GameEngine(this, this._graphicsDeviceManager, inputSchemes);
+            this._engine = new GameEngine(this, this._graphicsDeviceManager);
 
             base.Initialize();
         }

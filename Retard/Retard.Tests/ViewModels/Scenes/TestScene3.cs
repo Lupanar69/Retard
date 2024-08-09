@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.ViewModels.Scenes;
+using Retard.Engine.Models;
 using Retard.Engine.ViewModels.Input;
 
 namespace Retard.Tests.ViewModels.Scenes
@@ -54,7 +55,7 @@ namespace Retard.Tests.ViewModels.Scenes
             this._debugTex = debugTex;
             this._spriteBatch = spriteBatch;
             this.Controls = new InputControls();
-            this.Controls.GetButtonEvent("Test/Numpad9").Started += this.RemoveActiveAndOverlaidScenesCallback;
+            this.Controls.AddAction("Test/Numpad9", InputEventHandleType.Started, this.RemoveActiveAndOverlaidScenesCallback);
         }
 
         #endregion
@@ -80,7 +81,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// </summary>
         private void RemoveActiveAndOverlaidScenesCallback(int _)
         {
-            SceneManager.RemoveActiveAndOverlaidScenes(this);
+            SceneManager.Instance.RemoveActiveAndOverlaidScenes(this);
         }
 
         #endregion

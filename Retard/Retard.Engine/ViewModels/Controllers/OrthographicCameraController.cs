@@ -2,6 +2,7 @@
 using MonoGame.Extended;
 using Retard.Core.Models;
 using Retard.Core.ViewModels.Input;
+using Retard.Engine.Models;
 using Retard.Engine.ViewModels.Input;
 
 namespace Retard.Core.ViewModels.Controllers
@@ -50,9 +51,9 @@ namespace Retard.Core.ViewModels.Controllers
             this.Camera = camera;
             this._mouseInput = InputManager.GetScheme<MouseInput>();
 
-            controls.GetButtonEvent("Camera/Reset").Started += this.ResetCameraPos;
-            controls.GetVector2DEvent("Camera/Move").Performed += this.MoveCamera;
-            controls.GetButtonEvent("Camera/LeftMouseHeld").Performed += this.MoveCamera;
+            controls.AddAction("Camera/Reset", InputEventHandleType.Started, this.ResetCameraPos);
+            controls.AddAction("Camera/Move", this.MoveCamera);
+            controls.AddAction("Camera/LeftMouseHeld", InputEventHandleType.Performed, this.MoveCamera);
 
             GameState.OnFocusEvent += (_, _) => controls.Enable();
             GameState.OnFocusLostEvent += (_, _) => controls.Disable();

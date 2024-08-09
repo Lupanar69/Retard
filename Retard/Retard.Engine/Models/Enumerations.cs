@@ -115,5 +115,16 @@
         Inert
     }
 
+    /// <summary>
+    /// Permet de sélectionner le handle auquel
+    /// ajouter une nouvelle méthode dans un InputControls
+    /// </summary>
+    public enum InputEventHandleType
+    {
+        Started,
+        Performed,
+        Finished
+    }
+
     #endregion
 }

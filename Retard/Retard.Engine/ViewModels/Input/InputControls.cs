@@ -1,6 +1,9 @@
-﻿using Arch.LowLevel;
+﻿using System;
+using Arch.LowLevel;
+using Microsoft.Xna.Framework;
 using Retard.Core.Models.ValueTypes;
 using Retard.Core.ViewModels.Input;
+using Retard.Engine.Models;
 using Retard.Engine.Models.Assets.Input;
 
 namespace Retard.Engine.ViewModels.Input
@@ -198,6 +201,8 @@ namespace Retard.Engine.ViewModels.Input
         /// <returns>Les actions liées à cet id</returns>
         public ref InputActionButtonStateHandles GetButtonEvent(NativeString key)
         {
+            // Si cette action n'existe pas dans la liste, on la crée
+
             if (!this._buttonStateHandlesIDs.Contains(key))
             {
                 this._buttonStateHandlesIDs.Add(key);
@@ -212,6 +217,34 @@ namespace Retard.Engine.ViewModels.Input
                 this._buttonStateHandles.Add(new InputActionButtonStateHandles(started, performed, finished));
             }
 
+            // Si l'objet est actif, on ajoute également cette nouvelle action
+            // aux Handles de l'InputManager
+
+            if (this._enabled)
+            {
+                if (!InputManager.Handles._buttonStateHandlesIDs.Contains(key))
+                {
+                    InputManager.Handles._buttonStateHandlesIDs.Add(key);
+
+                    var started = InputManager.ActionResources.Add(delegate
+                    { });
+                    var performed = InputManager.ActionResources.Add(delegate
+                    { });
+                    var finished = InputManager.ActionResources.Add(delegate
+                    { });
+
+                    InputManager.Handles._buttonStateHandles.Add(new InputActionButtonStateHandles(started, performed, finished));
+                }
+
+                int lIndexOf = InputManager.Handles._buttonStateHandlesIDs.IndexOf(key);
+                int rIndexOf = this._buttonStateHandlesIDs.IndexOf(key);
+                ref readonly InputActionButtonStateHandles lHandles = ref InputManager.Handles._buttonStateHandles[lIndexOf];
+                ref readonly InputActionButtonStateHandles rHandles = ref this._buttonStateHandles[rIndexOf];
+                lHandles.Started += rHandles.Started;
+                lHandles.Performed += rHandles.Performed;
+                lHandles.Finished += rHandles.Finished;
+            }
+
             return ref this._buttonStateHandles[this._buttonStateHandlesIDs.IndexOf(key)];
         }
 
@@ -222,6 +255,8 @@ namespace Retard.Engine.ViewModels.Input
         /// <returns>Les actions liées à cet id</returns>
         public ref InputActionVector1DHandles GetVector1DEvent(NativeString key)
         {
+            // Si cette action n'existe pas dans la liste, on la crée
+
             if (!this._vector1DHandlesIDs.Contains(key))
             {
                 this._vector1DHandlesIDs.Add(key);
@@ -230,6 +265,28 @@ namespace Retard.Engine.ViewModels.Input
                 { });
 
                 this._vector1DHandles.Add(new InputActionVector1DHandles(performed));
+            }
+
+            // Si l'objet est actif, on ajoute également cette nouvelle action
+            // aux Handles de l'InputManager
+
+            if (this._enabled)
+            {
+                if (!InputManager.Handles._vector1DHandlesIDs.Contains(key))
+                {
+                    InputManager.Handles._vector1DHandlesIDs.Add(key);
+
+                    var performed = InputManager.ActionVector1DResources.Add(delegate
+                    { });
+
+                    InputManager.Handles._vector1DHandles.Add(new InputActionVector1DHandles(performed));
+                }
+
+                int lIndexOf = InputManager.Handles._vector1DHandlesIDs.IndexOf(key);
+                int rIndexOf = this._vector1DHandlesIDs.IndexOf(key);
+                ref readonly InputActionVector1DHandles lHandles = ref InputManager.Handles._vector1DHandles[lIndexOf];
+                ref readonly InputActionVector1DHandles rHandles = ref this._vector1DHandles[rIndexOf];
+                lHandles.Performed += rHandles.Performed;
             }
 
             return ref this._vector1DHandles[this._vector1DHandlesIDs.IndexOf(key)];
@@ -242,6 +299,8 @@ namespace Retard.Engine.ViewModels.Input
         /// <returns>Les actions liées à cet id</returns>
         public ref InputActionVector2DHandles GetVector2DEvent(NativeString key)
         {
+            // Si cette action n'existe pas dans la liste, on la crée
+
             if (!this._vector2DHandlesIDs.Contains(key))
             {
                 this._vector2DHandlesIDs.Add(key);
@@ -252,7 +311,198 @@ namespace Retard.Engine.ViewModels.Input
                 this._vector2DHandles.Add(new InputActionVector2DHandles(performed));
             }
 
+            // Si l'objet est actif, on ajoute également cette nouvelle action
+            // aux Handles de l'InputManager
+
+            if (this._enabled)
+            {
+                if (!InputManager.Handles._vector2DHandlesIDs.Contains(key))
+                {
+                    InputManager.Handles._vector2DHandlesIDs.Add(key);
+
+                    var performed = InputManager.ActionVector2DResources.Add(delegate
+                    { });
+
+                    InputManager.Handles._vector2DHandles.Add(new InputActionVector2DHandles(performed));
+                }
+
+                int lIndexOf = InputManager.Handles._vector2DHandlesIDs.IndexOf(key);
+                int rIndexOf = this._vector2DHandlesIDs.IndexOf(key);
+                ref readonly InputActionVector2DHandles lHandles = ref InputManager.Handles._vector2DHandles[lIndexOf];
+                ref readonly InputActionVector2DHandles rHandles = ref this._vector2DHandles[rIndexOf];
+                lHandles.Performed += rHandles.Performed;
+            }
+
             return ref this._vector2DHandles[this._vector2DHandlesIDs.IndexOf(key)];
+        }
+
+        /// <summary>
+        /// Assigne un callback à un InputAction de type ButtonState à partir de son ID.
+        /// </summary>
+        /// <param name="key">L'ID de l'action</param>
+        /// <param name="handleType">Le type de handle auquel s'abonner</param>
+        /// <param name="callback">La méthode à exécuter</param>
+        public void AddAction(NativeString key, InputEventHandleType handleType, Action<int> callback)
+        {
+            // Si cette action n'existe pas dans la liste, on la crée
+
+            if (!this._buttonStateHandlesIDs.Contains(key))
+            {
+                this._buttonStateHandlesIDs.Add(key);
+
+                var started = InputManager.ActionResources.Add(delegate
+                { });
+                var performed = InputManager.ActionResources.Add(delegate
+                { });
+                var finished = InputManager.ActionResources.Add(delegate
+                { });
+
+                this._buttonStateHandles.Add(new InputActionButtonStateHandles(started, performed, finished));
+            }
+
+            // Assigne l'action
+
+            int thisIndexOf = this._buttonStateHandlesIDs.IndexOf(key);
+            ref readonly InputActionButtonStateHandles thisHandles = ref this._buttonStateHandles[thisIndexOf];
+
+            switch (handleType)
+            {
+                case InputEventHandleType.Started:
+                    thisHandles.Started += callback;
+                    break;
+                case InputEventHandleType.Performed:
+                    thisHandles.Performed += callback;
+                    break;
+                case InputEventHandleType.Finished:
+                    thisHandles.Finished += callback;
+                    break;
+            }
+
+            // Si l'objet est actif, on ajoute également cette nouvelle action
+            // aux Handles de l'InputManager
+
+            if (this._enabled)
+            {
+                if (!InputManager.Handles._buttonStateHandlesIDs.Contains(key))
+                {
+                    InputManager.Handles._buttonStateHandlesIDs.Add(key);
+
+                    var started = InputManager.ActionResources.Add(delegate
+                    { });
+                    var performed = InputManager.ActionResources.Add(delegate
+                    { });
+                    var finished = InputManager.ActionResources.Add(delegate
+                    { });
+
+                    InputManager.Handles._buttonStateHandles.Add(new InputActionButtonStateHandles(started, performed, finished));
+                }
+
+                // Assigne l'action
+
+                int mainIndexOf = InputManager.Handles._buttonStateHandlesIDs.IndexOf(key);
+                ref readonly InputActionButtonStateHandles mainHandles = ref InputManager.Handles._buttonStateHandles[mainIndexOf];
+
+                switch (handleType)
+                {
+                    case InputEventHandleType.Started:
+                        mainHandles.Started += callback;
+                        break;
+                    case InputEventHandleType.Performed:
+                        mainHandles.Performed += callback;
+                        break;
+                    case InputEventHandleType.Finished:
+                        mainHandles.Finished += callback;
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Assigne un callback à un InputAction de type Vector1D à partir de son ID.
+        /// </summary>
+        /// <param name="key">L'ID de l'action</param>
+        /// <param name="callback">La méthode à exécuter</param>
+        public void AddAction(NativeString key, Action<int, float> callback)
+        {
+            // Si cette action n'existe pas dans la liste, on la crée
+
+            if (!this._vector1DHandlesIDs.Contains(key))
+            {
+                this._vector1DHandlesIDs.Add(key);
+
+                var performed = InputManager.ActionVector1DResources.Add(delegate
+                { });
+
+                this._vector1DHandles.Add(new InputActionVector1DHandles(performed));
+            }
+
+            int thisIndexOf = this._vector1DHandlesIDs.IndexOf(key);
+            ref readonly InputActionVector1DHandles thisHandles = ref this._vector1DHandles[thisIndexOf];
+            thisHandles.Performed += callback;
+
+            // Si l'objet est actif, on ajoute également cette nouvelle action
+            // aux Handles de l'InputManager
+
+            if (this._enabled)
+            {
+                if (!InputManager.Handles._vector1DHandlesIDs.Contains(key))
+                {
+                    InputManager.Handles._vector1DHandlesIDs.Add(key);
+
+                    var performed = InputManager.ActionVector1DResources.Add(delegate
+                    { });
+
+                    InputManager.Handles._vector1DHandles.Add(new InputActionVector1DHandles(performed));
+                }
+
+                int mainIndexOf = InputManager.Handles._vector1DHandlesIDs.IndexOf(key);
+                ref readonly InputActionVector1DHandles mainHandles = ref InputManager.Handles._vector1DHandles[mainIndexOf];
+                mainHandles.Performed += callback;
+            }
+        }
+
+        /// <summary>
+        /// Assigne un callback à un InputAction de type Vector2D à partir de son ID.
+        /// </summary>
+        /// <param name="key">L'ID de l'action</param>
+        /// <param name="callback">La méthode à exécuter</param>
+        public void AddAction(NativeString key, Action<int, Vector2> callback)
+        {
+            // Si cette action n'existe pas dans la liste, on la crée
+
+            if (!this._vector2DHandlesIDs.Contains(key))
+            {
+                this._vector2DHandlesIDs.Add(key);
+
+                var performed = InputManager.ActionVector2DResources.Add(delegate
+                { });
+
+                this._vector2DHandles.Add(new InputActionVector2DHandles(performed));
+            }
+
+            int thisIndexOf = this._vector2DHandlesIDs.IndexOf(key);
+            ref readonly InputActionVector2DHandles thisHandles = ref this._vector2DHandles[thisIndexOf];
+            thisHandles.Performed += callback;
+
+            // Si l'objet est actif, on ajoute également cette nouvelle action
+            // aux Handles de l'InputManager
+
+            if (this._enabled)
+            {
+                if (!InputManager.Handles._vector2DHandlesIDs.Contains(key))
+                {
+                    InputManager.Handles._vector2DHandlesIDs.Add(key);
+
+                    var performed = InputManager.ActionVector2DResources.Add(delegate
+                    { });
+
+                    InputManager.Handles._vector2DHandles.Add(new InputActionVector2DHandles(performed));
+                }
+
+                int mainIndexOf = InputManager.Handles._vector2DHandlesIDs.IndexOf(key);
+                ref readonly InputActionVector2DHandles mainHandles = ref InputManager.Handles._vector2DHandles[mainIndexOf];
+                mainHandles.Performed += callback;
+            }
         }
 
         #endregion

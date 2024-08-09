@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Retard.Core.Models.Assets.Scene;
 using Retard.Core.ViewModels.Scenes;
+using Retard.Engine.Models;
 using Retard.Engine.ViewModels.Input;
 
 namespace Retard.Tests.ViewModels.Scenes
@@ -56,7 +57,7 @@ namespace Retard.Tests.ViewModels.Scenes
 
             this.ConsumeDraw = true;
             this.Controls = new InputControls();
-            this.Controls.GetButtonEvent("Test/Enter").Started += this.RemoveActiveSceneCallback;
+            this.Controls.AddAction("Test/Enter", InputEventHandleType.Started, this.RemoveActiveSceneCallback);
         }
 
         #endregion
@@ -82,7 +83,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// </summary>
         public void RemoveActiveSceneCallback(int _)
         {
-            SceneManager.RemoveActiveScene(this);
+            SceneManager.Instance.RemoveActiveScene(this);
         }
 
         #endregion

@@ -20,13 +20,13 @@ namespace Retard.Core.ViewModels.App
         /// Cached to restore the user defined framerate
         /// each time we focus back on the game window
         /// </summary>
-        private int _userDefinedFocusedFrameRate = Constants.DEFAULT_FOCUSED_FRAMERATE;
+        private double _userDefinedFocusedFrameRate = Constants.DEFAULT_FOCUSED_FRAMERATE;
 
         /// <summary>
         /// Cached to restore the user defined framerate
         /// each time the game window is set in the background
         /// </summary>
-        private int _userDefinedUnfocusedFrameRate = Constants.DEFAULT_UNFOCUSED_FRAMERATE;
+        private double _userDefinedUnfocusedFrameRate = Constants.DEFAULT_UNFOCUSED_FRAMERATE;
 
         /// <summary>
         /// <see langword="true"/> si la fenêtre a le focus
@@ -69,7 +69,7 @@ namespace Retard.Core.ViewModels.App
         {
             if (this._windowHasFocus)
             {
-                this._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)framerate);
+                this._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / framerate);
             }
 
             this._userDefinedFocusedFrameRate = framerate;
@@ -83,7 +83,7 @@ namespace Retard.Core.ViewModels.App
         {
             if (!this._windowHasFocus)
             {
-                this._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)framerate);
+                this._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / framerate);
             }
 
             this._userDefinedUnfocusedFrameRate = framerate;
@@ -110,7 +110,7 @@ namespace Retard.Core.ViewModels.App
         private void OnActivatedCallback(object sender, EventArgs e)
         {
             this._windowHasFocus = true;
-            this._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)this._userDefinedFocusedFrameRate);
+            this._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / this._userDefinedFocusedFrameRate);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Retard.Core.ViewModels.App
         private void OnDeactivatedCallback(object sender, EventArgs e)
         {
             this._windowHasFocus = false;
-            this._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / (double)this._userDefinedUnfocusedFrameRate);
+            this._game.TargetElapsedTime = TimeSpan.FromSeconds(1d / this._userDefinedUnfocusedFrameRate);
         }
 
         #endregion

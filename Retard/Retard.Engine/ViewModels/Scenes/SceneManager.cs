@@ -5,6 +5,9 @@ using Retard.Core.Models.Assets.Scene;
 
 namespace Retard.Core.ViewModels.Scenes
 {
+    /// TAF : Une fois qu'on sera passé à la prochaine version de Monogame,
+    /// remplacer les champs et méthodes statiques par des champs et méthodes d'instance
+
     /// <summary>
     /// Gère l'ajout, la màj et la suppression des scènes
     /// </summary>
@@ -16,6 +19,15 @@ namespace Retard.Core.ViewModels.Scenes
         /// <see langword="true"/> s'il n'y a aucune scène active
         /// </summary>
         public bool IsEmpty => this._activeScenes.Count == 0;
+
+        #endregion
+
+        #region Variables statiques
+
+        /// <summary>
+        /// Singleton
+        /// </summary>
+        public static SceneManager Instance { get; private set; }
 
         #endregion
 
@@ -43,6 +55,7 @@ namespace Retard.Core.ViewModels.Scenes
         {
             this._activeScenes = new List<IScene>(defaultCapacity);
             this._inactiveScenes = new Dictionary<Type, IScene>(defaultCapacity);
+            SceneManager.Instance = this;
         }
 
         #endregion
@@ -65,6 +78,8 @@ namespace Retard.Core.ViewModels.Scenes
         /// <param name="scenes">Les nouvelles scènes</param>
         public void AddScenesToPool(params IScene[] scenes)
         {
+            this._inactiveScenes.EnsureCapacity(scenes.Length);
+
             foreach (IScene scene in scenes)
             {
                 this.AddSceneToPool(scene);
@@ -194,7 +209,7 @@ namespace Retard.Core.ViewModels.Scenes
 
         #endregion
 
-        #region Méthodes statiques privées
+        #region Méthodes privées
 
         /// <summary>
         /// Active ou désactive les InputControls des scènes

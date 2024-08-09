@@ -12,12 +12,13 @@
         /// <summary>
         /// Le framerate par défaut de l'appli si active
         /// </summary>
-        internal const int DEFAULT_FOCUSED_FRAMERATE = 60;
+        internal const double DEFAULT_FOCUSED_FRAMERATE = 60d;
 
         /// <summary>
-        /// Le framerate par défaut de l'appli si active
+        /// Le framerate par défaut de l'appli si inactive
+        /// (ne peut pas être plus bas que 2 FPS)
         /// </summary>
-        internal const int DEFAULT_UNFOCUSED_FRAMERATE = 30;
+        internal const double DEFAULT_UNFOCUSED_FRAMERATE = 2d;
 
         #endregion
 

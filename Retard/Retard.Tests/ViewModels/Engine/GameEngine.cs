@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Retard.Core.Models;
 using Retard.Core.Models.Assets.Input;
 using Retard.Core.Models.ValueTypes;
 using Retard.Core.ViewModels.App;
 using Retard.Core.ViewModels.Controllers;
+using Retard.Core.ViewModels.Input;
+using Retard.Engine.Models;
 using Retard.Engine.Models.App;
 using Retard.Engine.Models.DTOs.App;
 using Retard.Engine.Models.DTOs.Input;
@@ -46,34 +49,16 @@ namespace Retard.Tests.ViewModels.Engine
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public GameEngine(Game game, GraphicsDeviceManager graphicsDeviceManager, params IInputScheme[] inputSchemes) : base(game, graphicsDeviceManager, inputSchemes)
+        public GameEngine(Game game, GraphicsDeviceManager graphicsDeviceManager) : base(game, graphicsDeviceManager)
         {
-            // Crée les fichiers de config spécifiques à cette application
-
-            AppConfigFileCreation.CreateDefaultConfigFiles
-                (
-                    Constants.GAME_DIR_PATH,
-                    Constants.OVERRIDE_DEFAULT_AND_CUSTOM_FILES,
-                    Constants.DEFAULT_INPUT_CONFIG,
-                    Constants.DEFAULT_APP_SETTINGS
-                );
-
-            // Initialise la fenêtre de jeu
-
-            this.InitialiseAppViewport();
-
-            // Initialise les managers
-
-            this.InitializeInputManager();
-
             // Initialise les components
 
             this._controls = new InputControls();
-            this._controls.GetButtonEvent("Exit").Started += (_) => { game.Exit(); };
+            this._controls.AddAction("Exit", InputEventHandleType.Started, (_) => { game.Exit(); });
+            this._controls.Enable();
 
             this._camera = new OrthographicCamera(game.GraphicsDevice);
             this._cameraController = new OrthographicCameraController(this._camera, this._controls);
-            this._controls.Enable();
         }
 
         #endregion
@@ -100,34 +85,6 @@ namespace Retard.Tests.ViewModels.Engine
         #region Méthodes privées
 
         /// <summary>
-        /// Initialise les paramètres de la fenêtre de jeu
-        /// </summary>
-        private void InitialiseAppViewport()
-        {
-            // Initialise l'appViewport
-
-            string customAppSettingsConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_APP_SETTINGS.CustomFilePath}";
-            string json = JsonUtilities.ReadFile(customAppSettingsConfigPath);
-            var settings = JsonUtilities.DeserializeObject<AppSettingsDTO>(json);
-            WindowSettings ws = settings.WindowSettings;
-
-            this._appViewport.SetViewportResolution(ws.WindowSize, ws.FullScreen);
-            this._appViewport.SetGameProperties(ws.MouseVisible, ws.AllowUserResizing);
-        }
-
-        /// <summary>
-        /// Initialise les systèmes de l'InputManager
-        /// </summary>
-        private void InitializeInputManager()
-        {
-            string customInputConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_INPUT_CONFIG.CustomFilePath}";
-            string json = JsonUtilities.ReadFile(customInputConfigPath);
-            var config = JsonUtilities.DeserializeObject<InputConfigDTO>(json);
-
-            this._inputManager.InitializeSystems(this._world, config);
-        }
-
-        /// <summary>
         /// <inheritdoc/>
         /// </summary>
         protected override void CreateScenes(Dictionary<NativeString, Texture2D> textures2D)
@@ -142,6 +99,56 @@ namespace Retard.Tests.ViewModels.Engine
                 Constants.SPRITE_SIZE_PIXELS));
 
             this._sceneManager.SetSceneAsActive<SpriteDrawTestScene>();
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        protected override void CreateDefaultConfigFiles()
+        {
+            AppConfigFileCreation.CreateDefaultConfigFiles
+                (
+                    Constants.GAME_DIR_PATH,
+                    Constants.OVERRIDE_DEFAULT_AND_CUSTOM_FILES,
+                    Constants.DEFAULT_INPUT_CONFIG,
+                    Constants.DEFAULT_APP_SETTINGS
+                );
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <returns>La liste des contrôleurs acceptés par le jeu</returns>
+        protected override IInputScheme[] GetInputSchemes()
+        {
+            return new IInputScheme[3]
+            {
+                new MouseInput(),
+                new KeyboardInput(),
+                new GamePadInput(GamePad.MaximumGamePadCount)
+            };
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <returns>Le fichier de configuration des entrées</returns>
+        protected override InputConfigDTO GetInputConfig()
+        {
+            string customInputConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_INPUT_CONFIG.CustomFilePath}";
+            string json = JsonUtilities.ReadFile(customInputConfigPath);
+            return JsonUtilities.DeserializeObject<InputConfigDTO>(json);
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        protected override WindowSettings GetWindowSettings()
+        {
+            string customAppSettingsConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_APP_SETTINGS.CustomFilePath}";
+            string json = JsonUtilities.ReadFile(customAppSettingsConfigPath);
+            var settings = JsonUtilities.DeserializeObject<AppSettingsDTO>(json);
+            return settings.WindowSettings;
         }
 
         #endregion

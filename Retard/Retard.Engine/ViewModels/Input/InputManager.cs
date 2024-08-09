@@ -69,16 +69,25 @@ namespace Retard.Core.ViewModels.Input
         /// <summary>
         /// Constructeur
         /// </summary>
-        /// <param name="inputSchemes">Les types de contrôles acceptées par le moteur</param>
-        public InputManager(params IInputScheme[] inputSchemes)
+        /// <param name="inputSchemes">Les contrôleurs acceptés par le jeu</param>
+        /// <param name="inputConfig">Les données de configuration des entrées à observer</param>
+        /// <param name="world">Ke monde contenant les entités</param>
+        public InputManager(IInputScheme[] inputSchemes, InputConfigDTO inputConfig, World world)
         {
-            this._updateSystems = new Group("Update Systems");
+            // Initialise les contrôleurs
+
             InputManager._inputSchemes = new Dictionary<Type, IInputScheme>(inputSchemes.Length);
 
             for (int i = 0; i < inputSchemes.Length; ++i)
             {
                 InputManager._inputSchemes.Add(inputSchemes[i].GetType(), inputSchemes[i]);
             }
+
+            // Initalise les systèmes
+
+            this._updateSystems = new Group("Update Systems");
+            this._updateSystems.Add(new InputSystem(world, inputConfig));
+            this._updateSystems.Initialize();
         }
 
         #endregion
@@ -91,8 +100,7 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="world">Le monde contenant les entités</param>
         public void InitializeSystems(World world, InputConfigDTO inputConfig)
         {
-            this._updateSystems.Add(new InputSystem(world, inputConfig));
-            this._updateSystems.Initialize();
+
         }
 
         /// <summary>
