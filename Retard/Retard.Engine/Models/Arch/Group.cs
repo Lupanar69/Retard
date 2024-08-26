@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Retard.Core.Models.ValueTypes;
+using Retard.Engine.Models.ValueTypes;
 
-namespace Retard.Core.Models.Arch;
+namespace Retard.Engine.Models.Arch;
 
 /// <summary>
 ///     A group of <see cref="ISystem"/>'s to organize them.

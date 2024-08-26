@@ -1,12 +1,12 @@
 ﻿using System;
 using Arch.LowLevel;
 
-namespace Retard.Core.Models.ValueTypes
+namespace Retard.Engine.Models.ValueTypes
 {
     /// <summary>
     /// Version blittable de System.String
     /// </summary>
-    public readonly struct NativeString : IDisposable
+    public readonly struct NativeString : IEquatable<NativeString>, IComparable<NativeString>, IDisposable
     {
         #region Variables d'instance
 
@@ -34,7 +34,7 @@ namespace Retard.Core.Models.ValueTypes
             this.Length = str.Length;
             this._arr = new UnsafeArray<char>(this.Length);
 
-            for (int i = 0; i < this.Length; i++)
+            for (int i = 0; i < this.Length; ++i)
             {
                 this._arr[i] = str[i];
             }
@@ -49,7 +49,7 @@ namespace Retard.Core.Models.ValueTypes
             this.Length = str.Length;
             this._arr = new UnsafeArray<char>(this.Length);
 
-            for (int i = 0; i < this.Length; i++)
+            for (int i = 0; i < this.Length; ++i)
             {
                 this._arr[i] = str[i];
             }
@@ -97,7 +97,7 @@ namespace Retard.Core.Models.ValueTypes
         {
             int minLength = Math.Min(this.Length, other.Length);
 
-            for (int i = 0; i < minLength; i++)
+            for (int i = 0; i < minLength; ++i)
             {
                 int result = this[i].CompareTo(other[i]);
 
@@ -117,19 +117,22 @@ namespace Retard.Core.Models.ValueTypes
         /// <returns><see langword="true"/> si les deux instances sont égales</returns>
         public override bool Equals(object obj)
         {
-            if (obj == null || this.GetType() != obj.GetType())
-            {
-                return false;
-            }
+            return obj is NativeString ns && Equals(ns);
+        }
 
-            var other = (NativeString)obj;
-
+        /// <summary>
+        /// Comparateur d'égalité
+        /// </summary>
+        /// <param name="other">La NativeString à comparer</param>
+        /// <returns><see langword="true"/> si les deux instances sont égales</returns>
+        public bool Equals(NativeString other)
+        {
             if (this.Length != other.Length)
             {
                 return false;
             }
 
-            for (int i = 0; i < this.Length; i++)
+            for (int i = 0; i < this.Length; ++i)
             {
                 if (this[i] != other[i])
                 {
@@ -148,7 +151,7 @@ namespace Retard.Core.Models.ValueTypes
         public override int GetHashCode()
         {
             int hash = 17;
-            for (int i = 0; i < this.Length; i++)
+            for (int i = 0; i < this.Length; ++i)
             {
                 hash = hash * 31 + this[i].GetHashCode();
             }

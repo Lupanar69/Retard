@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Retard.Core.Models.Assets.Scene;
-using Retard.Core.ViewModels.Scenes;
+using Retard.Engine.Models.Assets.Scene;
+using Retard.Engine.ViewModels.Scenes;
 using Retard.Engine.Models;
-using Retard.Engine.ViewModels.Input;
+using Retard.Engine.Models.Assets.Input;
 
 namespace Retard.Tests.ViewModels.Scenes
 {

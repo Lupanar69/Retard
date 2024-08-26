@@ -1,7 +1,7 @@
 ﻿using Arch.AOT.SourceGenerator;
 using Arch.LowLevel;
 
-namespace Retard.Core.Components.Input
+namespace Retard.Engine.Components.Input
 {
     /// <summary>
     /// Indique si la séquence de ce binding est valide pour le n° de joueur donné.

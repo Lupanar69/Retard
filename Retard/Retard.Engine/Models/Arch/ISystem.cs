@@ -1,4 +1,4 @@
-﻿namespace Retard.Core.Models.Arch;
+﻿namespace Retard.Engine.Models.Arch;
 
 /// <summary>
 ///     An interface providing several methods for a system. 

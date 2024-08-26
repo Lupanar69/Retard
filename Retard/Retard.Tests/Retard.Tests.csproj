@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Platforms>AnyCPU;x86</Platforms>
-    <Configurations>Debug;Release;Master</Configurations>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DefineConstants>$(DefineConstants);ENABLE_LOGS;PURE_ECS</DefineConstants>
@@ -13,25 +13,19 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<DefineConstants>$(DefineConstants);ENABLE_LOGS;PURE_ECS</DefineConstants>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Master|AnyCPU'">
-	  <DefineConstants>$(DefineConstants);ENABLE_LOGS;PURE_ECS</DefineConstants>
-	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-	  <DefineConstants>$(DefineConstants);ENABLE_LOGS;PURE_ECS</DefineConstants>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Master|x86'">
 	  <DefineConstants>$(DefineConstants);ENABLE_LOGS;PURE_ECS</DefineConstants>
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<Using Include="Retard.Core.ViewModels.Tests.log" Static="True" />
+		<Using Include="Retard.Engine.ViewModels.Log" Static="True" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Arch" Version="1.2.8" />
-    <PackageReference Include="Arch.LowLevel" Version="1.1.1" />
+    <PackageReference Include="Arch.LowLevel" Version="1.1.3" />
     <PackageReference Include="MonoGame.Extended" Version="4.0.0" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.2.1105" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Retard.Engine\Retard.Engine.csproj" />

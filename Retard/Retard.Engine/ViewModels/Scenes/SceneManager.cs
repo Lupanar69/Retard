@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Retard.Core.Models.Assets.Scene;
+using Retard.Engine.Models.Assets.Scene;
 
-namespace Retard.Core.ViewModels.Scenes
+namespace Retard.Engine.ViewModels.Scenes
 {
     /// TAF : Une fois qu'on sera passé à la prochaine version de Monogame,
     /// remplacer les champs et méthodes statiques par des champs et méthodes d'instance
@@ -11,23 +11,28 @@ namespace Retard.Core.ViewModels.Scenes
     /// <summary>
     /// Gère l'ajout, la màj et la suppression des scènes
     /// </summary>
-    public readonly struct SceneManager
+    public sealed class SceneManager
     {
+        #region Singleton
+
+        /// <summary>
+        /// Singleton
+        /// </summary>
+        public static SceneManager Instance => SceneManager._instance.Value;
+
+        /// <summary>
+        /// Singleton
+        /// </summary>
+        private static readonly Lazy<SceneManager> _instance = new(() => new SceneManager());
+
+        #endregion
+
         #region Propriétés
 
         /// <summary>
         /// <see langword="true"/> s'il n'y a aucune scène active
         /// </summary>
         public bool IsEmpty => this._activeScenes.Count == 0;
-
-        #endregion
-
-        #region Variables statiques
-
-        /// <summary>
-        /// Singleton
-        /// </summary>
-        public static SceneManager Instance { get; private set; }
 
         #endregion
 
@@ -50,12 +55,10 @@ namespace Retard.Core.ViewModels.Scenes
         /// <summary>
         /// Constructeur
         /// </summary>
-        /// <param name="defaultCapacity">La taille par défaut des listes de scènes actives et inactives</param>
-        public SceneManager(int defaultCapacity)
+        private SceneManager()
         {
-            this._activeScenes = new List<IScene>(defaultCapacity);
-            this._inactiveScenes = new Dictionary<Type, IScene>(defaultCapacity);
-            SceneManager.Instance = this;
+            this._activeScenes = new List<IScene>(1);
+            this._inactiveScenes = new Dictionary<Type, IScene>(1);
         }
 
         #endregion

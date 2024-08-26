@@ -1,7 +1,7 @@
 ﻿using System;
 using Arch.LowLevel;
 using Microsoft.Xna.Framework;
-using Retard.Core.ViewModels.Input;
+using Retard.Engine.ViewModels.Input;
 
 namespace Retard.Engine.Models.Assets.Input
 {
@@ -18,8 +18,8 @@ namespace Retard.Engine.Models.Assets.Input
         /// </summary>
         public Action<int, Vector2> Performed
         {
-            get => InputManager.ActionVector2DResources.Get(in _performed);
-            set => InputManager.ActionVector2DResources.Get(in _performed) = value;
+            get => InputManager.Instance.ActionVector2DResources.Get(in this._performed);
+            set => InputManager.Instance.ActionVector2DResources.Get(in this._performed) = value;
         }
 
 

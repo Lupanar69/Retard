@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Retard.Engine.Models.App;
 
-namespace Retard.Core.ViewModels.App
+namespace Retard.Engine.ViewModels.App
 {
     /// <summary>
     /// Gère les paramètres de la fenêtre du jeu

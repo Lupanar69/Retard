@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Text;
 
-namespace Retard.Core.ViewModels.Tests
+namespace Retard.Engine.ViewModels
 {
     /// <summary>
     /// Permet d'écrire dans la console plus facilement
     /// </summary>
-    public static class log
+    public static class Log
     {
         #region Variables statiques
 
@@ -34,16 +34,16 @@ namespace Retard.Core.ViewModels.Tests
         [Conditional("ENABLE_LOGS")]
         public static void p2(params object[] args)
         {
-            log._sb.EnsureCapacity(args.Length * 150);
+            _sb.EnsureCapacity(args.Length * 150);
 
-            log._sb.Append($"{args[0].ToString()}");
+            _sb.Append($"{args[0].ToString()}");
 
             for (int i = 1; i < args.Length; ++i)
             {
-                log._sb.Append($" ; {args[i].ToString()}");
+                _sb.Append($" ; {args[i].ToString()}");
             }
 
-            Trace.WriteLine(log._sb.ToString());
+            Trace.WriteLine(_sb.ToString());
         }
     }
 }

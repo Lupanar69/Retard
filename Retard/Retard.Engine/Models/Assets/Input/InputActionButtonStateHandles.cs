@@ -1,6 +1,6 @@
 ﻿using System;
 using Arch.LowLevel;
-using Retard.Core.ViewModels.Input;
+using Retard.Engine.ViewModels.Input;
 
 namespace Retard.Engine.Models.Assets.Input
 {
@@ -17,8 +17,8 @@ namespace Retard.Engine.Models.Assets.Input
         /// </summary>
         public Action<int> Started
         {
-            get => InputManager.ActionResources.Get(in _started);
-            set => InputManager.ActionResources.Get(in _started) = value;
+            get => InputManager.Instance.ActionButtonResources.Get(in this._started);
+            set => InputManager.Instance.ActionButtonResources.Get(in this._started) = value;
         }
 
         /// <summary>
@@ -26,8 +26,8 @@ namespace Retard.Engine.Models.Assets.Input
         /// </summary>
         public Action<int> Performed
         {
-            get => InputManager.ActionResources.Get(in _performed);
-            set => InputManager.ActionResources.Get(in _performed) = value;
+            get => InputManager.Instance.ActionButtonResources.Get(in this._performed);
+            set => InputManager.Instance.ActionButtonResources.Get(in this._performed) = value;
         }
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace Retard.Engine.Models.Assets.Input
         /// </summary>
         public Action<int> Finished
         {
-            get => InputManager.ActionResources.Get(in _finished);
-            set => InputManager.ActionResources.Get(in _finished) = value;
+            get => InputManager.Instance.ActionButtonResources.Get(in this._finished);
+            set => InputManager.Instance.ActionButtonResources.Get(in this._finished) = value;
         }
 
         #endregion

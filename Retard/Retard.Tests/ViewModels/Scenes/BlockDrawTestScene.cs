@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Retard.Core.Models.Assets.Scene;
-using Retard.Core.ViewModels.Scenes;
+using Retard.Engine.Models.Assets.Scene;
+using Retard.Engine.ViewModels.Scenes;
 using Retard.Engine.Models;
-using Retard.Engine.ViewModels.Input;
+using Retard.Engine.Models.Assets.Input;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -27,6 +27,9 @@ namespace Retard.Tests.ViewModels.Scenes
         ///<inheritdoc/>
         public InputControls Controls { get; init; }
 
+        /// <inheritdoc/>
+        public SceneManager SceneManager { get; init; }
+
         #endregion
 
         #region Variables d'instance
@@ -48,12 +51,14 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Constructeur
         /// </summary>
+        /// <param name="sceneManager">Le SceneManager</param>
         /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
         /// <param name="debugTex">La texture de debug</param>
-        public BlockDrawTestScene(SpriteBatch spriteBatch, Texture2D debugTex)
+        public BlockDrawTestScene(SceneManager sceneManager, SpriteBatch spriteBatch, Texture2D debugTex)
         {
             this._debugTex = debugTex;
             this._spriteBatch = spriteBatch;
+            this.SceneManager = sceneManager;
 
             this.ConsumeDraw = true;
             this.Controls = new InputControls();
@@ -83,7 +88,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// </summary>
         public void RemoveActiveSceneCallback(int _)
         {
-            SceneManager.Instance.RemoveActiveScene(this);
+            this.SceneManager.RemoveActiveScene(this);
         }
 
         #endregion

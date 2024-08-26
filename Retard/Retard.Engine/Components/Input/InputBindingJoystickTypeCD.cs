@@ -1,7 +1,7 @@
 ﻿using Arch.AOT.SourceGenerator;
 using Retard.Engine.Models;
 
-namespace Retard.Core.Components.Input
+namespace Retard.Engine.Components.Input
 {
     /// <summary>
     /// Le type du joystick utilisé

@@ -1,47 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Retard.Core.Models.Arch;
-using Retard.Core.Models.Assets.Input;
-using Retard.Core.Models.ValueTypes;
-using Retard.Core.Systems.Input;
 using Retard.Engine.Models;
+using Retard.Engine.Models.Arch;
 using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.Models.DTOs.Input;
-using Retard.Engine.ViewModels.Input;
+using Retard.Engine.Models.ValueTypes;
+using Retard.Engine.Systems.Input;
 
-namespace Retard.Core.ViewModels.Input
+namespace Retard.Engine.ViewModels.Input
 {
     /// <summary>
     /// Passerelle entre les entrées du joueur
     /// et les commandes à exécuter
     /// </summary>
-    public struct InputManager
+    public sealed class InputManager
     {
+        #region Singleton
+
+        /// <summary>
+        /// Singleton
+        /// </summary>
+        public static InputManager Instance => InputManager._instance.Value;
+
+        /// <summary>
+        /// Singleton
+        /// </summary>
+        private static readonly Lazy<InputManager> _instance = new(() => new InputManager());
+
+        #endregion
+
         #region Propriétés
 
         /// <summary>
         /// Permet d'accéder aux events sans type
         /// </summary>
-        internal static Resources<Action<int>> ActionResources { get; private set; }
+        internal Resources<Action<int>> ActionButtonResources { get; private set; }
 
         /// <summary>
         /// Permet d'accéder aux events de type Vector1D
         /// </summary>
-        internal static Resources<Action<int, float>> ActionVector1DResources { get; private set; }
+        internal Resources<Action<int, float>> ActionVector1DResources { get; private set; }
 
         /// <summary>
         /// Permet d'accéder aux events de type Vector2D
         /// </summary>
-        internal static Resources<Action<int, Vector2>> ActionVector2DResources { get; private set; }
+        internal Resources<Action<int, Vector2>> ActionVector2DResources { get; private set; }
 
         /// <summary>
         /// Regroupe les handles de chaque InputAction
         /// </summary>
-        internal static InputControls Handles { get; set; }
+        internal InputHandles Handles { get; set; }
 
         #endregion
 
@@ -51,7 +64,7 @@ namespace Retard.Core.ViewModels.Input
         /// La liste des types d'entrées autorisées pour ce jeu
         /// (clavier, souris, manette, etc.)
         /// </summary>
-        private static Dictionary<Type, IInputScheme> _inputSchemes;
+        private Dictionary<Type, IInputScheme> _inputSchemes;
 
         #endregion
 
@@ -60,7 +73,7 @@ namespace Retard.Core.ViewModels.Input
         /// <summary>
         /// Les systèmes ECS à màj dans Update()
         /// </summary>
-        private readonly Group _updateSystems;
+        private Group _updateSystems;
 
         #endregion
 
@@ -69,25 +82,9 @@ namespace Retard.Core.ViewModels.Input
         /// <summary>
         /// Constructeur
         /// </summary>
-        /// <param name="inputSchemes">Les contrôleurs acceptés par le jeu</param>
-        /// <param name="inputConfig">Les données de configuration des entrées à observer</param>
-        /// <param name="world">Ke monde contenant les entités</param>
-        public InputManager(IInputScheme[] inputSchemes, InputConfigDTO inputConfig, World world)
+        private InputManager()
         {
-            // Initialise les contrôleurs
 
-            InputManager._inputSchemes = new Dictionary<Type, IInputScheme>(inputSchemes.Length);
-
-            for (int i = 0; i < inputSchemes.Length; ++i)
-            {
-                InputManager._inputSchemes.Add(inputSchemes[i].GetType(), inputSchemes[i]);
-            }
-
-            // Initalise les systèmes
-
-            this._updateSystems = new Group("Update Systems");
-            this._updateSystems.Add(new InputSystem(world, inputConfig));
-            this._updateSystems.Initialize();
         }
 
         #endregion
@@ -95,22 +92,14 @@ namespace Retard.Core.ViewModels.Input
         #region Méthodes publiques
 
         /// <summary>
-        /// Crée les systèmes ECS gérant les entrées
-        /// </summary>
-        /// <param name="world">Le monde contenant les entités</param>
-        public void InitializeSystems(World world, InputConfigDTO inputConfig)
-        {
-
-        }
-
-        /// <summary>
         /// Récupère les événements liés un InputAction de type ButtonState à partir de son ID.
         /// </summary>
         /// <param name="key">L'ID de l'action</param>
         /// <returns>Les actions liées à cet id</returns>
-        public static ref InputActionButtonStateHandles GetButtonEvent(NativeString key)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ref readonly InputActionButtonStateHandles GetButtonEvent(NativeString key)
         {
-            return ref InputManager.Handles.GetButtonEvent(key);
+            return ref this.Handles.GetButtonEvent(key);
         }
 
         /// <summary>
@@ -118,9 +107,10 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <param name="key">L'ID de l'action</param>
         /// <returns>Les actions liées à cet id</returns>
-        public static ref InputActionVector1DHandles GetVector1DEvent(NativeString key)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ref readonly InputActionVector1DHandles GetVector1DEvent(NativeString key)
         {
-            return ref InputManager.Handles.GetVector1DEvent(key);
+            return ref this.Handles.GetVector1DEvent(key);
         }
 
         /// <summary>
@@ -128,9 +118,10 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <param name="key">L'ID de l'action</param>
         /// <returns>Les actions liées à cet id</returns>
-        public static ref InputActionVector2DHandles GetVector2DEvent(NativeString key)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ref readonly InputActionVector2DHandles GetVector2DEvent(NativeString key)
         {
-            return ref InputManager.Handles.GetVector2DEvent(key);
+            return ref this.Handles.GetVector2DEvent(key);
         }
 
         #endregion
@@ -140,16 +131,46 @@ namespace Retard.Core.ViewModels.Input
         /// <summary>
         /// Crée les InputSchemes pour chaque type de contrôleur souhaité
         /// </summary>
+        /// <param name="inputSchemes">Les contrôleurs pris en charge par le jeu</param>
+        internal void InitializeInputSchemes(IInputScheme[] inputSchemes)
+        {
+            // Initialise les contrôleurs
+
+            this._inputSchemes = new Dictionary<Type, IInputScheme>(inputSchemes.Length);
+
+            for (int i = 0; i < inputSchemes.Length; ++i)
+            {
+                this._inputSchemes.Add(inputSchemes[i].GetType(), inputSchemes[i]);
+            }
+        }
+
+        /// <summary>
+        /// Initialise les systèmes
+        /// </summary>
+        /// <param name="inputConfig">Les données de configuration des entrées à observer</param>
+        /// <param name="world">Le monde contenant les entités</param>
+        internal void InitializeSystems(InputConfigDTO inputConfig, World world)
+        {
+            // Initalise les systèmes
+
+            this._updateSystems = new Group("Update Systems");
+            this._updateSystems.Add(new InputSystem(world, inputConfig));
+            this._updateSystems.Initialize();
+        }
+
+        /// <summary>
+        /// Crée les InputSchemes pour chaque type de contrôleur souhaité
+        /// </summary>
         /// <param name="buttonIDs">La liste des IDs des actions de type ButtonState</param>
         /// <param name="vector1DIDs">La liste des IDs des actions de type Vector1D</param>
         /// <param name="vector2DIDs">La liste des IDs des actions de type Vector2D</param>
-        internal static void InitializeInputActionEvents(UnsafeList<NativeString> buttonIDs, UnsafeList<NativeString> vector1DIDs, UnsafeList<NativeString> vector2DIDs)
+        internal void InitializeInputActionEvents(UnsafeList<NativeString> buttonIDs, UnsafeList<NativeString> vector1DIDs, UnsafeList<NativeString> vector2DIDs)
         {
-            InputManager.ActionResources = new(Math.Max(1, buttonIDs.Count * 3));
-            InputManager.ActionVector1DResources = new(Math.Max(1, vector1DIDs.Count));
-            InputManager.ActionVector2DResources = new(Math.Max(1, vector2DIDs.Count));
+            this.ActionButtonResources = new Resources<Action<int>>(Math.Max(1, buttonIDs.Count * 3));
+            this.ActionVector1DResources = new Resources<Action<int, float>>(Math.Max(1, vector1DIDs.Count));
+            this.ActionVector2DResources = new Resources<Action<int, Vector2>>(Math.Max(1, vector2DIDs.Count));
 
-            InputManager.Handles = new InputControls(buttonIDs, vector1DIDs, vector2DIDs);
+            this.Handles = new InputHandles(buttonIDs, vector1DIDs, vector2DIDs);
         }
 
         /// <summary>
@@ -157,7 +178,7 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         internal void Update()
         {
-            foreach (KeyValuePair<Type, IInputScheme> pair in InputManager._inputSchemes)
+            foreach (KeyValuePair<Type, IInputScheme> pair in this._inputSchemes)
             {
                 pair.Value.Update();
             }
@@ -172,7 +193,7 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         internal void AfterUpdate()
         {
-            foreach (KeyValuePair<Type, IInputScheme> pair in InputManager._inputSchemes)
+            foreach (KeyValuePair<Type, IInputScheme> pair in this._inputSchemes)
             {
                 pair.Value.AfterUpdate();
             }
@@ -183,9 +204,9 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
         /// <returns>Le contrôleur souhaité</returns>
-        internal static T GetScheme<T>() where T : IInputScheme, new()
+        internal T GetScheme<T>() where T : IInputScheme, new()
         {
-            return (T)InputManager._inputSchemes[typeof(T)];
+            return (T)this._inputSchemes[typeof(T)];
         }
 
         /// <summary>
@@ -193,11 +214,11 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
         /// <returns><see langword="true"/> si le contrôleur souhaité existe</returns>
-        internal static bool TryGetScheme<T>(out T scheme) where T : IInputScheme, new()
+        internal bool TryGetScheme<T>(out T scheme) where T : IInputScheme, new()
         {
-            if (InputManager.HasScheme<T>())
+            if (this.HasScheme<T>())
             {
-                scheme = InputManager.GetScheme<T>();
+                scheme = this.GetScheme<T>();
                 return true;
             }
 
@@ -210,9 +231,9 @@ namespace Retard.Core.ViewModels.Input
         /// </summary>
         /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
         /// <returns><see langword="true"/> si le contrôleur souhaité existe</returns>
-        internal static bool HasScheme<T>() where T : IInputScheme, new()
+        internal bool HasScheme<T>() where T : IInputScheme, new()
         {
-            return InputManager._inputSchemes.ContainsKey(typeof(T));
+            return this._inputSchemes.ContainsKey(typeof(T));
         }
 
         /// <summary>
@@ -221,9 +242,9 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="mouseKey">La touche de la souris à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        internal static InputKeySequenceState GetMouseKeyState(MouseKey mouseKey)
+        internal InputKeySequenceState GetMouseKeyState(MouseKey mouseKey)
         {
-            MouseInput mouseInput = InputManager.GetScheme<MouseInput>();
+            MouseInput mouseInput = this.GetScheme<MouseInput>();
 
             return mouseKey switch
             {
@@ -277,9 +298,9 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="keyboardKey">La touche du clavier à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        internal static InputKeySequenceState GetKeyboardKeyState(Keys keyboardKey)
+        internal InputKeySequenceState GetKeyboardKeyState(Keys keyboardKey)
         {
-            KeyboardInput keyboardInput = InputManager.GetScheme<KeyboardInput>();
+            KeyboardInput keyboardInput = this.GetScheme<KeyboardInput>();
 
             return keyboardInput.IsKeyPressed(keyboardKey)
                                         ? InputKeySequenceState.Pressed
@@ -296,28 +317,10 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="playerIndex">L'ID de la manette</param>
         /// <param name="gamePadKey">La touche de la manette à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
-        internal static InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey)
+        internal InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey)
         {
-            GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
+            GamePadInput gamePadInput = this.GetScheme<GamePadInput>();
 
-            return gamePadInput.IsButtonPressed(playerIndex, gamePadKey)
-                                        ? InputKeySequenceState.Pressed
-                                        : gamePadInput.IsButtonHeld(playerIndex, gamePadKey)
-                                        ? InputKeySequenceState.Held
-                                        : gamePadInput.IsButtonReleased(playerIndex, gamePadKey)
-                                        ? InputKeySequenceState.Released
-                                        : InputKeySequenceState.Inert;
-        }
-
-        /// <summary>
-        /// Retourne l'état de la touche
-        /// </summary>
-        /// <param name="playerIndex">L'ID de la manette</param>
-        /// <param name="gamePadKey">La touche de la manette à evaluer</param>
-        /// <param name="gamePadInput">Les contrôles de la manette</param>
-        /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
-        internal static InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey, GamePadInput gamePadInput)
-        {
             return gamePadInput.IsButtonPressed(playerIndex, gamePadKey)
                                         ? InputKeySequenceState.Pressed
                                         : gamePadInput.IsButtonHeld(playerIndex, gamePadKey)
@@ -334,9 +337,9 @@ namespace Retard.Core.ViewModels.Input
         /// <param name="joystickKey">La touche de la manette à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        internal static InputKeySequenceState GetJoystickKeyState(int playerIndex, JoystickKey joystickKey)
+        internal InputKeySequenceState GetJoystickKeyState(int playerIndex, JoystickKey joystickKey)
         {
-            GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
+            GamePadInput gamePadInput = this.GetScheme<GamePadInput>();
             Vector2 leftAxis = gamePadInput.GetLeftThumbstickAxis(playerIndex);
             Vector2 rightAxis = gamePadInput.GetRightThumbstickAxis(playerIndex);
 

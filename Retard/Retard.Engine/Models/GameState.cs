@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Retard.Core.Models
+namespace Retard.Engine.Models
 {
     /// <summary>
     /// Contient des infos sur la session en cours

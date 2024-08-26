@@ -8,7 +8,7 @@ using Retard.Engine.Models.DTOs;
 using Retard.Engine.Models.DTOs.App;
 using Retard.Engine.Models.DTOs.Input;
 
-namespace Retard.Core.Models
+namespace Retard.Engine.Models
 {
     /// <summary>
     /// Les constantes partagées dans tout le projet

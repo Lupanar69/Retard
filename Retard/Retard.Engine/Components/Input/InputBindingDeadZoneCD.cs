@@ -1,6 +1,6 @@
 ﻿using Arch.AOT.SourceGenerator;
 
-namespace Retard.Core.Components.Input
+namespace Retard.Engine.Components.Input
 {
     /// <summary>
     /// La valeur en dessous de laquelle l'input 

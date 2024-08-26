@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using Retard.Core.Models;
-using Retard.Core.Models.Assets.Input;
-using Retard.Core.Models.ValueTypes;
-using Retard.Core.ViewModels.App;
-using Retard.Core.ViewModels.Controllers;
-using Retard.Core.ViewModels.Input;
 using Retard.Engine.Models;
 using Retard.Engine.Models.App;
+using Retard.Engine.Models.Assets;
+using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.Models.DTOs.App;
 using Retard.Engine.Models.DTOs.Input;
+using Retard.Engine.Models.ValueTypes;
+using Retard.Engine.ViewModels.App;
+using Retard.Engine.ViewModels.Controllers;
 using Retard.Engine.ViewModels.Engine;
 using Retard.Engine.ViewModels.Input;
+using Retard.Engine.ViewModels.Scenes;
 using Retard.Engine.ViewModels.Utilities;
 using Retard.Tests.ViewModels.Scenes;
 
@@ -70,14 +69,19 @@ namespace Retard.Tests.ViewModels.Engine
         /// </summary>
         public sealed override void LoadContent()
         {
-            Dictionary<NativeString, Texture2D> textures2D = new(1)
+            Dictionary<NativeString, Texture2D> textures2D = new()
             {
                 { "tiles_test2", this._content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}/tiles_test2") }
             };
 
             // Initialise les scènes
 
-            this.CreateScenes(textures2D);
+            GameResources gameResources = new()
+            {
+                Textures2D = textures2D,
+            };
+
+            this.CreateScenes(in gameResources);
         }
 
         #endregion
@@ -87,24 +91,25 @@ namespace Retard.Tests.ViewModels.Engine
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        protected override void CreateScenes(Dictionary<NativeString, Texture2D> textures2D)
+        /// <param name="gameResources"><inheritdoc/></param>
+        protected sealed override void CreateScenes(in GameResources gameResources)
         {
-            this._sceneManager.AddSceneToPool(new SpriteDrawTestScene
+            SceneManager.Instance.AddSceneToPool(new SpriteDrawTestScene
                 (
                 this._world,
                 this._spriteBatch,
                 this._camera,
-                textures2D["tiles_test2"],
+                gameResources.Textures2D["tiles_test2"],
                 new Point(100),
                 Constants.SPRITE_SIZE_PIXELS));
 
-            this._sceneManager.SetSceneAsActive<SpriteDrawTestScene>();
+            SceneManager.Instance.SetSceneAsActive<SpriteDrawTestScene>();
         }
 
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        protected override void CreateDefaultConfigFiles()
+        protected sealed override void CreateDefaultConfigFiles()
         {
             AppConfigFileCreation.CreateDefaultConfigFiles
                 (
@@ -119,21 +124,21 @@ namespace Retard.Tests.ViewModels.Engine
         /// <inheritdoc/>
         /// </summary>
         /// <returns>La liste des contrôleurs acceptés par le jeu</returns>
-        protected override IInputScheme[] GetInputSchemes()
+        protected sealed override IInputScheme[] GetInputSchemes()
         {
-            return new IInputScheme[3]
-            {
+            return
+            [
                 new MouseInput(),
                 new KeyboardInput(),
-                new GamePadInput(GamePad.MaximumGamePadCount)
-            };
+                new GamePadInput(Microsoft.Xna.Framework.Input.GamePad.MaximumGamePadCount)
+            ];
         }
 
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
         /// <returns>Le fichier de configuration des entrées</returns>
-        protected override InputConfigDTO GetInputConfig()
+        protected sealed override InputConfigDTO GetInputConfig()
         {
             string customInputConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_INPUT_CONFIG.CustomFilePath}";
             string json = JsonUtilities.ReadFile(customInputConfigPath);
@@ -143,7 +148,7 @@ namespace Retard.Tests.ViewModels.Engine
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        protected override WindowSettings GetWindowSettings()
+        protected sealed override WindowSettings GetWindowSettings()
         {
             string customAppSettingsConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_APP_SETTINGS.CustomFilePath}";
             string json = JsonUtilities.ReadFile(customAppSettingsConfigPath);

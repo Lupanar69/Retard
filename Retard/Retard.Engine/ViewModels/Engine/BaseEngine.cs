@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using Arch.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Retard.Core.Models;
-using Retard.Core.Models.Assets.Input;
-using Retard.Core.Models.ValueTypes;
-using Retard.Core.ViewModels.App;
-using Retard.Core.ViewModels.Input;
-using Retard.Core.ViewModels.Scenes;
+using Retard.Engine.Models;
+using Retard.Engine.Models.Assets.Input;
+using Retard.Engine.ViewModels.App;
+using Retard.Engine.ViewModels.Input;
+using Retard.Engine.ViewModels.Scenes;
 using Retard.Engine.Models.App;
+using Retard.Engine.Models.Assets;
 using Retard.Engine.Models.DTOs.Input;
 
 namespace Retard.Engine.ViewModels.Engine
@@ -37,16 +36,6 @@ namespace Retard.Engine.ViewModels.Engine
         /// Le monde contenant les entités
         /// </summary>
         protected readonly World _world;
-
-        /// <summary>
-        /// Passerelle entre les entrées du joueur et les commandes à effectuer
-        /// </summary>
-        protected readonly InputManager _inputManager;
-
-        /// <summary>
-        /// Gère l'ajout, màj et suppression des scènes
-        /// </summary>
-        protected readonly SceneManager _sceneManager;
 
         /// <summary>
         /// Gère les paramètres de la fenêtre de jeu
@@ -96,8 +85,8 @@ namespace Retard.Engine.ViewModels.Engine
             InputConfigDTO inputConfig = this.GetInputConfig();
             WindowSettings ws = this.GetWindowSettings();
 
-            this._inputManager = new InputManager(inputSchemes, inputConfig, this._world);
-            this._sceneManager = new SceneManager(1);
+            InputManager.Instance.InitializeInputSchemes(inputSchemes);
+            InputManager.Instance.InitializeSystems(inputConfig, this._world);
             this._appViewport = new AppViewport(game, graphicsDeviceManager, ws);
             this._appPerformance = new AppPerformance(game);
         }
@@ -125,19 +114,19 @@ namespace Retard.Engine.ViewModels.Engine
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
         public void Update(Game game, GameTime gameTime)
         {
-            if (this._sceneManager.IsEmpty)
+            if (SceneManager.Instance.IsEmpty)
             {
                 game.Exit();
             }
 
             // Màj les inputs
 
-            this._inputManager.Update();
+            InputManager.Instance.Update();
 
             // Màj les scènes
 
-            this._sceneManager.UpdateInput(gameTime);
-            this._sceneManager.Update(gameTime);
+            SceneManager.Instance.UpdateInput(gameTime);
+            SceneManager.Instance.Update(gameTime);
         }
 
         /// <summary>
@@ -148,7 +137,7 @@ namespace Retard.Engine.ViewModels.Engine
             // Appelé en dernier pour ne pas écraser le précédent KeyboardState
             // avant les comparaisons
 
-            this._inputManager.AfterUpdate();
+            InputManager.Instance.AfterUpdate();
         }
 
         /// <summary>
@@ -159,7 +148,7 @@ namespace Retard.Engine.ViewModels.Engine
         {
             graphicsDevice.Clear(Color.Black);
 
-            this._sceneManager.Draw(gameTime);
+            SceneManager.Instance.Draw(gameTime);
         }
 
         /// <summary>
@@ -202,8 +191,8 @@ namespace Retard.Engine.ViewModels.Engine
         /// <summary>
         /// Crée les scènes du jeu
         /// </summary>
-        /// <param name="textures2D">Les Textures2D du jeu</param>
-        protected abstract void CreateScenes(Dictionary<NativeString, Texture2D> textures2D);
+        /// <param name="gameResources">Les ressources du jeu</param>
+        protected abstract void CreateScenes(in GameResources gameResources);
 
         /// <summary>
         /// Libère les allocations mémoire

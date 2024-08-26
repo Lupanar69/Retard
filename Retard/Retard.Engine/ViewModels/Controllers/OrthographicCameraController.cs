@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended;
-using Retard.Core.Models;
-using Retard.Core.ViewModels.Input;
 using Retard.Engine.Models;
+using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.ViewModels.Input;
 
-namespace Retard.Core.ViewModels.Controllers
+namespace Retard.Engine.ViewModels.Controllers
 {
     /// <summary>
     /// Permet de déplacer la caméra dans la scène
@@ -49,10 +48,10 @@ namespace Retard.Core.ViewModels.Controllers
         public OrthographicCameraController(OrthographicCamera camera, InputControls controls)
         {
             this.Camera = camera;
-            this._mouseInput = InputManager.GetScheme<MouseInput>();
+            this._mouseInput = InputManager.Instance.GetScheme<MouseInput>();
 
-            controls.AddAction("Camera/Reset", InputEventHandleType.Started, this.ResetCameraPos);
             controls.AddAction("Camera/Move", this.MoveCamera);
+            controls.AddAction("Camera/Reset", InputEventHandleType.Started, this.ResetCameraPos);
             controls.AddAction("Camera/LeftMouseHeld", InputEventHandleType.Performed, this.MoveCamera);
 
             GameState.OnFocusEvent += (_, _) => controls.Enable();

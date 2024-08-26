@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Retard.Core.Models.Assets.Sprites
+namespace Retard.Engine.Models.Assets.Sprites
 {
     /// <summary>
     /// Représente un sprite provenant d'un atlas

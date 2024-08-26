@@ -1,6 +1,6 @@
 ﻿using Arch.AOT.SourceGenerator;
 
-namespace Retard.Core.Components.Input
+namespace Retard.Engine.Components.Input
 {
     /// <summary>
     /// Tag relationnel entre une InputAction et ses InputBindings.

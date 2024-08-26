@@ -1,11 +1,11 @@
 ﻿using Arch.Core;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using Retard.Core.Entities;
-using Retard.Core.Models.Arch;
-using Retard.Core.Models.Assets.Sprites;
+using Retard.Engine.Entities;
+using Retard.Engine.Models.Arch;
+using Retard.Engine.Models.Assets.Sprites;
 
-namespace Retard.Core.Systems.Sprite
+namespace Retard.Engine.Systems.Sprite
 {
     /// <summary>
     /// Affiche les sprites à l'écran

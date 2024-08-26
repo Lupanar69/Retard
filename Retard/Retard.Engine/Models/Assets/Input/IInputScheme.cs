@@ -1,4 +1,4 @@
-﻿namespace Retard.Core.Models.Assets.Input
+﻿namespace Retard.Engine.Models.Assets.Input
 {
     /// <summary>
     /// Interface des différents types de lecteur d'input possibles

@@ -3,13 +3,12 @@ using Arch.Core;
 using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Retard.Core.Components.Input;
-using Retard.Core.Components.Sprites;
 using Retard.Engine.Components.Input;
+using Retard.Engine.Components.Sprites;
 using Retard.Engine.Models;
 using Retard.Engine.Models.Assets.Input;
 
-namespace Retard.Core.Entities
+namespace Retard.Engine.Entities
 {
     /// <summary>
     /// Contient les méthodes de création

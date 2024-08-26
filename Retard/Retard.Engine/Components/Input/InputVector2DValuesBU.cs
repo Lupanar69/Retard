@@ -2,7 +2,7 @@
 using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 
-namespace Retard.Core.Components.Input
+namespace Retard.Engine.Components.Input
 {
     /// <summary>
     /// L'état du bouton lié à une InputAction

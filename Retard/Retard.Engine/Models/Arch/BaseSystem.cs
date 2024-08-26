@@ -1,6 +1,6 @@
 ﻿using Arch.Core;
 
-namespace Retard.Core.Models.Arch
+namespace Retard.Engine.Models.Arch
 {
     /// <summary>
     ///     A basic implementation of a <see cref="ISystem"/>.

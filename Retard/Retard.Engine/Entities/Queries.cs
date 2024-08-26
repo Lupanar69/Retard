@@ -7,14 +7,13 @@ using Arch.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Retard.Core.Components.Input;
-using Retard.Core.Components.Sprites;
-using Retard.Core.Models.Assets.Sprites;
-using Retard.Core.ViewModels.Input;
 using Retard.Engine.Components.Input;
+using Retard.Engine.Components.Sprites;
 using Retard.Engine.Models;
+using Retard.Engine.Models.Assets.Sprites;
+using Retard.Engine.ViewModels.Input;
 
-namespace Retard.Core.Entities
+namespace Retard.Engine.Entities
 {
     /// <summary>
     /// Regroupe les queries Arch pouvant être parallélisées
@@ -62,7 +61,7 @@ namespace Retard.Core.Entities
 
                             MouseKey mouseKey = (MouseKey)id;
 
-                            if (InputManager.GetMouseKeyState(mouseKey) != validState)
+                            if (InputManager.Instance.GetMouseKeyState(mouseKey) != validState)
                             {
                                 returnValuesBU.Value[i] = false;
                                 goto NextController;
@@ -81,7 +80,7 @@ namespace Retard.Core.Entities
 
                             Keys keyboardKey = (Keys)id;
 
-                            if (InputManager.GetKeyboardKeyState(keyboardKey) != validState)
+                            if (InputManager.Instance.GetKeyboardKeyState(keyboardKey) != validState)
                             {
                                 returnValuesBU.Value[i] = false;
                                 goto NextController;
@@ -92,7 +91,7 @@ namespace Retard.Core.Entities
                         case InputBindingKeyType.GamePadKey:
                             Buttons gamePadKey = (Buttons)id;
 
-                            if (InputManager.GetGamePadKeyState(i, gamePadKey) != validState)
+                            if (InputManager.Instance.GetGamePadKeyState(i, gamePadKey) != validState)
                             {
                                 returnValuesBU.Value[i] = false;
                                 goto NextController;
@@ -102,7 +101,7 @@ namespace Retard.Core.Entities
                         case InputBindingKeyType.JoystickKey:
                             JoystickKey joystickKey = (JoystickKey)id;
 
-                            if (InputManager.GetJoystickKeyState(i, joystickKey) != validState)
+                            if (InputManager.Instance.GetJoystickKeyState(i, joystickKey) != validState)
                             {
                                 returnValuesBU.Value[i] = false;
                                 goto NextController;
@@ -151,7 +150,7 @@ namespace Retard.Core.Entities
                         }
 
                         MouseKey mouseKey = (MouseKey)idsCD.PositiveID;
-                        InputKeySequenceState mouseKeyState = InputManager.GetMouseKeyState(mouseKey);
+                        InputKeySequenceState mouseKeyState = InputManager.Instance.GetMouseKeyState(mouseKey);
 
                         if (mouseKeyState == InputKeySequenceState.Pressed || mouseKeyState == InputKeySequenceState.Held)
                         {
@@ -170,7 +169,7 @@ namespace Retard.Core.Entities
                         }
 
                         Keys keyboardKey = (Keys)idsCD.PositiveID;
-                        InputKeySequenceState keyboardKeyState = InputManager.GetKeyboardKeyState(keyboardKey);
+                        InputKeySequenceState keyboardKeyState = InputManager.Instance.GetKeyboardKeyState(keyboardKey);
 
                         if (keyboardKeyState == InputKeySequenceState.Pressed || keyboardKeyState == InputKeySequenceState.Held)
                         {
@@ -180,7 +179,7 @@ namespace Retard.Core.Entities
 
                     case InputBindingKeyType.GamePadKey:
                         Buttons gamePadKey = (Buttons)idsCD.PositiveID;
-                        InputKeySequenceState gamePadKeyState = InputManager.GetGamePadKeyState(i, gamePadKey);
+                        InputKeySequenceState gamePadKeyState = InputManager.Instance.GetGamePadKeyState(i, gamePadKey);
 
                         if (gamePadKeyState == InputKeySequenceState.Pressed || gamePadKeyState == InputKeySequenceState.Held)
                         {
@@ -190,7 +189,7 @@ namespace Retard.Core.Entities
 
                     case InputBindingKeyType.JoystickKey:
                         JoystickKey joystickKey = (JoystickKey)idsCD.PositiveID;
-                        InputKeySequenceState joystickKeyState = InputManager.GetJoystickKeyState(i, joystickKey);
+                        InputKeySequenceState joystickKeyState = InputManager.Instance.GetJoystickKeyState(i, joystickKey);
 
                         if (joystickKeyState == InputKeySequenceState.Pressed || joystickKeyState == InputKeySequenceState.Held)
                         {
@@ -212,7 +211,7 @@ namespace Retard.Core.Entities
                         }
 
                         MouseKey mouseKey = (MouseKey)idsCD.NegativeID;
-                        InputKeySequenceState mouseKeyState = InputManager.GetMouseKeyState(mouseKey);
+                        InputKeySequenceState mouseKeyState = InputManager.Instance.GetMouseKeyState(mouseKey);
 
                         if (mouseKeyState == InputKeySequenceState.Pressed || mouseKeyState == InputKeySequenceState.Held)
                         {
@@ -231,7 +230,7 @@ namespace Retard.Core.Entities
                         }
 
                         Keys keyboardKey = (Keys)idsCD.NegativeID;
-                        InputKeySequenceState keyboardKeyState = InputManager.GetKeyboardKeyState(keyboardKey);
+                        InputKeySequenceState keyboardKeyState = InputManager.Instance.GetKeyboardKeyState(keyboardKey);
 
                         if (keyboardKeyState == InputKeySequenceState.Pressed || keyboardKeyState == InputKeySequenceState.Held)
                         {
@@ -241,7 +240,7 @@ namespace Retard.Core.Entities
 
                     case InputBindingKeyType.GamePadKey:
                         Buttons gamePadKey = (Buttons)idsCD.NegativeID;
-                        InputKeySequenceState gamePadKeyState = InputManager.GetGamePadKeyState(i, gamePadKey);
+                        InputKeySequenceState gamePadKeyState = InputManager.Instance.GetGamePadKeyState(i, gamePadKey);
 
                         if (gamePadKeyState == InputKeySequenceState.Pressed || gamePadKeyState == InputKeySequenceState.Held)
                         {
@@ -251,7 +250,7 @@ namespace Retard.Core.Entities
 
                     case InputBindingKeyType.JoystickKey:
                         JoystickKey joystickKey = (JoystickKey)idsCD.NegativeID;
-                        InputKeySequenceState joystickKeyState = InputManager.GetJoystickKeyState(i, joystickKey);
+                        InputKeySequenceState joystickKeyState = InputManager.Instance.GetJoystickKeyState(i, joystickKey);
 
                         if (joystickKeyState == InputKeySequenceState.Pressed || joystickKeyState == InputKeySequenceState.Held)
                         {
@@ -297,7 +296,7 @@ namespace Retard.Core.Entities
                         }
 
                         MouseKey mouseKey = (MouseKey)idsCD.PositiveXID;
-                        InputKeySequenceState mouseKeyState = InputManager.GetMouseKeyState(mouseKey);
+                        InputKeySequenceState mouseKeyState = InputManager.Instance.GetMouseKeyState(mouseKey);
 
                         if (mouseKeyState == InputKeySequenceState.Pressed || mouseKeyState == InputKeySequenceState.Held)
                         {
@@ -316,7 +315,7 @@ namespace Retard.Core.Entities
                         }
 
                         Keys keyboardKey = (Keys)idsCD.PositiveXID;
-                        InputKeySequenceState keyboardKeyState = InputManager.GetKeyboardKeyState(keyboardKey);
+                        InputKeySequenceState keyboardKeyState = InputManager.Instance.GetKeyboardKeyState(keyboardKey);
 
                         if (keyboardKeyState == InputKeySequenceState.Pressed || keyboardKeyState == InputKeySequenceState.Held)
                         {
@@ -326,7 +325,7 @@ namespace Retard.Core.Entities
 
                     case InputBindingKeyType.GamePadKey:
                         Buttons gamePadKey = (Buttons)idsCD.PositiveXID;
-                        InputKeySequenceState gamePadKeyState = InputManager.GetGamePadKeyState(i, gamePadKey);
+                        InputKeySequenceState gamePadKeyState = InputManager.Instance.GetGamePadKeyState(i, gamePadKey);
 
                         if (gamePadKeyState == InputKeySequenceState.Pressed || gamePadKeyState == InputKeySequenceState.Held)
                         {
@@ -336,7 +335,7 @@ namespace Retard.Core.Entities
 
                     case InputBindingKeyType.JoystickKey:
                         JoystickKey joystickKey = (JoystickKey)idsCD.PositiveXID;
-                        InputKeySequenceState joystickKeyState = InputManager.GetJoystickKeyState(i, joystickKey);
+                        InputKeySequenceState joystickKeyState = InputManager.Instance.GetJoystickKeyState(i, joystickKey);
 
                         if (joystickKeyState == InputKeySequenceState.Pressed || joystickKeyState == InputKeySequenceState.Held)
                         {
@@ -358,7 +357,7 @@ namespace Retard.Core.Entities
                         }
 
                         MouseKey mouseKey = (MouseKey)idsCD.NegativeXID;
-                        InputKeySequenceState mouseKeyState = InputManager.GetMouseKeyState(mouseKey);
+                        InputKeySequenceState mouseKeyState = InputManager.Instance.GetMouseKeyState(mouseKey);
 
                         if (mouseKeyState == InputKeySequenceState.Pressed || mouseKeyState == InputKeySequenceState.Held)
                         {
@@ -377,7 +376,7 @@ namespace Retard.Core.Entities
                         }
 
                         Keys keyboardKey = (Keys)idsCD.NegativeXID;
-                        InputKeySequenceState keyboardKeyState = InputManager.GetKeyboardKeyState(keyboardKey);
+                        InputKeySequenceState keyboardKeyState = InputManager.Instance.GetKeyboardKeyState(keyboardKey);
 
                         if (keyboardKeyState == InputKeySequenceState.Pressed || keyboardKeyState == InputKeySequenceState.Held)
                         {
@@ -387,7 +386,7 @@ namespace Retard.Core.Entities
 
                     case InputBindingKeyType.GamePadKey:
                         Buttons gamePadKey = (Buttons)idsCD.NegativeXID;
-                        InputKeySequenceState gamePadKeyState = InputManager.GetGamePadKeyState(i, gamePadKey);
+                        InputKeySequenceState gamePadKeyState = InputManager.Instance.GetGamePadKeyState(i, gamePadKey);
 
                         if (gamePadKeyState == InputKeySequenceState.Pressed || gamePadKeyState == InputKeySequenceState.Held)
                         {
@@ -397,7 +396,7 @@ namespace Retard.Core.Entities
 
                     case InputBindingKeyType.JoystickKey:
                         JoystickKey joystickKey = (JoystickKey)idsCD.NegativeXID;
-                        InputKeySequenceState joystickKeyState = InputManager.GetJoystickKeyState(i, joystickKey);
+                        InputKeySequenceState joystickKeyState = InputManager.Instance.GetJoystickKeyState(i, joystickKey);
 
                         if (joystickKeyState == InputKeySequenceState.Pressed || joystickKeyState == InputKeySequenceState.Held)
                         {
@@ -419,7 +418,7 @@ namespace Retard.Core.Entities
                         }
 
                         MouseKey mouseKey = (MouseKey)idsCD.PositiveYID;
-                        InputKeySequenceState mouseKeyState = InputManager.GetMouseKeyState(mouseKey);
+                        InputKeySequenceState mouseKeyState = InputManager.Instance.GetMouseKeyState(mouseKey);
 
                         if (mouseKeyState == InputKeySequenceState.Pressed || mouseKeyState == InputKeySequenceState.Held)
                         {
@@ -438,7 +437,7 @@ namespace Retard.Core.Entities
                         }
 
                         Keys keyboardKey = (Keys)idsCD.PositiveYID;
-                        InputKeySequenceState keyboardKeyState = InputManager.GetKeyboardKeyState(keyboardKey);
+                        InputKeySequenceState keyboardKeyState = InputManager.Instance.GetKeyboardKeyState(keyboardKey);
 
                         if (keyboardKeyState == InputKeySequenceState.Pressed || keyboardKeyState == InputKeySequenceState.Held)
                         {
@@ -448,7 +447,7 @@ namespace Retard.Core.Entities
 
                     case InputBindingKeyType.GamePadKey:
                         Buttons gamePadKey = (Buttons)idsCD.PositiveYID;
-                        InputKeySequenceState gamePadKeyState = InputManager.GetGamePadKeyState(i, gamePadKey);
+                        InputKeySequenceState gamePadKeyState = InputManager.Instance.GetGamePadKeyState(i, gamePadKey);
 
                         if (gamePadKeyState == InputKeySequenceState.Pressed || gamePadKeyState == InputKeySequenceState.Held)
                         {
@@ -458,7 +457,7 @@ namespace Retard.Core.Entities
 
                     case InputBindingKeyType.JoystickKey:
                         JoystickKey joystickKey = (JoystickKey)idsCD.PositiveYID;
-                        InputKeySequenceState joystickKeyState = InputManager.GetJoystickKeyState(i, joystickKey);
+                        InputKeySequenceState joystickKeyState = InputManager.Instance.GetJoystickKeyState(i, joystickKey);
 
                         if (joystickKeyState == InputKeySequenceState.Pressed || joystickKeyState == InputKeySequenceState.Held)
                         {
@@ -480,7 +479,7 @@ namespace Retard.Core.Entities
                         }
 
                         MouseKey mouseKey = (MouseKey)idsCD.NegativeYID;
-                        InputKeySequenceState mouseKeyState = InputManager.GetMouseKeyState(mouseKey);
+                        InputKeySequenceState mouseKeyState = InputManager.Instance.GetMouseKeyState(mouseKey);
 
                         if (mouseKeyState == InputKeySequenceState.Pressed || mouseKeyState == InputKeySequenceState.Held)
                         {
@@ -499,7 +498,7 @@ namespace Retard.Core.Entities
                         }
 
                         Keys keyboardKey = (Keys)idsCD.NegativeYID;
-                        InputKeySequenceState keyboardKeyState = InputManager.GetKeyboardKeyState(keyboardKey);
+                        InputKeySequenceState keyboardKeyState = InputManager.Instance.GetKeyboardKeyState(keyboardKey);
 
                         if (keyboardKeyState == InputKeySequenceState.Pressed || keyboardKeyState == InputKeySequenceState.Held)
                         {
@@ -509,7 +508,7 @@ namespace Retard.Core.Entities
 
                     case InputBindingKeyType.GamePadKey:
                         Buttons gamePadKey = (Buttons)idsCD.NegativeYID;
-                        InputKeySequenceState gamePadKeyState = InputManager.GetGamePadKeyState(i, gamePadKey);
+                        InputKeySequenceState gamePadKeyState = InputManager.Instance.GetGamePadKeyState(i, gamePadKey);
 
                         if (gamePadKeyState == InputKeySequenceState.Pressed || gamePadKeyState == InputKeySequenceState.Held)
                         {
@@ -519,7 +518,7 @@ namespace Retard.Core.Entities
 
                     case InputBindingKeyType.JoystickKey:
                         JoystickKey joystickKey = (JoystickKey)idsCD.NegativeYID;
-                        InputKeySequenceState joystickKeyState = InputManager.GetJoystickKeyState(i, joystickKey);
+                        InputKeySequenceState joystickKeyState = InputManager.Instance.GetJoystickKeyState(i, joystickKey);
 
                         if (joystickKeyState == InputKeySequenceState.Pressed || joystickKeyState == InputKeySequenceState.Held)
                         {
@@ -550,12 +549,12 @@ namespace Retard.Core.Entities
                 switch (triggerTypeCD.Value)
                 {
                     case TriggerType.LeftTrigger:
-                        GamePadInput gamePadInput1 = InputManager.GetScheme<GamePadInput>();
+                        GamePadInput gamePadInput1 = InputManager.Instance.GetScheme<GamePadInput>();
                         float value1 = gamePadInput1.GetLeftTriggerValue(i);
                         returnValuesBU.Value[i] = Math.Abs(value1) > deadZoneCD.Value ? value1 : 0f;
                         break;
                     case TriggerType.RightTrigger:
-                        GamePadInput gamePadInput2 = InputManager.GetScheme<GamePadInput>();
+                        GamePadInput gamePadInput2 = InputManager.Instance.GetScheme<GamePadInput>();
                         float value2 = gamePadInput2.GetRightTriggerValue(i);
                         returnValuesBU.Value[i] = Math.Abs(value2) > deadZoneCD.Value ? value2 : 0f;
                         break;
@@ -568,7 +567,7 @@ namespace Retard.Core.Entities
                             return;
                         }
 
-                        MouseInput mouseInput = InputManager.GetScheme<MouseInput>();
+                        MouseInput mouseInput = InputManager.Instance.GetScheme<MouseInput>();
                         returnValuesBU.Value[0] = Math.Clamp(mouseInput.GetMouseWheelScrollValue(), -1f, 1f);
                         break;
                 }
@@ -588,7 +587,7 @@ namespace Retard.Core.Entities
             in InputBindingJoystickTypeCD joystickTypeCD,
             ref InputVector2DValuesBU returnValuesBU)
         {
-            GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
+            GamePadInput gamePadInput = InputManager.Instance.GetScheme<GamePadInput>();
 
             for (int i = 0; i < returnValuesBU.Value.Length; ++i)
             {
@@ -620,7 +619,7 @@ namespace Retard.Core.Entities
             in InputBindingJoystickTypeCD joystickTypeCD,
             ref InputVector1DValuesBU returnValuesBU)
         {
-            GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
+            GamePadInput gamePadInput = InputManager.Instance.GetScheme<GamePadInput>();
 
             for (int i = 0; i < returnValuesBU.Value.Length; ++i)
             {
@@ -653,7 +652,7 @@ namespace Retard.Core.Entities
             in InputBindingJoystickTypeCD joystickTypeCD,
             ref InputVector1DValuesBU returnValuesBU)
         {
-            GamePadInput gamePadInput = InputManager.GetScheme<GamePadInput>();
+            GamePadInput gamePadInput = InputManager.Instance.GetScheme<GamePadInput>();
 
             for (int i = 0; i < returnValuesBU.Value.Length; ++i)
             {
@@ -719,7 +718,7 @@ namespace Retard.Core.Entities
                         {
                             case true:
                                 actionValues.Value[i] = false;
-                                InputManager.GetButtonEvent(actionID.Value).Finished?.Invoke(i);
+                                InputManager.Instance.GetButtonEvent(actionID.Value).Finished?.Invoke(i);
                                 break;
                         }
                         break;
@@ -739,11 +738,11 @@ namespace Retard.Core.Entities
                                     {
                                         case false:
                                             actionValues.Value[i] = true;
-                                            InputManager.GetButtonEvent(actionID.Value).Started?.Invoke(i);
+                                            InputManager.Instance.GetButtonEvent(actionID.Value).Started?.Invoke(i);
                                             break;
 
                                         case true:
-                                            InputManager.GetButtonEvent(actionID.Value).Performed?.Invoke(i);
+                                            InputManager.Instance.GetButtonEvent(actionID.Value).Performed?.Invoke(i);
                                             goto NextController;    // Empêche plusieurs bindings actifs de réinvoquer l'action
                                     }
                                     break;
@@ -794,7 +793,7 @@ namespace Retard.Core.Entities
 
                 if (Math.Abs(returnValue) > float.Epsilon)
                 {
-                    InputManager.GetVector1DEvent(actionID.Value).Performed?.Invoke(i, returnValue);
+                    InputManager.Instance.GetVector1DEvent(actionID.Value).Performed?.Invoke(i, returnValue);
                 }
             }
         }
@@ -836,7 +835,7 @@ namespace Retard.Core.Entities
 
                 if (Math.Abs(returnValue.LengthSquared()) > float.Epsilon)
                 {
-                    InputManager.GetVector2DEvent(actionID.Value).Performed?.Invoke(i, returnValue);
+                    InputManager.Instance.GetVector2DEvent(actionID.Value).Performed?.Invoke(i, returnValue);
                 }
             }
         }

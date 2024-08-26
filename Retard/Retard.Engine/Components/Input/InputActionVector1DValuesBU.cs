@@ -1,7 +1,7 @@
 ﻿using Arch.AOT.SourceGenerator;
 using Arch.LowLevel;
 
-namespace Retard.Core.Components.Input
+namespace Retard.Engine.Components.Input
 {
     /// <summary>
     /// L'état de l'InputBinding pressé

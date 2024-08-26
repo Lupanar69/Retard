@@ -1,7 +1,7 @@
 ﻿using Arch.AOT.SourceGenerator;
-using Retard.Core.Models.ValueTypes;
+using Retard.Engine.Models.ValueTypes;
 
-namespace Retard.Core.Components.Input
+namespace Retard.Engine.Components.Input
 {
     /// <summary>
     /// L'ID d'une InputAction

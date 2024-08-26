@@ -1,9 +1,9 @@
 ﻿using System.IO;
-using Retard.Core.Models.ValueTypes;
+using Retard.Engine.Models.ValueTypes;
 using Retard.Engine.Models.DTOs;
 using Retard.Engine.ViewModels.Utilities;
 
-namespace Retard.Core.ViewModels.App
+namespace Retard.Engine.ViewModels.App
 {
     /// <summary>
     /// Chargé de créer les fichiers par défaut

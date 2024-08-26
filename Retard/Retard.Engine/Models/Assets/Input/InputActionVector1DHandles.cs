@@ -1,6 +1,6 @@
 ﻿using System;
 using Arch.LowLevel;
-using Retard.Core.ViewModels.Input;
+using Retard.Engine.ViewModels.Input;
 
 namespace Retard.Engine.Models.Assets.Input
 {
@@ -17,8 +17,8 @@ namespace Retard.Engine.Models.Assets.Input
         /// </summary>
         public Action<int, float> Performed
         {
-            get => InputManager.ActionVector1DResources.Get(in _performed);
-            set => InputManager.ActionVector1DResources.Get(in _performed) = value;
+            get => InputManager.Instance.ActionVector1DResources.Get(in this._performed);
+            set => InputManager.Instance.ActionVector1DResources.Get(in this._performed) = value;
         }
 
         #endregion

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using Retard.Engine.ViewModels.Input;
+using Retard.Engine.Models.Assets.Input;
 
-namespace Retard.Core.Models.Assets.Scene
+namespace Retard.Engine.Models.Assets.Scene
 {
     /// <summary>
     /// Permet de compartimenter la logique parmi différents contextes

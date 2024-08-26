@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Retard.Engine.Models;
 
-namespace Retard.Core.ViewModels.App
+namespace Retard.Engine.ViewModels.App
 {
     /// <summary>
     /// Gère les performance du jeu

@@ -1,4 +1,4 @@
-﻿using Retard.Core.Models.ValueTypes;
+﻿using Retard.Engine.Models.ValueTypes;
 
 namespace Retard.Engine.Models.DTOs
 {

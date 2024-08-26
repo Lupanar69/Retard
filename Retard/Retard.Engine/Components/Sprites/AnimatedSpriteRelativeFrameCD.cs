@@ -1,6 +1,6 @@
 ﻿using Arch.AOT.SourceGenerator;
 
-namespace Retard.Core.Components.Sprites
+namespace Retard.Engine.Components.Sprites
 {
     /// <summary>
     /// L'ID du sprite actuel depuis le début de l'animation

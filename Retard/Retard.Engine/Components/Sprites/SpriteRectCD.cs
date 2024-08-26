@@ -1,7 +1,7 @@
 ﻿using Arch.AOT.SourceGenerator;
 using Microsoft.Xna.Framework;
 
-namespace Retard.Core.Components.Sprites
+namespace Retard.Engine.Components.Sprites
 {
     /// <summary>
     /// Les dimensions du sprite

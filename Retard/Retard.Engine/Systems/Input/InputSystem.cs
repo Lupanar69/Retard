@@ -1,14 +1,14 @@
 ﻿using Arch.Core;
 using Arch.LowLevel;
 using Arch.Relationships;
-using Retard.Core.Components.Input;
-using Retard.Core.Entities;
-using Retard.Core.Models.Arch;
-using Retard.Core.Models.ValueTypes;
-using Retard.Core.ViewModels.Input;
+using Retard.Engine.Components.Input;
+using Retard.Engine.Entities;
+using Retard.Engine.Models.Arch;
+using Retard.Engine.Models.ValueTypes;
+using Retard.Engine.ViewModels.Input;
 using Retard.Engine.Models.DTOs.Input;
 
-namespace Retard.Core.Systems.Input
+namespace Retard.Engine.Systems.Input
 {
     /// <summary>
     /// Affiche les sprites à l'écran
@@ -43,7 +43,7 @@ namespace Retard.Core.Systems.Input
         public InputSystem(World world, InputConfigDTO inputConfig)
         {
             this.World = world;
-            this._nbMaxControllers = InputManager.TryGetScheme(out GamePadInput gamePadInput) ? gamePadInput.NbMaxGamePads : 1;
+            this._nbMaxControllers = InputManager.Instance.TryGetScheme(out GamePadInput gamePadInput) ? gamePadInput.NbMaxGamePads : 1;
 
             InputSystem.CreateInputEntities(this.World, inputConfig, this._nbMaxControllers);
             InputSystem.CreateInputActionEvents(this.World);
@@ -87,9 +87,9 @@ namespace Retard.Core.Systems.Input
         /// <param name="nbMaxControllers">Le nombre max de contrôleurs pris en charge par l'InputSystem</param>
         private static void CreateInputEntities(World world, InputConfigDTO config, int nbMaxControllers)
         {
-            bool usesMouse = InputManager.HasScheme<MouseInput>();
-            bool usesKeyboard = InputManager.HasScheme<KeyboardInput>();
-            bool usesGamePad = InputManager.HasScheme<GamePadInput>();
+            bool usesMouse = InputManager.Instance.HasScheme<MouseInput>();
+            bool usesKeyboard = InputManager.Instance.HasScheme<KeyboardInput>();
+            bool usesGamePad = InputManager.Instance.HasScheme<GamePadInput>();
 
             for (int i = 0; i < config.Actions.Length; ++i)
             {
@@ -190,7 +190,7 @@ namespace Retard.Core.Systems.Input
                 list3.Add(actionID.Value);
             });
 
-            InputManager.InitializeInputActionEvents(list1, list2, list3);
+            InputManager.Instance.InitializeInputActionEvents(list1, list2, list3);
         }
 
         #endregion

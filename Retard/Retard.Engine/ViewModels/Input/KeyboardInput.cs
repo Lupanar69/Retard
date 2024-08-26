@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Input;
-using Retard.Core.Models.Assets.Input;
+using Retard.Engine.Models.Assets.Input;
 
-namespace Retard.Core.ViewModels.Input
+namespace Retard.Engine.ViewModels.Input
 {
     /// <summary>
     /// Utilitaire pour gérer les entrées clavier

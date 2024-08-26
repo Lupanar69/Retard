@@ -4,13 +4,13 @@ using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using Retard.Core.Components.Sprites;
-using Retard.Core.Entities;
-using Retard.Core.Models.Arch;
-using Retard.Core.Models.Assets.Scene;
-using Retard.Core.Models.Assets.Sprites;
-using Retard.Core.Systems.Sprite;
-using Retard.Engine.ViewModels.Input;
+using Retard.Engine.Components.Sprites;
+using Retard.Engine.Entities;
+using Retard.Engine.Models.Arch;
+using Retard.Engine.Models.Assets.Input;
+using Retard.Engine.Models.Assets.Scene;
+using Retard.Engine.Models.Assets.Sprites;
+using Retard.Engine.Systems.Sprite;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -82,6 +82,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <param name="world">Le monde contenant les entités</param>
         /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
         /// <param name="camera">La caméra du jeu</param>
+        /// <param name="sceneManager">Le SceneManager</param>
         /// <param name="debugTex">La texture de debug</param>
         /// <param name="size">La taille de la carte à dessiner</param>
         /// <param name="spriteResolution">La résolution d'un sprite en pixels</param>

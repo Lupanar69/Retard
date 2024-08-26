@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Retard.Core.Models.Assets.Input;
-using Retard.Core.ViewModels.App;
+using Retard.Engine.Models.Assets.Input;
+using Retard.Engine.ViewModels.App;
 
-namespace Retard.Core.ViewModels.Input
+namespace Retard.Engine.ViewModels.Input
 {
     /// <summary>
     /// Utilitaire pour gérer les entrées souris
