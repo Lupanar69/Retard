@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Retard.Core.ViewModels.App;
+using Retard.App.ViewModels;
 using Retard.Input.Models.Assets;
 
 namespace Retard.Input.ViewModels

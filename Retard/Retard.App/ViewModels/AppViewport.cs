@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Retard.Core.Models.App;
+using Retard.App.Models;
 
-namespace Retard.Core.ViewModels.App
+namespace Retard.App.ViewModels
 {
     /// <summary>
     /// Gère les paramètres de la fenêtre du jeu
@@ -60,14 +60,14 @@ namespace Retard.Core.ViewModels.App
         /// <param name="ws">Les paramètres de la fenêtre</param>
         public AppViewport(Game game, GraphicsDeviceManager graphicsDeviceManager, WindowSettings ws)
         {
-            this._game = game;
-            this._graphicsDeviceManager = graphicsDeviceManager;
-            AppViewport.WindowResolution = new Point(game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
+            _game = game;
+            _graphicsDeviceManager = graphicsDeviceManager;
+            WindowResolution = new Point(game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
 
-            this.SetViewportResolution(ws.WindowSize, ws.FullScreen);
-            this.SetGameProperties(ws.MouseVisible, ws.AllowUserResizing);
+            SetViewportResolution(ws.WindowSize, ws.FullScreen);
+            SetGameProperties(ws.MouseVisible, ws.AllowUserResizing);
 
-            game.Window.ClientSizeChanged += this.OnClientSizeChangedCallback;
+            game.Window.ClientSizeChanged += OnClientSizeChangedCallback;
         }
 
         #endregion
@@ -79,7 +79,7 @@ namespace Retard.Core.ViewModels.App
         /// </summary>
         public void Dispose()
         {
-            this._game.Window.ClientSizeChanged -= this.OnClientSizeChangedCallback;
+            _game.Window.ClientSizeChanged -= OnClientSizeChangedCallback;
         }
 
         /// <summary>
@@ -89,13 +89,13 @@ namespace Retard.Core.ViewModels.App
         /// <param name="fullScreen"><see langword="true"/> pour passer la fenêtre en plein écran</param>
         public void SetViewportResolution(Point windowResolution, bool fullScreen)
         {
-            this._graphicsDeviceManager.PreferredBackBufferWidth = windowResolution.X;
-            this._graphicsDeviceManager.PreferredBackBufferHeight = windowResolution.Y;
-            this._graphicsDeviceManager.IsFullScreen = fullScreen;
-            this._graphicsDeviceManager.ApplyChanges();
+            _graphicsDeviceManager.PreferredBackBufferWidth = windowResolution.X;
+            _graphicsDeviceManager.PreferredBackBufferHeight = windowResolution.Y;
+            _graphicsDeviceManager.IsFullScreen = fullScreen;
+            _graphicsDeviceManager.ApplyChanges();
 
-            AppViewport.WindowResolution = windowResolution;
-            this.OnViewportResolutionSetEvent?.Invoke(null, windowResolution);
+            WindowResolution = windowResolution;
+            OnViewportResolutionSetEvent?.Invoke(null, windowResolution);
         }
 
         /// <summary>
@@ -105,8 +105,8 @@ namespace Retard.Core.ViewModels.App
         /// <param name="allowUserResizing"><see langword="true"/> si le joueur peut redimensionner la fenêtre manuellement</param>
         public void SetGameProperties(bool mouseVisible = true, bool allowUserResizing = true)
         {
-            this._game.IsMouseVisible = mouseVisible;
-            this._game.Window.AllowUserResizing = allowUserResizing;
+            _game.IsMouseVisible = mouseVisible;
+            _game.Window.AllowUserResizing = allowUserResizing;
         }
 
         #endregion
@@ -120,8 +120,8 @@ namespace Retard.Core.ViewModels.App
         /// <param name="e">vide</param>
         private void OnClientSizeChangedCallback(object sender, EventArgs e)
         {
-            AppViewport.WindowResolution = new Point(this._game.GraphicsDevice.Viewport.Width, this._game.GraphicsDevice.Viewport.Height);
-            this.OnClientSizeChangedEvent?.Invoke(null, AppViewport.WindowResolution);
+            WindowResolution = new Point(_game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height);
+            OnClientSizeChangedEvent?.Invoke(null, WindowResolution);
         }
 
         #endregion

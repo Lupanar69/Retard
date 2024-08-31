@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Retard.Engine.Models.Assets.Scene;
+using Retard.SceneManagement.Models;
 
-namespace Retard.Engine.ViewModels.Scenes
+namespace Retard.SceneManagement.ViewModels
 {
     /// TAF : Une fois qu'on sera passé à la prochaine version de Monogame,
     /// remplacer les champs et méthodes statiques par des champs et méthodes d'instance
@@ -18,7 +18,7 @@ namespace Retard.Engine.ViewModels.Scenes
         /// <summary>
         /// Singleton
         /// </summary>
-        public static SceneManager Instance => SceneManager._instance.Value;
+        public static SceneManager Instance => _instance.Value;
 
         /// <summary>
         /// Singleton
@@ -32,7 +32,7 @@ namespace Retard.Engine.ViewModels.Scenes
         /// <summary>
         /// <see langword="true"/> s'il n'y a aucune scène active
         /// </summary>
-        public bool IsEmpty => this._activeScenes.Count == 0;
+        public bool IsEmpty => _activeScenes.Count == 0;
 
         #endregion
 
@@ -57,8 +57,8 @@ namespace Retard.Engine.ViewModels.Scenes
         /// </summary>
         private SceneManager()
         {
-            this._activeScenes = new List<IScene>(1);
-            this._inactiveScenes = new Dictionary<Type, IScene>(1);
+            _activeScenes = new List<IScene>(1);
+            _inactiveScenes = new Dictionary<Type, IScene>(1);
         }
 
         #endregion
@@ -66,101 +66,14 @@ namespace Retard.Engine.ViewModels.Scenes
         #region Méthodes publiques
 
         /// <summary>
-        /// Ajoute une nouvelle scène à l'ObjectPool des scènes
-        /// </summary>
-        /// <param name="scene">La nouvelle scène</param>
-        public void AddSceneToPool(IScene scene)
-        {
-            Type t = scene.GetType();
-            this._inactiveScenes.Add(t, scene);
-        }
-
-        /// <summary>
-        /// Ajoute une nouvelle scène à l'ObjectPool scènes actives
-        /// </summary>
-        /// <param name="scenes">Les nouvelles scènes</param>
-        public void AddScenesToPool(params IScene[] scenes)
-        {
-            this._inactiveScenes.EnsureCapacity(scenes.Length);
-
-            foreach (IScene scene in scenes)
-            {
-                this.AddSceneToPool(scene);
-            }
-        }
-
-        /// <summary>
-        /// Prend une scène de l'objectPool et la place dans la liste active
-        /// </summary>
-        /// <typeparam name="T">Le type de la scène</typeparam>
-        public void SetSceneAsActive<T>()
-        {
-            Type t = typeof(T);
-            this._inactiveScenes.Remove(t, out IScene scene);
-            this._activeScenes.Add(scene);
-            scene.OnSetActive();
-            this.SetScenesControlsActiveState();
-        }
-
-        /// <summary>
-        /// Retire la scène en fin de la liste des scènes actives
-        /// </summary>
-        public void RemoveLastActiveScene()
-        {
-            IScene scene = this._activeScenes[^1];
-            scene.DisableControls();
-            Type t = scene.GetType();
-            this._activeScenes.Remove(scene);
-            this._inactiveScenes.Add(t, scene);
-            this.SetScenesControlsActiveState();
-        }
-
-        /// <summary>
-        /// Retire la scène de la liste des scènes actives
-        /// </summary>
-        /// <param name="scene">La scène à supprimer</param>
-        public void RemoveActiveScene(IScene scene)
-        {
-            Type t = scene.GetType();
-            scene.DisableControls();
-            this._activeScenes.Remove(scene);
-            this._inactiveScenes.Add(t, scene);
-            this.SetScenesControlsActiveState();
-        }
-
-        /// <summary>
-        /// Retire la scène ainsi que toutes celles superposées de la liste des scènes actives
-        /// </summary>
-        /// <param name="scene">La scène à supprimer</param>
-        public void RemoveActiveAndOverlaidScenes(IScene scene)
-        {
-            int index = this._activeScenes.IndexOf(scene);
-
-            for (int i = this._activeScenes.Count - 1; i >= index; --i)
-            {
-                IScene s = this._activeScenes[i];
-                Type t = s.GetType();
-                s.DisableControls();
-                this._activeScenes.RemoveAt(i);
-                this._inactiveScenes.Add(t, s);
-            }
-
-            this.SetScenesControlsActiveState();
-        }
-
-        #endregion
-
-        #region Méthodes internes
-
-        /// <summary>
         /// Màj les entrées lues par chaque scène
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        internal void UpdateInput(GameTime gameTime)
+        public void UpdateInput(GameTime gameTime)
         {
-            for (int i = this._activeScenes.Count - 1; i >= 0; --i)
+            for (int i = _activeScenes.Count - 1; i >= 0; --i)
             {
-                IScene scene = this._activeScenes[i];
+                IScene scene = _activeScenes[i];
                 scene.OnUpdateInput(gameTime);
 
                 if (scene.ConsumeInput)
@@ -174,11 +87,11 @@ namespace Retard.Engine.ViewModels.Scenes
         /// Màj la logique de chaque scène
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        internal void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
-            for (int i = this._activeScenes.Count - 1; i >= 0; --i)
+            for (int i = _activeScenes.Count - 1; i >= 0; --i)
             {
-                IScene scene = this._activeScenes[i];
+                IScene scene = _activeScenes[i];
                 scene.OnUpdate(gameTime);
 
                 if (scene.ConsumeUpdate)
@@ -192,22 +105,105 @@ namespace Retard.Engine.ViewModels.Scenes
         /// Affiche le contenu des scènes à l'écran
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        internal void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime)
         {
             int startDrawIndex = 0;
 
-            for (int i = 0; i < this._activeScenes.Count; ++i)
+            for (int i = 0; i < _activeScenes.Count; ++i)
             {
-                if (this._activeScenes[i].ConsumeDraw)
+                if (_activeScenes[i].ConsumeDraw)
                 {
                     startDrawIndex = i;
                 }
             }
 
-            for (int i = startDrawIndex; i < this._activeScenes.Count; ++i)
+            for (int i = startDrawIndex; i < _activeScenes.Count; ++i)
             {
-                this._activeScenes[i].OnDraw(gameTime);
+                _activeScenes[i].OnDraw(gameTime);
             }
+        }
+
+        /// <summary>
+        /// Ajoute une nouvelle scène à l'ObjectPool des scènes
+        /// </summary>
+        /// <param name="scene">La nouvelle scène</param>
+        public void AddSceneToPool(IScene scene)
+        {
+            Type t = scene.GetType();
+            _inactiveScenes.Add(t, scene);
+        }
+
+        /// <summary>
+        /// Ajoute une nouvelle scène à l'ObjectPool scènes actives
+        /// </summary>
+        /// <param name="scenes">Les nouvelles scènes</param>
+        public void AddScenesToPool(params IScene[] scenes)
+        {
+            _inactiveScenes.EnsureCapacity(scenes.Length);
+
+            foreach (IScene scene in scenes)
+            {
+                AddSceneToPool(scene);
+            }
+        }
+
+        /// <summary>
+        /// Prend une scène de l'objectPool et la place dans la liste active
+        /// </summary>
+        /// <typeparam name="T">Le type de la scène</typeparam>
+        public void SetSceneAsActive<T>()
+        {
+            Type t = typeof(T);
+            _inactiveScenes.Remove(t, out IScene scene);
+            _activeScenes.Add(scene);
+            scene.OnSetActive();
+            SetScenesControlsActiveState();
+        }
+
+        /// <summary>
+        /// Retire la scène en fin de la liste des scènes actives
+        /// </summary>
+        public void RemoveLastActiveScene()
+        {
+            IScene scene = _activeScenes[^1];
+            scene.DisableControls();
+            Type t = scene.GetType();
+            _activeScenes.Remove(scene);
+            _inactiveScenes.Add(t, scene);
+            SetScenesControlsActiveState();
+        }
+
+        /// <summary>
+        /// Retire la scène de la liste des scènes actives
+        /// </summary>
+        /// <param name="scene">La scène à supprimer</param>
+        public void RemoveActiveScene(IScene scene)
+        {
+            Type t = scene.GetType();
+            scene.DisableControls();
+            _activeScenes.Remove(scene);
+            _inactiveScenes.Add(t, scene);
+            SetScenesControlsActiveState();
+        }
+
+        /// <summary>
+        /// Retire la scène ainsi que toutes celles superposées de la liste des scènes actives
+        /// </summary>
+        /// <param name="scene">La scène à supprimer</param>
+        public void RemoveActiveAndOverlaidScenes(IScene scene)
+        {
+            int index = _activeScenes.IndexOf(scene);
+
+            for (int i = _activeScenes.Count - 1; i >= index; --i)
+            {
+                IScene s = _activeScenes[i];
+                Type t = s.GetType();
+                s.DisableControls();
+                _activeScenes.RemoveAt(i);
+                _inactiveScenes.Add(t, s);
+            }
+
+            SetScenesControlsActiveState();
         }
 
         #endregion
@@ -222,9 +218,9 @@ namespace Retard.Engine.ViewModels.Scenes
         {
             int endDisableIndex = 0;
 
-            for (int i = 0; i < this._activeScenes.Count; ++i)
+            for (int i = 0; i < _activeScenes.Count; ++i)
             {
-                if (this._activeScenes[i].ConsumeInput)
+                if (_activeScenes[i].ConsumeInput)
                 {
                     endDisableIndex = i;
                 }
@@ -232,12 +228,12 @@ namespace Retard.Engine.ViewModels.Scenes
 
             for (int i = 0; i < endDisableIndex; ++i)
             {
-                this._activeScenes[i].DisableControls();
+                _activeScenes[i].DisableControls();
             }
 
-            for (int i = endDisableIndex; i < this._activeScenes.Count; ++i)
+            for (int i = endDisableIndex; i < _activeScenes.Count; ++i)
             {
-                this._activeScenes[i].EnableControls();
+                _activeScenes[i].EnableControls();
             }
         }
 

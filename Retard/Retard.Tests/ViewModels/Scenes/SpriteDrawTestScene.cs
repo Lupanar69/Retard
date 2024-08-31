@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Retard.Core.Models.Arch;
-using Retard.Engine.Models.Assets.Scene;
+using Retard.SceneManagement.Models;
 using Retard.Input.Models.Assets;
 using Retard.Rendering2D.Components;
 using Retard.Rendering2D.Entities;

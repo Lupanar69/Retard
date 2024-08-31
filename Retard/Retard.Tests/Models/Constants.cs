@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Retard.Core.Models.App;
+using Retard.App.Models;
+using Retard.App.Models.DTOs;
 using Retard.Core.Models.DTOs;
-using Retard.Engine.Models.DTOs.App;
 using Retard.Input.Models;
 using Retard.Input.Models.Assets;
 using Retard.Input.Models.DTOs;

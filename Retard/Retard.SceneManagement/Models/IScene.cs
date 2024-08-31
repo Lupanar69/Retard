@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Retard.Input.Models.Assets;
 
-namespace Retard.Engine.Models.Assets.Scene
+namespace Retard.SceneManagement.Models
 {
     /// <summary>
     /// Permet de compartimenter la logique parmi différents contextes
@@ -49,12 +49,12 @@ namespace Retard.Engine.Models.Assets.Scene
         /// <summary>
         /// Active les contrôles
         /// </summary>
-        public void EnableControls() => this.Controls?.Enable();
+        public void EnableControls() => Controls?.Enable();
 
         /// <summary>
         /// Désactive les contrôles
         /// </summary>
-        public void DisableControls() => this.Controls?.Disable();
+        public void DisableControls() => Controls?.Disable();
 
         /// <summary>
         /// Màj à chaque frame
