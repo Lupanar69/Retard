@@ -7,7 +7,7 @@ using MonoGame.Extended;
 using Retard.Core.Models.Arch;
 using Retard.Engine.Components.Sprites;
 using Retard.Engine.Entities;
-using Retard.Engine.Models.Assets.Input;
+using Retard.Input.Models.Assets;
 using Retard.Engine.Models.Assets.Scene;
 using Retard.Engine.Models.Assets.Sprites;
 using Retard.Engine.Systems.Sprite;

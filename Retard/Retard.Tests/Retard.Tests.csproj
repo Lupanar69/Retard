@@ -30,5 +30,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Retard.Core\Retard.Core.csproj" />
     <ProjectReference Include="..\Retard.Engine\Retard.Engine.csproj" />
+    <ProjectReference Include="..\Retard.Input\Retard.Input.csproj" />
   </ItemGroup>
 </Project>

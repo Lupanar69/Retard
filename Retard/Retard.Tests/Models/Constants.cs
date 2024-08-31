@@ -3,11 +3,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models.App;
 using Retard.Core.Models.DTOs;
-using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.Models.DTOs.App;
-using Retard.Engine.Models.DTOs.Input;
+using Retard.Input.Models;
+using Retard.Input.Models.Assets;
+using Retard.Input.Models.DTOs;
 
-namespace Retard.Engine.Models
+namespace Retard.Tests.Models
 {
     /// <summary>
     /// Les constantes partagées dans tout le projet

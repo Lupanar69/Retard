@@ -3,14 +3,14 @@ using Arch.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Retard.Engine.Models;
-using Retard.Engine.Models.Assets.Input;
-using Retard.Engine.ViewModels.App;
-using Retard.Engine.ViewModels.Input;
-using Retard.Engine.ViewModels.Scenes;
 using Retard.Core.Models.App;
+using Retard.Core.ViewModels.App;
+using Retard.Engine.Models;
 using Retard.Engine.Models.Assets;
-using Retard.Engine.Models.DTOs.Input;
+using Retard.Engine.ViewModels.Scenes;
+using Retard.Input.Models.Assets;
+using Retard.Input.Models.DTOs;
+using Retard.Input.ViewModels;
 
 namespace Retard.Engine.ViewModels.Engine
 {

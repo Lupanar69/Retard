@@ -1,8 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Retard.Engine.Models;
-using Retard.Engine.Models.Assets.Input;
-using Retard.Engine.ViewModels.Input;
+using Retard.Input.Models;
+using Retard.Input.Models.Assets;
+using Retard.Input.ViewModels;
 
 namespace Retard.Engine.ViewModels.Controllers
 {

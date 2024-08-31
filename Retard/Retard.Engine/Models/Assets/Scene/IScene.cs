@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Retard.Engine.Models.Assets.Input;
+using Retard.Input.Models.Assets;
 
 namespace Retard.Engine.Models.Assets.Scene
 {
