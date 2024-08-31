@@ -6,10 +6,10 @@ using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Retard.Engine.Models;
-using Retard.Engine.Models.Arch;
+using Retard.Core.Models.Arch;
 using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.Models.DTOs.Input;
-using Retard.Engine.Models.ValueTypes;
+using Retard.Core.Models.ValueTypes;
 using Retard.Engine.Systems.Input;
 
 namespace Retard.Engine.ViewModels.Input
@@ -58,17 +58,13 @@ namespace Retard.Engine.ViewModels.Input
 
         #endregion
 
-        #region Variables statiques
+        #region Variables d'instance
 
         /// <summary>
         /// La liste des types d'entrées autorisées pour ce jeu
         /// (clavier, souris, manette, etc.)
         /// </summary>
         private Dictionary<Type, IInputScheme> _inputSchemes;
-
-        #endregion
-
-        #region Variables d'instance
 
         /// <summary>
         /// Les systèmes ECS à màj dans Update()

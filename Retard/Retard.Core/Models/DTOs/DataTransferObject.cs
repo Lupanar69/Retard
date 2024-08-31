@@ -1,4 +1,4 @@
-﻿namespace Retard.Engine.Models.DTOs
+﻿namespace Retard.Core.Models.DTOs
 {
     /// <summary>
     /// Représente un conteneur de données conçu pour être écrit

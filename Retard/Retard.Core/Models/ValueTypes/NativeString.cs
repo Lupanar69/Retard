@@ -1,7 +1,7 @@
 ﻿using System;
 using Arch.LowLevel;
 
-namespace Retard.Engine.Models.ValueTypes
+namespace Retard.Core.Models.ValueTypes
 {
     /// <summary>
     /// Version blittable de System.String

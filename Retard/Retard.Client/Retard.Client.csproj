@@ -27,7 +27,7 @@
   </PropertyGroup>
 	
 	<ItemGroup>
-		<Using Include="Retard.Engine.ViewModels.Log" Static="True" />
+		<Using Include="Retard.Core.ViewModels.Log" Static="True" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -53,6 +53,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Retard.Core\Retard.Core.csproj" />
     <ProjectReference Include="..\Retard.Engine\Retard.Engine.csproj" />
     <ProjectReference Include="..\Retard.Tests\Retard.Tests.csproj" />
   </ItemGroup>

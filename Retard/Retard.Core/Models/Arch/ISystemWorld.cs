@@ -1,4 +1,4 @@
-﻿namespace Retard.Engine.Models.Arch
+﻿namespace Retard.Core.Models.Arch
 {
     /// <summary>
     ///     A basic implementation of a <see cref="ISystem"/>.

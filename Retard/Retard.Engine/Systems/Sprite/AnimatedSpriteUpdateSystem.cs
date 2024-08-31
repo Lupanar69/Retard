@@ -1,6 +1,6 @@
 ﻿using Arch.Core;
 using Retard.Engine.Entities;
-using Retard.Engine.Models.Arch;
+using Retard.Core.Models.Arch;
 
 namespace Retard.Engine.Systems.Sprite
 {

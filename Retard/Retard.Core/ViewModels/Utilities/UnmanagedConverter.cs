@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Retard.Engine.ViewModels.Utilities
+namespace Retard.Core.ViewModels.Utilities
 {
     /// <summary>
     /// Convertisseur générique

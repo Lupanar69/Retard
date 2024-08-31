@@ -1,4 +1,6 @@
-﻿namespace Retard.Engine.Models.DTOs.Input
+﻿using Retard.Core.Models.DTOs;
+
+namespace Retard.Engine.Models.DTOs.Input
 {
     /// <summary>
     /// Représente les données du fichier de configuration 

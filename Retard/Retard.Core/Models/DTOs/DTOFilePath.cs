@@ -1,6 +1,6 @@
-﻿using Retard.Engine.Models.ValueTypes;
+﻿using Retard.Core.Models.ValueTypes;
 
-namespace Retard.Engine.Models.DTOs
+namespace Retard.Core.Models.DTOs
 {
     /// <summary>
     /// Fournit les chemins d'accès vers les fichiers JSON

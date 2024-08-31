@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 
-namespace Retard.Engine.ViewModels
+namespace Retard.Core.ViewModels
 {
     /// <summary>
     /// Permet d'écrire dans la console plus facilement

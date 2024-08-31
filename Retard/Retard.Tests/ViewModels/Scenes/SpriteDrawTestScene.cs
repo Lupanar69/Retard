@@ -4,9 +4,9 @@ using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using Retard.Core.Models.Arch;
 using Retard.Engine.Components.Sprites;
 using Retard.Engine.Entities;
-using Retard.Engine.Models.Arch;
 using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.Models.Assets.Scene;
 using Retard.Engine.Models.Assets.Sprites;
@@ -70,7 +70,7 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// L'archétype des sprites
         /// </summary>
-        private readonly Arch.Core.Utils.ComponentType[] _spriteArchetype = new Arch.Core.Utils.ComponentType[] { typeof(SpriteRectCD), typeof(SpritePositionCD), typeof(SpriteColorCD) };
+        private readonly Arch.Core.Utils.ComponentType[] _spriteArchetype = [typeof(SpriteRectCD), typeof(SpritePositionCD), typeof(SpriteColorCD)];
 
         #endregion
 

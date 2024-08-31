@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Retard.Engine.Entities;
-using Retard.Engine.Models.Arch;
+using Retard.Core.Models.Arch;
 using Retard.Engine.Models.Assets.Sprites;
 
 namespace Retard.Engine.Systems.Sprite

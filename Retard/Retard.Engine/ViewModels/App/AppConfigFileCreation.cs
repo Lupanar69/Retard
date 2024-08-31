@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using Retard.Engine.Models.ValueTypes;
-using Retard.Engine.Models.DTOs;
-using Retard.Engine.ViewModels.Utilities;
+using Retard.Core.Models.DTOs;
+using Retard.Core.Models.ValueTypes;
+using Retard.Core.ViewModels.Utilities;
 
 namespace Retard.Engine.ViewModels.App
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Retard.Engine.Models.ValueTypes;
+using Retard.Core.Models.ValueTypes;
 using Retard.Engine.ViewModels.Input;
 
 namespace Retard.Engine.Models.Assets.Input

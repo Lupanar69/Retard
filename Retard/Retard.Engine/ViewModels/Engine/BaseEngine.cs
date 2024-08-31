@@ -8,7 +8,7 @@ using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.ViewModels.App;
 using Retard.Engine.ViewModels.Input;
 using Retard.Engine.ViewModels.Scenes;
-using Retard.Engine.Models.App;
+using Retard.Core.Models.App;
 using Retard.Engine.Models.Assets;
 using Retard.Engine.Models.DTOs.Input;
 

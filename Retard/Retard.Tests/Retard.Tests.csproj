@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Platforms>AnyCPU;x86</Platforms>
@@ -18,7 +18,7 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<Using Include="Retard.Engine.ViewModels.Log" Static="True" />
+		<Using Include="Retard.Core.ViewModels.Log" Static="True" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -28,6 +28,7 @@
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.2.1105" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Retard.Core\Retard.Core.csproj" />
     <ProjectReference Include="..\Retard.Engine\Retard.Engine.csproj" />
   </ItemGroup>
 </Project>

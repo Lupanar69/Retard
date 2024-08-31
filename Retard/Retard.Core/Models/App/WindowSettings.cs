@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 
-namespace Retard.Engine.Models.App
+namespace Retard.Core.Models.App
 {
     /// <summary>
     /// Paramètres de la fenêtre

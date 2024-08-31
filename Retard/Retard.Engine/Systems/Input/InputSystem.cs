@@ -1,12 +1,12 @@
 ﻿using Arch.Core;
 using Arch.LowLevel;
 using Arch.Relationships;
+using Retard.Core.Models.Arch;
+using Retard.Core.Models.ValueTypes;
 using Retard.Engine.Components.Input;
 using Retard.Engine.Entities;
-using Retard.Engine.Models.Arch;
-using Retard.Engine.Models.ValueTypes;
-using Retard.Engine.ViewModels.Input;
 using Retard.Engine.Models.DTOs.Input;
+using Retard.Engine.ViewModels.Input;
 
 namespace Retard.Engine.Systems.Input
 {

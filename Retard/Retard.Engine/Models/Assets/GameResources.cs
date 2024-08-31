@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
-using Retard.Engine.Models.ValueTypes;
+using Retard.Core.Models.ValueTypes;
 
 namespace Retard.Engine.Models.Assets
 {

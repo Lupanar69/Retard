@@ -2,19 +2,19 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using Retard.Core.Models.App;
+using Retard.Core.Models.ValueTypes;
+using Retard.Core.ViewModels.Utilities;
 using Retard.Engine.Models;
-using Retard.Engine.Models.App;
 using Retard.Engine.Models.Assets;
 using Retard.Engine.Models.Assets.Input;
 using Retard.Engine.Models.DTOs.App;
 using Retard.Engine.Models.DTOs.Input;
-using Retard.Engine.Models.ValueTypes;
 using Retard.Engine.ViewModels.App;
 using Retard.Engine.ViewModels.Controllers;
 using Retard.Engine.ViewModels.Engine;
 using Retard.Engine.ViewModels.Input;
 using Retard.Engine.ViewModels.Scenes;
-using Retard.Engine.ViewModels.Utilities;
 using Retard.Tests.ViewModels.Scenes;
 
 namespace Retard.Tests.ViewModels.Engine

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
-using Retard.Engine.Models.App;
+using Retard.Core.Models.App;
+using Retard.Core.Models.DTOs;
 
 namespace Retard.Engine.Models.DTOs.App
 {

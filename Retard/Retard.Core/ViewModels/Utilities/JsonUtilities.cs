@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
-namespace Retard.Engine.ViewModels.Utilities
+namespace Retard.Core.ViewModels.Utilities
 {
     /// <summary>
     /// Utilisée pour lire et écrire dans des fichiers Json

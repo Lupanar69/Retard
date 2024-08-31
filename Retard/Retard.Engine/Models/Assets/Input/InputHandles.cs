@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using Arch.LowLevel;
-using Retard.Engine.Models.ValueTypes;
+using Retard.Core.Models.ValueTypes;
 using Retard.Engine.ViewModels.Input;
 
 namespace Retard.Engine.Models.Assets.Input
@@ -8,7 +8,7 @@ namespace Retard.Engine.Models.Assets.Input
     /// <summary>
     /// Contient les handles des différents types d'action
     /// </summary>
-    public class InputHandles
+    public sealed class InputHandles
     {
         #region Variables d'instance
 
