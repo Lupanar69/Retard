@@ -1,33 +1,24 @@
 ﻿using Arch.Core;
-using Retard.Engine.Entities;
 using Retard.Core.Models.Arch;
+using Retard.Rendering2D.Entities;
 
-namespace Retard.Engine.Systems.Sprite
+namespace Retard.Rendering2D.Systems
 {
     /// <summary>
     /// Màj les frames des des sprites animés
     /// </summary>
-    public readonly struct AnimatedSpriteUpdateSystem : ISystemWorld
+    /// <remarks>
+    /// Constructeur
+    /// </remarks>
+    /// <param name="world">Le monde contenant les entités des sprites</param>
+    public readonly struct AnimatedSpriteUpdateSystem(World world) : ISystemWorld
     {
         #region Propriétés
 
         /// <summary>
         /// Le monde contenant les entités
         /// </summary>
-        public readonly World World { get; init; }
-
-        #endregion
-
-        #region Constructeur
-
-        /// <summary>
-        /// Constructeur
-        /// </summary>
-        /// <param name="world">Le monde contenant les entités des sprites</param>
-        public AnimatedSpriteUpdateSystem(World world)
-        {
-            this.World = world;
-        }
+        public readonly World World { get; init; } = world;
 
         #endregion
 

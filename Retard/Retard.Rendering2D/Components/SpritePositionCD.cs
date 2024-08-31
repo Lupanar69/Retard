@@ -1,7 +1,7 @@
 ﻿using Arch.AOT.SourceGenerator;
 using Microsoft.Xna.Framework;
 
-namespace Retard.Engine.Components.Sprites
+namespace Retard.Rendering2D.Components
 {
     /// <summary>
     /// La position du sprite à l'écran en pixels
@@ -26,7 +26,7 @@ namespace Retard.Engine.Components.Sprites
         /// <param name="pos">La position du sprite à l'écran en pixels</param>
         public SpritePositionCD(Vector2 pos)
         {
-            this.Value = pos;
+            Value = pos;
         }
 
         #endregion

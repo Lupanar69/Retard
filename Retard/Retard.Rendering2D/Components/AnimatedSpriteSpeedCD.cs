@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Arch.AOT.SourceGenerator;
 
-namespace Retard.Engine.Components.Sprites
+namespace Retard.Rendering2D.Components
 {
     /// <summary>
     /// Le nombre de frames à attendre avant de màj la frame du sprite.
@@ -34,8 +34,8 @@ namespace Retard.Engine.Components.Sprites
         /// <param name="totalFrames">Le nombre de frames à attendre avant de màj la frame du sprite.</param>
         public AnimatedSpriteSpeedCD([Range(1, int.MaxValue)] int totalFrames = 1)
         {
-            this.TotalFrames = totalFrames;
-            this.ElapsedFrames = 0;
+            TotalFrames = totalFrames;
+            ElapsedFrames = 0;
         }
 
         #endregion

@@ -3,10 +3,10 @@ using Arch.Core;
 using Arch.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Retard.Engine.Components.Sprites;
-using Retard.Engine.Models.Assets.Sprites;
+using Retard.Rendering2D.Components;
+using Retard.Rendering2D.Models;
 
-namespace Retard.Engine.Entities
+namespace Retard.Rendering2D.Entities
 {
     /// <summary>
     /// Regroupe les queries Arch pouvant être parallélisées
@@ -74,10 +74,6 @@ namespace Retard.Engine.Entities
                 frame.Value = animation.StartFrame + relativeFrame.Value;
             }
         }
-
-        #endregion
-
-        #region Cameras
 
         #endregion
     }

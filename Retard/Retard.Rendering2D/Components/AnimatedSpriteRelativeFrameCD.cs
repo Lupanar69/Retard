@@ -1,6 +1,6 @@
 ﻿using Arch.AOT.SourceGenerator;
 
-namespace Retard.Engine.Components.Sprites
+namespace Retard.Rendering2D.Components
 {
     /// <summary>
     /// L'ID du sprite actuel depuis le début de l'animation
@@ -25,7 +25,7 @@ namespace Retard.Engine.Components.Sprites
         /// <param name="relativeFrame">L'ID du sprite actuel depuis le début de l'animation</param>
         public AnimatedSpriteRelativeFrameCD(int relativeFrame = 0)
         {
-            this.Value = relativeFrame;
+            Value = relativeFrame;
         }
 
         #endregion

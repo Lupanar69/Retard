@@ -1,6 +1,6 @@
 ﻿using Arch.AOT.SourceGenerator;
 
-namespace Retard.Engine.Components.Sprites
+namespace Retard.Rendering2D.Components
 {
     /// <summary>
     /// Les IDs des sprites de début et fin de l'animation
@@ -31,8 +31,8 @@ namespace Retard.Engine.Components.Sprites
         /// <param name="length">Le nombre de sprites dans l'animation</param>
         public AnimatedSpriteAnimationCD(int startFrame, int length)
         {
-            this.StartFrame = startFrame;
-            this.Length = length;
+            StartFrame = startFrame;
+            Length = length;
         }
 
         #endregion

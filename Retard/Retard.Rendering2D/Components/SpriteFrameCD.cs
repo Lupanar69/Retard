@@ -1,6 +1,6 @@
 ﻿using Arch.AOT.SourceGenerator;
 
-namespace Retard.Engine.Components.Sprites
+namespace Retard.Rendering2D.Components
 {
     /// <summary>
     /// L'ID du sprite à afficher dans l'atlas
@@ -25,7 +25,7 @@ namespace Retard.Engine.Components.Sprites
         /// <param name="frame">L'ID du sprite à afficher dans l'atlas</param>
         public SpriteFrameCD(int frame)
         {
-            this.Value = frame;
+            Value = frame;
         }
 
         #endregion

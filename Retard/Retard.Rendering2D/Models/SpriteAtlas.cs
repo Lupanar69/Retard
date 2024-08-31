@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Retard.Engine.Models.Assets.Sprites
+namespace Retard.Rendering2D.Models
 {
     /// <summary>
     /// Représente un sprite provenant d'un atlas
@@ -37,9 +37,9 @@ namespace Retard.Engine.Models.Assets.Sprites
         /// <param name="columns">Le nombre de colonnes de sprite</param>
         public SpriteAtlas(Texture2D texture, int rows, int columns)
         {
-            this.Texture = texture;
-            this.Rows = rows;
-            this.Columns = columns;
+            Texture = texture;
+            Rows = rows;
+            Columns = columns;
         }
 
         #endregion
@@ -54,10 +54,10 @@ namespace Retard.Engine.Models.Assets.Sprites
         /// <returns>Les dimensions du sprite</returns>
         public Rectangle GetSpriteRect(int frame, int spriteSize = 1)
         {
-            int width = this.Texture.Width / this.Columns * spriteSize;
-            int height = this.Texture.Height / this.Rows * spriteSize;
-            int row = frame / this.Columns;
-            int column = frame % this.Columns;
+            int width = Texture.Width / Columns * spriteSize;
+            int height = Texture.Height / Rows * spriteSize;
+            int row = frame / Columns;
+            int column = frame % Columns;
 
             return new Rectangle(width * column, height * row, width, height);
         }

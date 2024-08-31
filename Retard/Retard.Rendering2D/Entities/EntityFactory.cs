@@ -2,9 +2,9 @@
 using Arch.Core;
 using Arch.LowLevel;
 using Microsoft.Xna.Framework;
-using Retard.Engine.Components.Sprites;
+using Retard.Rendering2D.Components;
 
-namespace Retard.Engine.Entities
+namespace Retard.Rendering2D.Entities
 {
     /// <summary>
     /// Contient les méthodes de création

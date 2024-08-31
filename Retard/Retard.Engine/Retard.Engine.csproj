@@ -17,10 +17,13 @@
     <DefineConstants>$(DefineConstants);ENABLE_LOGS;PURE_ECS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Systems\**" />
     <Compile Remove="Tests\**" />
     <Compile Remove="View\**" />
+    <EmbeddedResource Remove="Systems\**" />
     <EmbeddedResource Remove="Tests\**" />
     <EmbeddedResource Remove="View\**" />
+    <None Remove="Systems\**" />
     <None Remove="Tests\**" />
     <None Remove="View\**" />
   </ItemGroup>
@@ -45,5 +48,6 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Retard.Core\Retard.Core.csproj" />
 	  <ProjectReference Include="..\Retard.Input\Retard.Input.csproj" />
+	  <ProjectReference Include="..\Retard.Rendering2D\Retard.Rendering2D.csproj" />
 	</ItemGroup>
 </Project>
