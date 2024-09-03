@@ -51,98 +51,13 @@ namespace Retard.Input.Models.Assets
         /// </summary>
         public InputHandles()
         {
-            _buttonStateHandlesIDs = new UnsafeList<NativeString>(1);
-            _vector1DHandlesIDs = new UnsafeList<NativeString>(1);
-            _vector2DHandlesIDs = new UnsafeList<NativeString>(1);
+            this._buttonStateHandlesIDs = new UnsafeList<NativeString>(1);
+            this._vector1DHandlesIDs = new UnsafeList<NativeString>(1);
+            this._vector2DHandlesIDs = new UnsafeList<NativeString>(1);
 
-            _buttonStateHandles = new UnsafeList<InputActionButtonStateHandles>(1);
-            _vector1DHandles = new UnsafeList<InputActionVector1DHandles>(1);
-            _vector2DHandles = new UnsafeList<InputActionVector2DHandles>(1);
-        }
-
-        /// <summary>
-        /// Constructeur
-        /// </summary>
-        /// <param name="handles">Les InputHandles à copier</param>
-        public InputHandles(in InputHandles handles) : this(handles._buttonStateHandlesIDs, handles._vector1DHandlesIDs, handles._vector2DHandlesIDs)
-        {
-            for (int i = 0; i < handles._buttonStateHandlesIDs.Count; ++i)
-            {
-                NativeString rKey = handles._buttonStateHandlesIDs[i];
-                int leftIndexOf = _buttonStateHandlesIDs.IndexOf(rKey);
-                ref readonly InputActionButtonStateHandles lHandles = ref _buttonStateHandles[leftIndexOf];
-                ref readonly InputActionButtonStateHandles rHandles = ref handles._buttonStateHandles[i];
-                lHandles.Started += rHandles.Started;
-                lHandles.Performed += rHandles.Performed;
-                lHandles.Finished += rHandles.Finished;
-            }
-
-            for (int i = 0; i < handles._vector1DHandlesIDs.Count; ++i)
-            {
-                NativeString rKey = handles._vector1DHandlesIDs[i];
-                int leftIndexOf = _vector1DHandlesIDs.IndexOf(rKey);
-                ref readonly InputActionVector1DHandles lHandles = ref _vector1DHandles[leftIndexOf];
-                ref readonly InputActionVector1DHandles rHandles = ref handles._vector1DHandles[i];
-                lHandles.Performed += rHandles.Performed;
-            }
-
-            for (int i = 0; i < handles._vector2DHandlesIDs.Count; ++i)
-            {
-                NativeString rKey = handles._vector2DHandlesIDs[i];
-                int leftIndexOf = _vector2DHandlesIDs.IndexOf(rKey);
-                ref readonly InputActionVector2DHandles lHandles = ref _vector2DHandles[leftIndexOf];
-                ref readonly InputActionVector2DHandles rHandles = ref handles._vector2DHandles[i];
-                lHandles.Performed += rHandles.Performed;
-            }
-        }
-
-        /// <summary>
-        /// Constructeur
-        /// </summary>
-        /// <param name="buttonIDs">La liste des IDs des actions de type ButtonState</param>
-        /// <param name="vector1DIDs">La liste des IDs des actions de type Vector1D</param>
-        /// <param name="vector2DIDs">La liste des IDs des actions de type Vector2D</param>
-        public InputHandles(UnsafeList<NativeString> buttonIDs, UnsafeList<NativeString> vector1DIDs, UnsafeList<NativeString> vector2DIDs)
-        {
-            _buttonStateHandlesIDs = new UnsafeList<NativeString>(buttonIDs.Capacity);
-            _vector1DHandlesIDs = new UnsafeList<NativeString>(vector1DIDs.Capacity);
-            _vector2DHandlesIDs = new UnsafeList<NativeString>(vector2DIDs.Capacity);
-
-            _buttonStateHandles = new UnsafeList<InputActionButtonStateHandles>(buttonIDs.Capacity);
-            _vector1DHandles = new UnsafeList<InputActionVector1DHandles>(vector1DIDs.Capacity);
-            _vector2DHandles = new UnsafeList<InputActionVector2DHandles>(vector2DIDs.Capacity);
-
-
-            for (int i = 0; i < buttonIDs.Count; ++i)
-            {
-                var started = InputManager.Instance.ActionButtonResources.Add(delegate
-                { });
-                var performed = InputManager.Instance.ActionButtonResources.Add(delegate
-                { });
-                var finished = InputManager.Instance.ActionButtonResources.Add(delegate
-                { });
-
-                _buttonStateHandlesIDs.Add(buttonIDs[i]);
-                _buttonStateHandles.Add(new InputActionButtonStateHandles(started, performed, finished));
-            }
-
-            for (int i = 0; i < vector1DIDs.Count; ++i)
-            {
-                var performed = InputManager.Instance.ActionVector1DResources.Add(delegate
-                { });
-
-                _vector1DHandlesIDs.Add(vector1DIDs[i]);
-                _vector1DHandles.Add(new InputActionVector1DHandles(performed));
-            }
-
-            for (int i = 0; i < vector2DIDs.Count; ++i)
-            {
-                var performed = InputManager.Instance.ActionVector2DResources.Add(delegate
-                { });
-
-                _vector2DHandlesIDs.Add(vector2DIDs[i]);
-                _vector2DHandles.Add(new InputActionVector2DHandles(performed));
-            }
+            this._buttonStateHandles = new UnsafeList<InputActionButtonStateHandles>(1);
+            this._vector1DHandles = new UnsafeList<InputActionVector1DHandles>(1);
+            this._vector2DHandles = new UnsafeList<InputActionVector2DHandles>(1);
         }
 
         #endregion
@@ -155,9 +70,9 @@ namespace Retard.Input.Models.Assets
         /// <param name="key">L'ID de l'action</param>
         /// <returns>TRUE si l'action est enregistrée</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool ButtonStateHandlesExist(NativeString key)
+        public bool ButtonStateHandleExists(NativeString key)
         {
-            return _buttonStateHandlesIDs.Contains(key);
+            return this._buttonStateHandlesIDs.Contains(key);
         }
 
         /// <summary>
@@ -166,9 +81,9 @@ namespace Retard.Input.Models.Assets
         /// <param name="key">L'ID de l'action</param>
         /// <returns>TRUE si l'action est enregistrée</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Vector1DHandlesExist(NativeString key)
+        public bool Vector1DHandleExists(NativeString key)
         {
-            return _vector1DHandlesIDs.Contains(key);
+            return this._vector1DHandlesIDs.Contains(key);
         }
 
         /// <summary>
@@ -177,9 +92,9 @@ namespace Retard.Input.Models.Assets
         /// <param name="key">L'ID de l'action</param>
         /// <returns>TRUE si l'action est enregistrée</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Vector2DHandleExist(NativeString key)
+        public bool Vector2DHandleExists(NativeString key)
         {
-            return _vector2DHandlesIDs.Contains(key);
+            return this._vector2DHandlesIDs.Contains(key);
         }
 
         /// <summary>
@@ -187,10 +102,8 @@ namespace Retard.Input.Models.Assets
         /// </summary>
         /// <param name="key">L'ID de l'action</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddButtonStateHandles(NativeString key)
+        public void AddButtonStateEvent(NativeString key)
         {
-            _buttonStateHandlesIDs.Add(key);
-
             var started = InputManager.Instance.ActionButtonResources.Add(delegate
             { });
             var performed = InputManager.Instance.ActionButtonResources.Add(delegate
@@ -198,7 +111,8 @@ namespace Retard.Input.Models.Assets
             var finished = InputManager.Instance.ActionButtonResources.Add(delegate
             { });
 
-            _buttonStateHandles.Add(new InputActionButtonStateHandles(started, performed, finished));
+            this._buttonStateHandlesIDs.Add(key);
+            this._buttonStateHandles.Add(new InputActionButtonStateHandles(started, performed, finished));
         }
 
         /// <summary>
@@ -206,14 +120,13 @@ namespace Retard.Input.Models.Assets
         /// </summary>
         /// <param name="key">L'ID de l'action</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddVector1DHandles(NativeString key)
+        public void AddVector1DEvent(NativeString key)
         {
-            _vector1DHandlesIDs.Add(key);
-
             var performed = InputManager.Instance.ActionVector1DResources.Add(delegate
             { });
 
-            _vector1DHandles.Add(new InputActionVector1DHandles(performed));
+            this._vector1DHandlesIDs.Add(key);
+            this._vector1DHandles.Add(new InputActionVector1DHandles(performed));
         }
 
         /// <summary>
@@ -221,14 +134,13 @@ namespace Retard.Input.Models.Assets
         /// </summary>
         /// <param name="key">L'ID de l'action</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddVector2DHandles(NativeString key)
+        public void AddVector2DEvent(NativeString key)
         {
-            _vector2DHandlesIDs.Add(key);
-
             var performed = InputManager.Instance.ActionVector2DResources.Add(delegate
             { });
 
-            _vector2DHandles.Add(new InputActionVector2DHandles(performed));
+            this._vector2DHandlesIDs.Add(key);
+            this._vector2DHandles.Add(new InputActionVector2DHandles(performed));
         }
 
         /// <summary>
@@ -239,7 +151,7 @@ namespace Retard.Input.Models.Assets
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ref readonly InputActionButtonStateHandles GetButtonEvent(NativeString key)
         {
-            return ref _buttonStateHandles[_buttonStateHandlesIDs.IndexOf(key)];
+            return ref this._buttonStateHandles[this._buttonStateHandlesIDs.IndexOf(key)];
         }
 
         /// <summary>
@@ -250,7 +162,7 @@ namespace Retard.Input.Models.Assets
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ref readonly InputActionVector1DHandles GetVector1DEvent(NativeString key)
         {
-            return ref _vector1DHandles[_vector1DHandlesIDs.IndexOf(key)];
+            return ref this._vector1DHandles[this._vector1DHandlesIDs.IndexOf(key)];
         }
 
         /// <summary>
@@ -261,7 +173,7 @@ namespace Retard.Input.Models.Assets
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ref readonly InputActionVector2DHandles GetVector2DEvent(NativeString key)
         {
-            return ref _vector2DHandles[_vector2DHandlesIDs.IndexOf(key)];
+            return ref this._vector2DHandles[this._vector2DHandlesIDs.IndexOf(key)];
         }
 
         #endregion

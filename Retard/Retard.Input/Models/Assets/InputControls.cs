@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Retard.Core.Models.ValueTypes;
-using Retard.Input.Models;
 using Retard.Input.ViewModels;
 
 namespace Retard.Input.Models.Assets
@@ -42,7 +41,7 @@ namespace Retard.Input.Models.Assets
         public InputControls()
         {
             _enabled = false;
-            _handles = new InputHandles();
+            this._handles = new InputHandles();
         }
 
         #endregion
@@ -56,7 +55,7 @@ namespace Retard.Input.Models.Assets
         {
             if (!_enabled)
             {
-                InputManager.Instance.Handles += _handles;
+                InputManager.Instance.Handles += this._handles;
                 _enabled = true;
             }
         }
@@ -68,7 +67,7 @@ namespace Retard.Input.Models.Assets
         {
             if (_enabled)
             {
-                InputManager.Instance.Handles -= _handles;
+                InputManager.Instance.Handles -= this._handles;
                 _enabled = false;
             }
         }
@@ -83,19 +82,14 @@ namespace Retard.Input.Models.Assets
         {
             // Si cette action n'existe pas dans la liste, on la crée
 
-            if (!_handles.ButtonStateHandlesExist(key))
+            if (!this._handles.ButtonStateHandleExists(key))
             {
-                _handles.AddButtonStateHandles(key);
+                this._handles.AddButtonStateEvent(key);
             }
 
             // Assigne l'action
 
-            if (!_handles.ButtonStateHandlesExist(key))
-            {
-                throw new ArgumentException($"Erreur : La clé \"{key}\" n'existe pas dans la liste des handles de type ButtonState.");
-            }
-
-            ref readonly InputActionButtonStateHandles thisHandles = ref _handles.GetButtonEvent(key);
+            ref readonly InputActionButtonStateHandles thisHandles = ref this._handles.GetButtonEvent(key);
 
             switch (handleType)
             {
@@ -115,9 +109,9 @@ namespace Retard.Input.Models.Assets
 
             if (_enabled)
             {
-                if (!InputManager.Instance.Handles.ButtonStateHandlesExist(key))
+                if (!InputManager.Instance.Handles.ButtonStateHandleExists(key))
                 {
-                    InputManager.Instance.Handles.AddButtonStateHandles(key);
+                    InputManager.Instance.Handles.AddButtonStateEvent(key);
                 }
 
                 // Assigne l'action
@@ -148,14 +142,14 @@ namespace Retard.Input.Models.Assets
         {
             // Si cette action n'existe pas dans la liste, on la crée
 
-            if (!_handles.Vector1DHandlesExist(key))
+            if (!this._handles.Vector1DHandleExists(key))
             {
-                _handles.AddVector1DHandles(key);
+                this._handles.AddVector1DEvent(key);
             }
 
             // Assigne l'action
 
-            ref readonly InputActionVector1DHandles thisHandles = ref _handles.GetVector1DEvent(key);
+            ref readonly InputActionVector1DHandles thisHandles = ref this._handles.GetVector1DEvent(key);
             thisHandles.Performed += callback;
 
             // Si l'objet est actif, on ajoute également cette nouvelle action
@@ -163,9 +157,9 @@ namespace Retard.Input.Models.Assets
 
             if (_enabled)
             {
-                if (!InputManager.Instance.Handles.ButtonStateHandlesExist(key))
+                if (!InputManager.Instance.Handles.ButtonStateHandleExists(key))
                 {
-                    InputManager.Instance.Handles.AddVector1DHandles(key);
+                    InputManager.Instance.Handles.AddVector1DEvent(key);
                 }
 
                 // Assigne l'action
@@ -184,14 +178,14 @@ namespace Retard.Input.Models.Assets
         {
             // Si cette action n'existe pas dans la liste, on la crée
 
-            if (!_handles.Vector2DHandleExist(key))
+            if (!this._handles.Vector2DHandleExists(key))
             {
-                _handles.AddVector2DHandles(key);
+                this._handles.AddVector2DEvent(key);
             }
 
             // Assigne l'action
 
-            ref readonly InputActionVector2DHandles thisHandles = ref _handles.GetVector2DEvent(key);
+            ref readonly InputActionVector2DHandles thisHandles = ref this._handles.GetVector2DEvent(key);
             thisHandles.Performed += callback;
 
             // Si l'objet est actif, on ajoute également cette nouvelle action
@@ -199,9 +193,9 @@ namespace Retard.Input.Models.Assets
 
             if (_enabled)
             {
-                if (!InputManager.Instance.Handles.Vector2DHandleExist(key))
+                if (!InputManager.Instance.Handles.Vector2DHandleExists(key))
                 {
-                    InputManager.Instance.Handles.AddVector2DHandles(key);
+                    InputManager.Instance.Handles.AddVector2DEvent(key);
                 }
 
                 // Assigne l'action

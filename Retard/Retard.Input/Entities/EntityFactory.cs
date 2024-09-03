@@ -54,7 +54,7 @@ namespace Retard.Input.Entities
         /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
         /// <param name="keySequence">La liste d'entrées à exécuter</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputBindingEntities(World world, int nbMaxControllers,
+        public static Entity CreateInputBindingKeySequenceEntity(World world, int nbMaxControllers,
             bool usesMouse, bool usesKeyboard, bool usesGamePad, InputKeySequenceElement[] keySequence)
         {
             if (keySequence == null || keySequence.Length == 0)
@@ -105,7 +105,7 @@ namespace Retard.Input.Entities
         /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
         /// <param name="vector1DKeys">Les touches pour actionner un seul axe (X ou Y)</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputBindingEntities(World world, int nbMaxControllers,
+        public static Entity CreateInputBindingVector1DKeysEntity(World world, int nbMaxControllers,
             bool usesMouse, bool usesKeyboard, bool usesGamePad, InputKeyVector1DElement[] vector1DKeys)
         {
             if (vector1DKeys == null || vector1DKeys.Length != 2)
@@ -149,7 +149,7 @@ namespace Retard.Input.Entities
         /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
         /// <param name="vector2DKeys">Les touches pour actionner un axe 2D</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputBindingEntities(World world, int nbMaxControllers,
+        public static Entity CreateInputBindingVector2DKeysEntity(World world, int nbMaxControllers,
             bool usesMouse, bool usesKeyboard, bool usesGamePad, InputKeyVector2DElement[] vector2DKeys)
         {
             if (vector2DKeys == null || vector2DKeys.Length != 4)
@@ -217,7 +217,7 @@ namespace Retard.Input.Entities
         /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
         /// <param name="joystick">Le joystick utilisé</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputBindingEntities(World world, int nbMaxControllers,
+        public static Entity CreateInputBindingJoystickEntity(World world, int nbMaxControllers,
             bool usesGamePad, InputBindingJoystick joystick)
         {
             if (!usesGamePad || joystick.Type == JoystickType.None)
@@ -258,7 +258,7 @@ namespace Retard.Input.Entities
         /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
         /// <param name="trigger">Le trigger utilisé</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputBindingEntities(World world, int nbMaxControllers,
+        public static Entity CreateInputBindingTriggerEntity(World world, int nbMaxControllers,
             bool usesMouse, bool usesGamePad, InputBindingTrigger trigger)
         {
             switch (trigger.Type)

@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.LowLevel;
+using Arch.Relationships;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models.Arch;
 using Retard.Core.Models.ValueTypes;
+using Retard.Engine.Entities;
+using Retard.Input.Components;
+using Retard.Input.Entities;
 using Retard.Input.Models;
 using Retard.Input.Models.Assets;
 using Retard.Input.Models.DTOs;
@@ -80,12 +84,41 @@ namespace Retard.Input.ViewModels
         /// </summary>
         private InputManager()
         {
-
+            this.ActionButtonResources = new Resources<Action<int>>(1);
+            this.ActionVector1DResources = new Resources<Action<int, float>>(1);
+            this.ActionVector2DResources = new Resources<Action<int, Vector2>>(1);
+            this.Handles = new InputHandles();
         }
 
         #endregion
 
         #region Méthodes publiques
+
+        /// <summary>
+        /// Capture l'état des inputs lors de la frame actuelle
+        /// </summary>
+        public void Update()
+        {
+            foreach (KeyValuePair<Type, IInputScheme> pair in this._inputSchemes)
+            {
+                pair.Value.Update();
+            }
+
+            this._updateSystems.Update();
+        }
+
+        /// <summary>
+        /// Capture l'état des inputs lors de la frame précédente
+        /// A appeler en fin d'Update pour ne pas écraser le précédent état
+        /// avant les comparaisons
+        /// </summary>
+        public void AfterUpdate()
+        {
+            foreach (KeyValuePair<Type, IInputScheme> pair in this._inputSchemes)
+            {
+                pair.Value.AfterUpdate();
+            }
+        }
 
         /// <summary>
         /// Récupère les événements liés un InputAction de type ButtonState à partir de son ID.
@@ -120,9 +153,16 @@ namespace Retard.Input.ViewModels
             return ref this.Handles.GetVector2DEvent(key);
         }
 
-        #endregion
-
-        #region Méthodes internes
+        /// <summary>
+        /// Récupère le nombre max de contrôleurs évalués par l'InputManager.
+        /// Si aucune manette n'est connectée, renvoie toujours 1.
+        /// </summary>
+        /// <returns>Le nombre max de contrôleurs évalués par l'InputManager (1 par défaut)</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int GetNbMaxControllers()
+        {
+            return this.TryGetScheme(out GamePadInput gamePadInput) ? gamePadInput.NbMaxGamePads : 1;
+        }
 
         /// <summary>
         /// Crée les InputSchemes pour chaque type de contrôleur souhaité
@@ -143,57 +183,165 @@ namespace Retard.Input.ViewModels
         /// <summary>
         /// Initialise les systèmes
         /// </summary>
-        /// <param name="inputConfig">Les données de configuration des entrées à observer</param>
         /// <param name="world">Le monde contenant les entités</param>
-        public void InitializeSystems(InputConfigDTO inputConfig, World world)
+        public void InitializeSystems(World world, int nbMaxControllers)
         {
             // Initalise les systèmes
 
             this._updateSystems = new Group("Update Systems");
-            this._updateSystems.Add(new InputSystem(world, inputConfig));
+            this._updateSystems.Add(new InputSystem(world, nbMaxControllers));
             this._updateSystems.Initialize();
         }
 
         /// <summary>
-        /// Crée les InputSchemes pour chaque type de contrôleur souhaité
+        /// Crée les entités des inputs à partir des données de config
         /// </summary>
-        /// <param name="buttonIDs">La liste des IDs des actions de type ButtonState</param>
-        /// <param name="vector1DIDs">La liste des IDs des actions de type Vector1D</param>
-        /// <param name="vector2DIDs">La liste des IDs des actions de type Vector2D</param>
-        public void InitializeInputActionEvents(UnsafeList<NativeString> buttonIDs, UnsafeList<NativeString> vector1DIDs, UnsafeList<NativeString> vector2DIDs)
+        /// <param name="world">Le monde contenant les entités</param>
+        /// <param name="nbMaxControllers">Le nombre max de contrôleurs pris en charge par l'InputSystem</param>
+        /// <param name="inputActions">La liste des actions à convertir en entités</param>
+        public void AddInputEntities(World world, int nbMaxControllers, params InputActionDTO[] inputActions)
         {
-            this.ActionButtonResources = new Resources<Action<int>>(Math.Max(1, buttonIDs.Count * 3));
-            this.ActionVector1DResources = new Resources<Action<int, float>>(Math.Max(1, vector1DIDs.Count));
-            this.ActionVector2DResources = new Resources<Action<int, Vector2>>(Math.Max(1, vector2DIDs.Count));
+            bool usesMouse = this.HasScheme<MouseInput>();
+            bool usesKeyboard = this.HasScheme<KeyboardInput>();
+            bool usesGamePad = this.HasScheme<GamePadInput>();
 
-            this.Handles = new InputHandles(buttonIDs, vector1DIDs, vector2DIDs);
+            for (int i = 0; i < inputActions.Length; ++i)
+            {
+                InputActionDTO action = inputActions[i];
+
+                if (action.Bindings == null || action.Bindings.Length == 0)
+                {
+                    continue;
+                }
+
+                #region Création des bindings
+
+                UnsafeList<Entity> bindingEs = new(action.Bindings.Length);
+
+                for (int j = 0; j < action.Bindings.Length; ++j)
+                {
+                    InputBindingDTO binding = action.Bindings[j];
+                    Entity e1 = EntityFactory.CreateInputBindingKeySequenceEntity(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.KeySequence);
+                    Entity e2 = EntityFactory.CreateInputBindingVector1DKeysEntity(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.Vector1DKeys);
+                    Entity e3 = EntityFactory.CreateInputBindingVector2DKeysEntity(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.Vector2DKeys);
+                    Entity e4 = EntityFactory.CreateInputBindingJoystickEntity(world, nbMaxControllers, usesGamePad, binding.Joystick);
+                    Entity e5 = EntityFactory.CreateInputBindingTriggerEntity(world, nbMaxControllers, usesMouse, usesGamePad, binding.Trigger);
+
+                    // Si un binding est null (aucune touche renseignée ou aucun IScheme correspondant dans l'InputManager),
+                    // on se contente de l'ignorer
+
+                    if (e1 != Entity.Null)
+                    {
+                        bindingEs.Add(e1);
+                    }
+
+                    if (e2 != Entity.Null)
+                    {
+                        bindingEs.Add(e2);
+                    }
+
+                    if (e3 != Entity.Null)
+                    {
+                        bindingEs.Add(e3);
+                    }
+
+                    if (e4 != Entity.Null)
+                    {
+                        bindingEs.Add(e4);
+                    }
+
+                    if (e5 != Entity.Null)
+                    {
+                        bindingEs.Add(e5);
+                    }
+                }
+
+                #endregion
+
+                #region Création des actions
+
+                if (bindingEs.Count > 0)
+                {
+                    Entity actionE = EntityFactory.CreateInputActionEntities(world, nbMaxControllers, action.Name, action.ValueType);
+
+                    for (int j = 0; j < bindingEs.Count; ++j)
+                    {
+                        world.AddRelationship<InputActionOf>(actionE, bindingEs[j]);
+                    }
+                }
+
+                #endregion
+            }
         }
 
         /// <summary>
-        /// Capture l'état des inputs lors de la frame actuelle
+        /// Initialise les événements des handles pour chaque type d'action souhaitée
         /// </summary>
-        public void Update()
+        /// <param name="inputActions">La liste des actions à enregistrer</param>
+        public void AddActionsIDsToHandles(params InputActionDTO[] inputActions)
         {
-            foreach (KeyValuePair<Type, IInputScheme> pair in this._inputSchemes)
-            {
-                pair.Value.Update();
-            }
+            UnsafeList<NativeString> buttonIDs = new(inputActions.Length);
+            UnsafeList<NativeString> vector1DIDs = new(inputActions.Length);
+            UnsafeList<NativeString> vector2DIDs = new(inputActions.Length);
 
-            this._updateSystems.Update();
+            for (int i = 0; i < inputActions.Length; ++i)
+            {
+                InputActionDTO action = inputActions[i];
+
+                switch (action.ValueType)
+                {
+                    case InputActionReturnValueType.ButtonState:
+                        if (!this.Handles.ButtonStateHandleExists(action.Name))
+                        {
+                            buttonIDs.Add(action.Name);
+                            this.Handles.AddButtonStateEvent(action.Name);
+                        }
+                        break;
+
+                    case InputActionReturnValueType.Vector1D:
+                        if (!this.Handles.Vector1DHandleExists(action.Name))
+                        {
+                            vector1DIDs.Add(action.Name);
+                            this.Handles.AddVector1DEvent(action.Name);
+                        }
+                        break;
+
+                    case InputActionReturnValueType.Vector2D:
+                        if (!this.Handles.Vector2DHandleExists(action.Name))
+                        {
+                            vector2DIDs.Add(action.Name);
+                            this.Handles.AddVector2DEvent(action.Name);
+                        }
+                        break;
+                }
+            }
         }
 
         /// <summary>
-        /// Capture l'état des inputs lors de la frame précédente
-        /// A appeler en fin d'Update pour ne pas écraser le précédent état
-        /// avant les comparaisons
+        /// Détruit toutes les entités des InputActions et InputBindings
         /// </summary>
-        public void AfterUpdate()
+        /// <param name="world">Le monde contenant les entités</param>
+        public static void DestroyAllInputEntities(World world)
         {
-            foreach (KeyValuePair<Type, IInputScheme> pair in this._inputSchemes)
-            {
-                pair.Value.AfterUpdate();
-            }
+            Queries.MarkAllInputActionEntitiesAsDestroyQuery(world, world);
+            Queries.DestroyInputEntitiesQuery(world, world);
         }
+
+        /// <summary>
+        /// Détruit toutes les entités des InputActions selon leurs IDs
+        /// ainsi que leurs bindings
+        /// </summary>
+        /// <param name="world">Le monde contenant les entités</param>
+        /// <param name="actionsIDs">Les IDs des actions à supprimer</param>
+        public static void DestroyInputEntities(World world, params NativeString[] actionsIDs)
+        {
+            Queries.MarkInputActionEntitiesAsDestroyQuery(world, world, actionsIDs);
+            Queries.DestroyInputEntitiesQuery(world, world);
+        }
+
+        #endregion
+
+        #region Méthodes internes
 
         /// <summary>
         /// Récupère le contrôleur du type souhaité

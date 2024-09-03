@@ -6,8 +6,9 @@ using Arch.Relationships;
 using Arch.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Retard.Input.Models;
+using Retard.Core.Models.ValueTypes;
 using Retard.Input.Components;
+using Retard.Input.Models;
 using Retard.Input.ViewModels;
 
 namespace Retard.Engine.Entities
@@ -17,6 +18,64 @@ namespace Retard.Engine.Entities
     /// </summary>
     internal static partial class Queries
     {
+        #region Destroy
+
+        /// <summary>
+        /// Détruit toutes les entités des InputActions ainsi que leurs InputBindings
+        /// </summary>
+        /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="actionE">L'entité de l'InputAction</param>
+        [Query]
+        [All(typeof(InputActionIDCD))]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void MarkAllInputActionEntitiesAsDestroy([Data] World w, in Entity actionE)
+        {
+            // Supprime ses bindings et ses relations
+
+            ref Relationship<InputActionOf> rel = ref w.GetRelationships<InputActionOf>(actionE);
+            foreach (var child in rel)
+            {
+                w.Destroy(child.Key);
+            }
+
+            // Détruit l'entité de l'action
+
+            w.Destroy(actionE);
+        }
+
+        /// <summary>
+        /// Détruit les entités des InputActions selon leurs IDs
+        /// ainsi que leurs InputBindings
+        /// </summary>
+        /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="actionsIDs">Les IDs des actions à supprimer</param>
+        /// <param name="actionE">L'entité de l'InputAction</param>
+        [Query]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void MarkInputActionEntitiesAsDestroy([Data] World w, [Data] NativeString[] actionsIDs, in Entity actionE, in InputActionIDCD actionID)
+        {
+            for (int i = 0; i < actionsIDs.Length; ++i)
+            {
+                if (actionID.Value.Equals(actionsIDs[i]))
+                {
+                    // Supprime ses bindings et ses relations
+
+                    ref Relationship<InputActionOf> rel = ref w.GetRelationships<InputActionOf>(actionE);
+                    foreach (var child in rel)
+                    {
+                        w.Destroy(child.Key);
+                    }
+
+                    // Détruit l'entité de l'action
+
+                    w.Destroy(actionE);
+                    break;
+                }
+            }
+        }
+
+        #endregion
+
         #region Input Bindings
 
         /// <summary>

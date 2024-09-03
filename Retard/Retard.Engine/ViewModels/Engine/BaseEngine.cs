@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Arch.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -82,11 +83,15 @@ namespace Retard.Engine.ViewModels.Engine
 
             CreateDefaultConfigFiles();
             IInputScheme[] inputSchemes = this.GetInputSchemes();
+            int nbMaxControllers = BaseEngine.GetNbMaxControllers(inputSchemes);
             InputConfigDTO inputConfig = this.GetInputConfig();
             WindowSettings ws = this.GetWindowSettings();
 
             InputManager.Instance.InitializeInputSchemes(inputSchemes);
-            InputManager.Instance.InitializeSystems(inputConfig, this._world);
+            InputManager.Instance.InitializeSystems(this._world, nbMaxControllers);
+            InputManager.Instance.AddInputEntities(this._world, nbMaxControllers, inputConfig.Actions);
+            InputManager.Instance.AddActionsIDsToHandles(inputConfig.Actions);
+
             this._appViewport = new AppViewport(game, graphicsDeviceManager, ws);
             this._appPerformance = new AppPerformance(game);
         }
@@ -213,6 +218,30 @@ namespace Retard.Engine.ViewModels.Engine
                 // TODO: set large fields to null
                 disposedValue = true;
             }
+        }
+
+        #endregion
+
+        #region Méthodes privées
+
+        /// <summary>
+        /// Récupère le nombre max de contrôleurs évalués par l'InputManager.
+        /// Si aucune manette n'est connectée, renvoie toujours 1.
+        /// </summary>
+        /// <param name="inputSchemes">La liste des types de contrôleurs</param>
+        /// <returns>Le nombre max de contrôleurs évalués par l'InputManager (1 par défaut)</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int GetNbMaxControllers(IInputScheme[] inputSchemes)
+        {
+            for (int i = 0; i < inputSchemes.Length; ++i)
+            {
+                if (inputSchemes[i] is GamePadInput g)
+                {
+                    return g.NbMaxGamePads;
+                }
+            }
+
+            return 1;
         }
 
         #endregion

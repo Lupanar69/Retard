@@ -1,4 +1,0 @@
-﻿namespace Retard.Engine.Models
-{
-
-}
