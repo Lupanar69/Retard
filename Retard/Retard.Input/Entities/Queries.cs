@@ -28,7 +28,7 @@ namespace Retard.Engine.Entities
         [Query]
         [All(typeof(InputActionIDCD))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void MarkAllInputActionEntitiesAsDestroy([Data] World w, in Entity actionE)
+        internal static void DestroyAllInputEntities([Data] World w, in Entity actionE)
         {
             // Supprime ses bindings et ses relations
 
@@ -52,7 +52,7 @@ namespace Retard.Engine.Entities
         /// <param name="actionE">L'entité de l'InputAction</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void MarkInputActionEntitiesAsDestroy([Data] World w, [Data] NativeString[] actionsIDs, in Entity actionE, in InputActionIDCD actionID)
+        internal static void DestroyInputEntities([Data] World w, [Data] NativeString[] actionsIDs, in Entity actionE, in InputActionIDCD actionID)
         {
             for (int i = 0; i < actionsIDs.Length; ++i)
             {

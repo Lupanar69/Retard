@@ -323,8 +323,7 @@ namespace Retard.Input.ViewModels
         /// <param name="world">Le monde contenant les entités</param>
         public static void DestroyAllInputEntities(World world)
         {
-            Queries.MarkAllInputActionEntitiesAsDestroyQuery(world, world);
-            Queries.DestroyInputEntitiesQuery(world, world);
+            Queries.DestroyAllInputEntitiesQuery(world, world);
         }
 
         /// <summary>
@@ -335,8 +334,7 @@ namespace Retard.Input.ViewModels
         /// <param name="actionsIDs">Les IDs des actions à supprimer</param>
         public static void DestroyInputEntities(World world, params NativeString[] actionsIDs)
         {
-            Queries.MarkInputActionEntitiesAsDestroyQuery(world, world, actionsIDs);
-            Queries.DestroyInputEntitiesQuery(world, world);
+            Queries.DestroyInputEntitiesQuery(world, world, actionsIDs);
         }
 
         #endregion
