@@ -194,138 +194,36 @@ namespace Retard.Input.ViewModels
         }
 
         /// <summary>
-        /// Crée les entités des inputs à partir des données de config
+        /// Enregistre les inputActions renseignées dans la liste des actions actives
         /// </summary>
         /// <param name="world">Le monde contenant les entités</param>
         /// <param name="nbMaxControllers">Le nombre max de contrôleurs pris en charge par l'InputSystem</param>
         /// <param name="inputActions">La liste des actions à convertir en entités</param>
-        public void AddInputEntities(World world, int nbMaxControllers, params InputActionDTO[] inputActions)
+        public void RegisterInputActions(World world, int nbMaxControllers, params InputActionDTO[] inputActions)
         {
-            bool usesMouse = this.HasScheme<MouseInput>();
-            bool usesKeyboard = this.HasScheme<KeyboardInput>();
-            bool usesGamePad = this.HasScheme<GamePadInput>();
+            // Doivent être appelées ensemble pour que les queries
+            // puissent trouver l'ID du handle correspondant
 
-            for (int i = 0; i < inputActions.Length; ++i)
-            {
-                InputActionDTO action = inputActions[i];
-
-                if (action.Bindings == null || action.Bindings.Length == 0)
-                {
-                    continue;
-                }
-
-                #region Création des bindings
-
-                UnsafeList<Entity> bindingEs = new(action.Bindings.Length);
-
-                for (int j = 0; j < action.Bindings.Length; ++j)
-                {
-                    InputBindingDTO binding = action.Bindings[j];
-                    Entity e1 = EntityFactory.CreateInputBindingKeySequenceEntity(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.KeySequence);
-                    Entity e2 = EntityFactory.CreateInputBindingVector1DKeysEntity(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.Vector1DKeys);
-                    Entity e3 = EntityFactory.CreateInputBindingVector2DKeysEntity(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.Vector2DKeys);
-                    Entity e4 = EntityFactory.CreateInputBindingJoystickEntity(world, nbMaxControllers, usesGamePad, binding.Joystick);
-                    Entity e5 = EntityFactory.CreateInputBindingTriggerEntity(world, nbMaxControllers, usesMouse, usesGamePad, binding.Trigger);
-
-                    // Si un binding est null (aucune touche renseignée ou aucun IScheme correspondant dans l'InputManager),
-                    // on se contente de l'ignorer
-
-                    if (e1 != Entity.Null)
-                    {
-                        bindingEs.Add(e1);
-                    }
-
-                    if (e2 != Entity.Null)
-                    {
-                        bindingEs.Add(e2);
-                    }
-
-                    if (e3 != Entity.Null)
-                    {
-                        bindingEs.Add(e3);
-                    }
-
-                    if (e4 != Entity.Null)
-                    {
-                        bindingEs.Add(e4);
-                    }
-
-                    if (e5 != Entity.Null)
-                    {
-                        bindingEs.Add(e5);
-                    }
-                }
-
-                #endregion
-
-                #region Création des actions
-
-                if (bindingEs.Count > 0)
-                {
-                    Entity actionE = EntityFactory.CreateInputActionEntities(world, nbMaxControllers, action.Name, action.ValueType);
-
-                    for (int j = 0; j < bindingEs.Count; ++j)
-                    {
-                        world.AddRelationship<InputActionOf>(actionE, bindingEs[j]);
-                    }
-                }
-
-                #endregion
-            }
-        }
-
-        /// <summary>
-        /// Initialise les événements des handles pour chaque type d'action souhaitée
-        /// </summary>
-        /// <param name="inputActions">La liste des actions à enregistrer</param>
-        public void AddActionsIDsToHandles(params InputActionDTO[] inputActions)
-        {
-            for (int i = 0; i < inputActions.Length; ++i)
-            {
-                InputActionDTO action = inputActions[i];
-
-                switch (action.ValueType)
-                {
-                    case InputActionReturnValueType.ButtonState:
-                        if (!this.Handles.ButtonStateHandleExists(action.Name))
-                        {
-                            this.Handles.AddButtonStateEvent(action.Name);
-                        }
-                        break;
-
-                    case InputActionReturnValueType.Vector1D:
-                        if (!this.Handles.Vector1DHandleExists(action.Name))
-                        {
-                            this.Handles.AddVector1DEvent(action.Name);
-                        }
-                        break;
-
-                    case InputActionReturnValueType.Vector2D:
-                        if (!this.Handles.Vector2DHandleExists(action.Name))
-                        {
-                            this.Handles.AddVector2DEvent(action.Name);
-                        }
-                        break;
-                }
-            }
+            this.AddInputEntities(world, nbMaxControllers, inputActions);
+            this.AddActionsIDsToHandles(inputActions);
         }
 
         /// <summary>
         /// Détruit toutes les entités des InputActions et InputBindings
         /// </summary>
         /// <param name="world">Le monde contenant les entités</param>
-        public static void DestroyAllInputEntities(World world)
+        public static void RemoveAllInputActions(World world)
         {
             Queries.DestroyAllInputEntitiesQuery(world, world);
         }
 
         /// <summary>
-        /// Détruit toutes les entités des InputActions selon leurs IDs
+        /// Détruit les entités des InputActions selon leurs IDs
         /// ainsi que leurs bindings
         /// </summary>
         /// <param name="world">Le monde contenant les entités</param>
         /// <param name="actionsIDs">Les IDs des actions à supprimer</param>
-        public static void DestroyInputEntities(World world, params NativeString[] actionsIDs)
+        public static void RemoveInputActions(World world, params NativeString[] actionsIDs)
         {
             Queries.DestroyInputEntitiesQuery(world, world, actionsIDs);
         }
@@ -609,6 +507,127 @@ namespace Retard.Input.ViewModels
                                         : InputKeySequenceState.Inert,
                 _ => throw new NotImplementedException($"JoystickKey non implémenté ({joystickKey})"),
             };
+        }
+
+        #endregion
+
+        #region Mééthodes privées
+
+        /// <summary>
+        /// Crée les entités des inputs à partir des données de config
+        /// </summary>
+        /// <param name="world">Le monde contenant les entités</param>
+        /// <param name="nbMaxControllers">Le nombre max de contrôleurs pris en charge par l'InputSystem</param>
+        /// <param name="inputActions">La liste des actions à convertir en entités</param>
+        private void AddInputEntities(World world, int nbMaxControllers, params InputActionDTO[] inputActions)
+        {
+            bool usesMouse = this.HasScheme<MouseInput>();
+            bool usesKeyboard = this.HasScheme<KeyboardInput>();
+            bool usesGamePad = this.HasScheme<GamePadInput>();
+
+            for (int i = 0; i < inputActions.Length; ++i)
+            {
+                InputActionDTO action = inputActions[i];
+
+                if (action.Bindings == null || action.Bindings.Length == 0)
+                {
+                    continue;
+                }
+
+                #region Création des bindings
+
+                UnsafeList<Entity> bindingEs = new(action.Bindings.Length);
+
+                for (int j = 0; j < action.Bindings.Length; ++j)
+                {
+                    InputBindingDTO binding = action.Bindings[j];
+                    Entity e1 = EntityFactory.CreateInputBindingKeySequenceEntity(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.KeySequence);
+                    Entity e2 = EntityFactory.CreateInputBindingVector1DKeysEntity(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.Vector1DKeys);
+                    Entity e3 = EntityFactory.CreateInputBindingVector2DKeysEntity(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.Vector2DKeys);
+                    Entity e4 = EntityFactory.CreateInputBindingJoystickEntity(world, nbMaxControllers, usesGamePad, binding.Joystick);
+                    Entity e5 = EntityFactory.CreateInputBindingTriggerEntity(world, nbMaxControllers, usesMouse, usesGamePad, binding.Trigger);
+
+                    // Si un binding est null (aucune touche renseignée ou aucun IScheme correspondant dans l'InputManager),
+                    // on se contente de l'ignorer
+
+                    if (e1 != Entity.Null)
+                    {
+                        bindingEs.Add(e1);
+                    }
+
+                    if (e2 != Entity.Null)
+                    {
+                        bindingEs.Add(e2);
+                    }
+
+                    if (e3 != Entity.Null)
+                    {
+                        bindingEs.Add(e3);
+                    }
+
+                    if (e4 != Entity.Null)
+                    {
+                        bindingEs.Add(e4);
+                    }
+
+                    if (e5 != Entity.Null)
+                    {
+                        bindingEs.Add(e5);
+                    }
+                }
+
+                #endregion
+
+                #region Création des actions
+
+                if (bindingEs.Count > 0)
+                {
+                    Entity actionE = EntityFactory.CreateInputActionEntities(world, nbMaxControllers, action.Name, action.ValueType);
+
+                    for (int j = 0; j < bindingEs.Count; ++j)
+                    {
+                        world.AddRelationship<InputActionOf>(actionE, bindingEs[j]);
+                    }
+                }
+
+                #endregion
+            }
+        }
+
+        /// <summary>
+        /// Initialise les événements des handles pour chaque type d'action souhaitée
+        /// </summary>
+        /// <param name="inputActions">La liste des actions à enregistrer</param>
+        private void AddActionsIDsToHandles(params InputActionDTO[] inputActions)
+        {
+            for (int i = 0; i < inputActions.Length; ++i)
+            {
+                InputActionDTO action = inputActions[i];
+
+                switch (action.ValueType)
+                {
+                    case InputActionReturnValueType.ButtonState:
+                        if (!this.Handles.ButtonStateHandleExists(action.Name))
+                        {
+                            this.Handles.AddButtonStateEvent(action.Name);
+                        }
+                        break;
+
+                    case InputActionReturnValueType.Vector1D:
+                        if (!this.Handles.Vector1DHandleExists(action.Name))
+                        {
+                            this.Handles.AddVector1DEvent(action.Name);
+                        }
+                        break;
+
+                    case InputActionReturnValueType.Vector2D:
+                        if (!this.Handles.Vector2DHandleExists(action.Name))
+                        {
+                            this.Handles.AddVector2DEvent(action.Name);
+                        }
+                        break;
+                }
+            }
         }
 
         #endregion

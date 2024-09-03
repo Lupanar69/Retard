@@ -89,8 +89,7 @@ namespace Retard.Engine.ViewModels.Engine
 
             InputManager.Instance.InitializeInputSchemes(inputSchemes);
             InputManager.Instance.InitializeSystems(this._world, nbMaxControllers);
-            InputManager.Instance.AddInputEntities(this._world, nbMaxControllers, inputConfig.Actions);
-            InputManager.Instance.AddActionsIDsToHandles(inputConfig.Actions);
+            InputManager.Instance.RegisterInputActions(this._world, nbMaxControllers, inputConfig.Actions);
 
             this._appViewport = new AppViewport(game, graphicsDeviceManager, ws);
             this._appPerformance = new AppPerformance(game);
