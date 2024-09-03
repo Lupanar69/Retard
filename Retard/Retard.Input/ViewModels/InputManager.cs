@@ -280,10 +280,6 @@ namespace Retard.Input.ViewModels
         /// <param name="inputActions">La liste des actions à enregistrer</param>
         public void AddActionsIDsToHandles(params InputActionDTO[] inputActions)
         {
-            UnsafeList<NativeString> buttonIDs = new(inputActions.Length);
-            UnsafeList<NativeString> vector1DIDs = new(inputActions.Length);
-            UnsafeList<NativeString> vector2DIDs = new(inputActions.Length);
-
             for (int i = 0; i < inputActions.Length; ++i)
             {
                 InputActionDTO action = inputActions[i];
@@ -293,7 +289,6 @@ namespace Retard.Input.ViewModels
                     case InputActionReturnValueType.ButtonState:
                         if (!this.Handles.ButtonStateHandleExists(action.Name))
                         {
-                            buttonIDs.Add(action.Name);
                             this.Handles.AddButtonStateEvent(action.Name);
                         }
                         break;
@@ -301,7 +296,6 @@ namespace Retard.Input.ViewModels
                     case InputActionReturnValueType.Vector1D:
                         if (!this.Handles.Vector1DHandleExists(action.Name))
                         {
-                            vector1DIDs.Add(action.Name);
                             this.Handles.AddVector1DEvent(action.Name);
                         }
                         break;
@@ -309,7 +303,6 @@ namespace Retard.Input.ViewModels
                     case InputActionReturnValueType.Vector2D:
                         if (!this.Handles.Vector2DHandleExists(action.Name))
                         {
-                            vector2DIDs.Add(action.Name);
                             this.Handles.AddVector2DEvent(action.Name);
                         }
                         break;
