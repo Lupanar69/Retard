@@ -6,28 +6,19 @@ namespace Retard.Rendering2D.Components
     /// <summary>
     /// Les dimensions du sprite
     /// </summary>
+    /// <remarks>
+    /// Constructeur
+    /// </remarks>
+    /// <param name="rect">Les dimensions du sprite</param>
     [Component]
-    public struct SpriteRectCD
+    public struct SpriteRectCD(Rectangle rect)
     {
         #region Variables d'instance
 
         /// <summary>
         /// Les dimensions du sprite
         /// </summary>
-        public Rectangle Value;
-
-        #endregion
-
-        #region Constructeur
-
-        /// <summary>
-        /// Constructeur
-        /// </summary>
-        /// <param name="rect">Les dimensions du sprite</param>
-        public SpriteRectCD(Rectangle rect)
-        {
-            Value = rect;
-        }
+        public Rectangle Value = rect;
 
         #endregion
     }

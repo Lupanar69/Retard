@@ -133,8 +133,8 @@ namespace Retard.Input.Entities
 
             return world.Create
                 (
-                new InputBindingVector1DKeysIDsCD { PositiveID = positiveID, NegativeID = negativeID },
-                new InputBindingVector1DKeysTypesCD { PositiveType = positiveType, NegativeType = negativeType },
+                new InputBindingVector1DKeysIDsCD(positiveID, negativeID),
+                new InputBindingVector1DKeysTypesCD(positiveType, negativeType),
                 new InputVector1DValuesBU(nbMaxControllers)
                 );
         }
@@ -191,20 +191,8 @@ namespace Retard.Input.Entities
 
             return world.Create
                 (
-                    new InputBindingVector2DKeysIDsCD
-                    {
-                        PositiveXID = positiveXID,
-                        NegativeXID = negativeXID,
-                        PositiveYID = positiveYID,
-                        NegativeYID = negativeYID
-                    },
-                    new InputBindingVector2DKeysTypesCD
-                    {
-                        PositiveXType = positiveXType,
-                        NegativeXType = negativeXType,
-                        PositiveYType = positiveYType,
-                        NegativeYType = negativeYType
-                    },
+                    new InputBindingVector2DKeysIDsCD(positiveXID, negativeXID, positiveYID, negativeYID),
+                    new InputBindingVector2DKeysTypesCD(positiveXType, negativeXType, positiveYType, negativeYType),
                     new InputVector2DValuesBU(nbMaxControllers)
                 );
         }
@@ -227,8 +215,8 @@ namespace Retard.Input.Entities
 
             Entity e = world.Create
                 (
-                    new InputBindingDeadZoneCD { Value = joystick.DeadZone },
-                    new InputBindingJoystickTypeCD { Value = joystick.Type }
+                    new InputBindingDeadZoneCD(joystick.DeadZone),
+                    new InputBindingJoystickTypeCD(joystick.Type)
                 );
 
             switch (joystick.Axis)
@@ -284,8 +272,8 @@ namespace Retard.Input.Entities
 
             return world.Create
                     (
-                        new InputBindingDeadZoneCD { Value = trigger.DeadZone },
-                        new InputBindingTriggerTypeCD { Value = trigger.Type },
+                        new InputBindingDeadZoneCD(trigger.DeadZone),
+                        new InputBindingTriggerTypeCD(trigger.Type),
                         new InputVector1DValuesBU(nbMaxControllers)
                     );
         }

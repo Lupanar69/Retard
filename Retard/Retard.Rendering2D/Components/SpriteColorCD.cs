@@ -6,28 +6,19 @@ namespace Retard.Rendering2D.Components
     /// <summary>
     /// La couleur d'un sprite
     /// </summary>
+    /// <remarks>
+    /// Constructeur
+    /// </remarks>
+    /// <param name="color">La couleur du sprite</param>
     [Component]
-    public struct SpriteColorCD
+    public struct SpriteColorCD(Color color)
     {
         #region Variables d'instance
 
         /// <summary>
         /// La couleur du sprite
         /// </summary>
-        public Color Value;
-
-        #endregion
-
-        #region Constructeur
-
-        /// <summary>
-        /// Constructeur
-        /// </summary>
-        /// <param name="color">La couleur du sprite</param>
-        public SpriteColorCD(Color color)
-        {
-            Value = color;
-        }
+        public Color Value = color;
 
         #endregion
     }

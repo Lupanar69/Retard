@@ -3,19 +3,21 @@
     /// <summary>
     /// Les IDs des touches positives et négatives d'un axe Vector1D
     /// </summary>
-    public struct InputBindingVector1DKeysIDsCD
+    /// <param name="positiveID">L'ID de la touche positive</param>
+    /// <param name="positiveID">L'ID de la touche négative</param>
+    public struct InputBindingVector1DKeysIDsCD(int positiveID, int negativeID)
     {
         #region Variables d'instance
 
         /// <summary>
         /// L'ID de la touche positive
         /// </summary>
-        public int PositiveID;
+        public int PositiveID = positiveID;
 
         /// <summary>
         /// L'ID de la touche négative
         /// </summary>
-        public int NegativeID;
+        public int NegativeID = negativeID;
 
         #endregion
     }

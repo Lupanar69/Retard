@@ -5,7 +5,7 @@ using Retard.Input.Models;
 using Retard.Input.Models.Assets;
 using Retard.Input.ViewModels;
 
-namespace Retard.Engine.ViewModels.Controllers
+namespace Retard.Tests.ViewModels.Controllers
 {
     /// <summary>
     /// Permet de déplacer la caméra dans la scène

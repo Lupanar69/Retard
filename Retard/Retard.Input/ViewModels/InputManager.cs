@@ -43,17 +43,17 @@ namespace Retard.Input.ViewModels
         /// <summary>
         /// Permet d'accéder aux events sans type
         /// </summary>
-        public Resources<Action<int>> ActionButtonResources { get; private set; }
+        public Resources<Action<int>> ActionButtonResources { get; init; }
 
         /// <summary>
         /// Permet d'accéder aux events de type Vector1D
         /// </summary>
-        public Resources<Action<int, float>> ActionVector1DResources { get; private set; }
+        public Resources<Action<int, float>> ActionVector1DResources { get; init; }
 
         /// <summary>
         /// Permet d'accéder aux events de type Vector2D
         /// </summary>
-        public Resources<Action<int, Vector2>> ActionVector2DResources { get; private set; }
+        public Resources<Action<int, Vector2>> ActionVector2DResources { get; init; }
 
         /// <summary>
         /// Regroupe les handles de chaque InputAction

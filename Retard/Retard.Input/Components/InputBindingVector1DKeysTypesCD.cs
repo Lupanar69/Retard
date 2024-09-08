@@ -5,19 +5,21 @@ namespace Retard.Input.Components
     /// <summary>
     /// Les types des touches positives et négatives d'un axe Vector1D
     /// </summary>
-    public struct InputBindingVector1DKeysTypesCD
+    /// <param name="positiveType">Le type de la touche positive</param>
+    /// <param name="positiveType">Le type de la touche négative</param>
+    public struct InputBindingVector1DKeysTypesCD(InputBindingKeyType positiveType, InputBindingKeyType negativeType)
     {
         #region Variables d'instance
 
         /// <summary>
         /// Le type de la touche positive
         /// </summary>
-        public InputBindingKeyType PositiveType;
+        public InputBindingKeyType PositiveType = positiveType;
 
         /// <summary>
         /// Le type de la touche négative
         /// </summary>
-        public InputBindingKeyType NegativeType;
+        public InputBindingKeyType NegativeType = negativeType;
 
         #endregion
     }

@@ -33,11 +33,11 @@ namespace Retard.Input.Components
         /// <param name="length">La taille de la collection</param>
         public InputVector2DValuesBU(int length)
         {
-            Value = new UnsafeArray<Vector2>(length);
+            this.Value = new UnsafeArray<Vector2>(length);
 
             for (int i = 0; i < length; ++i)
             {
-                Value[i] = Vector2.Zero;
+                this.Value[i] = Vector2.Zero;
             }
         }
 

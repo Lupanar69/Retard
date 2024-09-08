@@ -27,9 +27,9 @@ namespace Retard.Rendering2D.Entities
             {
                 world.Create
                     (
-                    new SpritePositionCD { Value = positions[i] },
-                    new SpriteRectCD { Value = rects[i] },
-                    new SpriteColorCD { Value = Color.White }
+                    new SpritePositionCD(positions[i]),
+                    new SpriteRectCD(rects[i]),
+                    new SpriteColorCD(Color.White)
                     );
             }
         }

@@ -25,11 +25,11 @@ namespace Retard.Input.Components
         /// <param name="value">Le tableau à copier</param>
         public InputBindingKeySequenceIDsBU(UnsafeArray<int> value)
         {
-            Value = new UnsafeArray<int>(value.Length);
+            this.Value = new UnsafeArray<int>(value.Length);
 
             for (int i = 0; i < value.Length; ++i)
             {
-                Value[i] = value[i];
+                this.Value[i] = value[i];
             }
         }
 

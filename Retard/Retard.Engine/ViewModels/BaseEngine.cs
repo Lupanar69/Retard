@@ -13,7 +13,7 @@ using Retard.Input.Models.DTOs;
 using Retard.Input.ViewModels;
 using Retard.SceneManagement.ViewModels;
 
-namespace Retard.Engine.ViewModels.Engine
+namespace Retard.Engine.ViewModels
 {
     /// <summary>
     /// Chargée d'initialiser et màj tous les systèmes nécessaires
@@ -74,25 +74,25 @@ namespace Retard.Engine.ViewModels.Engine
             game.Activated += GameState.OnFocusEvent;
             game.Deactivated += GameState.OnFocusLostEvent;
 
-            this._content = game.Content;
-            this._spriteBatch = new SpriteBatch(game.GraphicsDevice);
-            this._world = World.Create();
-            this._game = game;
+            _content = game.Content;
+            _spriteBatch = new SpriteBatch(game.GraphicsDevice);
+            _world = World.Create();
+            _game = game;
 
             // Initialise les managers
 
             CreateDefaultConfigFiles();
-            IInputScheme[] inputSchemes = this.GetInputSchemes();
-            int nbMaxControllers = BaseEngine.GetNbMaxControllers(inputSchemes);
-            InputConfigDTO inputConfig = this.GetInputConfig();
-            WindowSettings ws = this.GetWindowSettings();
+            IInputScheme[] inputSchemes = GetInputSchemes();
+            int nbMaxControllers = GetNbMaxControllers(inputSchemes);
+            InputConfigDTO inputConfig = GetInputConfig();
+            WindowSettings ws = GetWindowSettings();
 
             InputManager.Instance.InitializeInputSchemes(inputSchemes);
-            InputManager.Instance.InitializeSystems(this._world, nbMaxControllers);
-            InputManager.Instance.RegisterInputActions(this._world, nbMaxControllers, inputConfig.Actions);
+            InputManager.Instance.InitializeSystems(_world, nbMaxControllers);
+            InputManager.Instance.RegisterInputActions(_world, nbMaxControllers, inputConfig.Actions);
 
-            this._appViewport = new AppViewport(game, graphicsDeviceManager, ws);
-            this._appPerformance = new AppPerformance(game);
+            _appViewport = new AppViewport(game, graphicsDeviceManager, ws);
+            _appPerformance = new AppPerformance(game);
         }
 
         // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
@@ -209,8 +209,8 @@ namespace Retard.Engine.ViewModels.Engine
                 {
                     // TODO: dispose managed state (managed objects)
 
-                    this._game.Activated -= GameState.OnFocusEvent;
-                    this._game.Deactivated -= GameState.OnFocusLostEvent;
+                    _game.Activated -= GameState.OnFocusEvent;
+                    _game.Deactivated -= GameState.OnFocusLostEvent;
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer

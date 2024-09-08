@@ -88,7 +88,7 @@ namespace Retard.Tests.Models
                     (
                         "Camera/Reset",
                         InputActionReturnValueType.ButtonState,
-                        new InputBindingDTO(new InputKeySequenceElement(Keys.R, InputKeySequenceState.Released))
+                        new InputBindingDTO(new InputKeySequenceElement(Keys.R, InputKeySequenceState.Pressed))
                     ),
                     new InputActionDTO
                     (

@@ -8,14 +8,14 @@ using Retard.App.ViewModels;
 using Retard.Core.Models.ValueTypes;
 using Retard.Core.ViewModels.Utilities;
 using Retard.Engine.Models.Assets;
-using Retard.Engine.ViewModels.Controllers;
-using Retard.Engine.ViewModels.Engine;
+using Retard.Engine.ViewModels;
 using Retard.Input.Models;
 using Retard.Input.Models.Assets;
 using Retard.Input.Models.DTOs;
 using Retard.Input.ViewModels;
 using Retard.SceneManagement.ViewModels;
 using Retard.Tests.Models;
+using Retard.Tests.ViewModels.Controllers;
 using Retard.Tests.ViewModels.Scenes;
 
 namespace Retard.Tests.ViewModels.Engine

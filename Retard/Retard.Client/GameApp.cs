@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Retard.Engine.ViewModels.Engine;
+using Retard.Engine.ViewModels;
 using Retard.Tests.ViewModels.Engine;
 
 namespace Retard.Client

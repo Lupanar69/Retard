@@ -30,11 +30,11 @@ namespace Retard.Input.Components
         /// <param name="length">La taille de la collection</param>
         public InputButtonStateValuesBU(int length)
         {
-            Value = new UnsafeArray<bool>(length);
+            this.Value = new UnsafeArray<bool>(length);
 
             for (int i = 0; i < length; ++i)
             {
-                Value[i] = false;
+                this.Value[i] = false;
             }
         }
 
