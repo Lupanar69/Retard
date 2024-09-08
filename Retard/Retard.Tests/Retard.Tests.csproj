@@ -18,7 +18,7 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<Using Include="Retard.Core.ViewModels.Log" Static="True" />
+		<Using Include="Retard.Core.ViewModels.Debug.Log" Static="True" />
 	</ItemGroup>
 
 	<ItemGroup>

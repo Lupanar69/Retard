@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Retard.Core.Models.Arch;
 using Retard.Rendering2D.Entities;
-using Retard.Rendering2D.Models;
 
 namespace Retard.Rendering2D.Systems
 {
@@ -15,9 +14,8 @@ namespace Retard.Rendering2D.Systems
     /// </remarks>
     /// <param name="world">Le monde contenant les entités des sprites</param>
     /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
-    /// <param name="spriteAtlas">L'atlas des sprites à afficher</param>
     /// <param name="camera">La caméra du jeu</param>
-    public readonly struct SpriteDrawSystem(World world, SpriteBatch spriteBatch, SpriteAtlas spriteAtlas, OrthographicCamera camera) : ISystemWorld
+    public readonly struct SpriteDrawSystem(World world, SpriteBatch spriteBatch, OrthographicCamera camera) : ISystemWorld
     {
         #region Propriétés
 
@@ -35,11 +33,11 @@ namespace Retard.Rendering2D.Systems
         /// </summary>
         public void Update()
         {
-            Queries.UpdateAnimatedSpriteRectQuery(this.World, in spriteAtlas);
+            Queries.UpdateAnimatedSpriteRectQuery(this.World, this.World);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.GetViewMatrix());
 
-            Queries.DrawSpritesQuery(this.World, in spriteAtlas, in spriteBatch);
+            Queries.DrawSpritesQuery(this.World, this.World, spriteBatch);
 
             spriteBatch.End();
         }

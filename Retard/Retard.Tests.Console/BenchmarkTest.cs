@@ -1,5 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Retard.Engine.Models.ValueTypes;
+using Retard.Core.Models.ValueTypes;
 
 namespace Retard.Tests
 {

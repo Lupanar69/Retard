@@ -5,12 +5,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Retard.Core.Models.Arch;
-using Retard.SceneManagement.Models;
 using Retard.Input.Models.Assets;
-using Retard.Rendering2D.Components;
+using Retard.Rendering2D.Components.Sprite;
+using Retard.Rendering2D.Components.SpriteAtlas;
 using Retard.Rendering2D.Entities;
-using Retard.Rendering2D.Models;
 using Retard.Rendering2D.Systems;
+using Retard.Rendering2D.ViewModels;
+using Retard.SceneManagement.Models;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -52,26 +53,6 @@ namespace Retard.Tests.ViewModels.Scenes
         /// </summary>
         private readonly Group _drawSystems;
 
-        /// <summary>
-        /// La texture des sprites
-        /// </summary>
-        private readonly SpriteAtlas _spriteAtlas;
-
-        /// <summary>
-        /// Nb de sprites à créer
-        /// </summary>
-        private readonly Point _size;
-
-        /// <summary>
-        /// La résolution d'un sprite en pixels
-        /// </summary>
-        private readonly int _spriteResolution;
-
-        /// <summary>
-        /// L'archétype des sprites
-        /// </summary>
-        private readonly Arch.Core.Utils.ComponentType[] _spriteArchetype = [typeof(SpriteRectCD), typeof(SpritePositionCD), typeof(SpriteColorCD)];
-
         #endregion
 
         #region Constructeur
@@ -82,33 +63,30 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <param name="world">Le monde contenant les entités</param>
         /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
         /// <param name="camera">La caméra du jeu</param>
-        /// <param name="sceneManager">Le SceneManager</param>
         /// <param name="debugTex">La texture de debug</param>
         /// <param name="size">La taille de la carte à dessiner</param>
         /// <param name="spriteResolution">La résolution d'un sprite en pixels</param>
         public SpriteDrawTestScene(World world, SpriteBatch spriteBatch, OrthographicCamera camera, Texture2D debugTex, Point size, int spriteResolution)
         {
             this._camera = camera;
-            this._size = size;
-            this._spriteResolution = spriteResolution;
 
             // Charge les textures
 
-            this._spriteAtlas = new SpriteAtlas(debugTex, 4, 4);
+            Entity spriteAtlasE = EntityFactory.CreateSpriteAtlasEntity(world, debugTex, 4, 4);
 
             // Initialise les systèmes
 
-            world.Reserve(_spriteArchetype, this._size.X * this._size.Y);
+            world.Reserve([typeof(SpriteRectCD), typeof(SpritePositionCD), typeof(SpriteColorCD)], size.X * size.Y);
             this._updateSystems = new Group("Update Systems");
             this._drawSystems = new Group("Draw Systems");
 
-            this._drawSystems.Add(new SpriteDrawSystem(world, spriteBatch, this._spriteAtlas, this._camera));
+            this._drawSystems.Add(new SpriteDrawSystem(world, spriteBatch, this._camera));
             this._updateSystems.Add(new AnimatedSpriteUpdateSystem(world));
 
             this._updateSystems.Initialize();
             this._drawSystems.Initialize();
 
-            this.CreateSpriteEntities(world);
+            CreateSpriteEntities(world, spriteAtlasE, size, spriteResolution);
         }
 
         #endregion
@@ -129,56 +107,66 @@ namespace Retard.Tests.ViewModels.Scenes
 
         #endregion
 
-        #region Méthodes privées
+        #region Méthodes statiques privées
 
         /// <summary>
         /// Crée les entités des sprites
         /// pour tester les systèmes d'affihage
         /// </summary>
         /// <param name="world">Le monde contenant les entités</param>
-        private void CreateSpriteEntities(World world)
+        /// <param name="size">La taille de la carte à dessiner</param>
+        /// <param name="spriteAtlasE">L'entité du SpriteAtlas</param>
+        /// <param name="spriteResolution">La résolution d'un sprite en pixels</param>
+        private static void CreateSpriteEntities(World world, Entity spriteAtlasE, Point size, int spriteResolution)
         {
-            using UnsafeArray<Rectangle> rects = this.GetSpritesRects();
-            using UnsafeArray<Vector2> positions = this.GetSpritesPositions();
+            SpriteAtlasTextureCD texCD = world.Get<SpriteAtlasTextureCD>(spriteAtlasE);
+            SpriteAtlasDimensionsCD dimensionsCD = world.Get<SpriteAtlasDimensionsCD>(spriteAtlasE);
+
+            using UnsafeArray<Rectangle> rects = GetSpritesRects(size, texCD.Value, dimensionsCD.Rows, dimensionsCD.Columns);
+            using UnsafeArray<Vector2> positions = GetSpritesPositions(size, spriteResolution);
 
             // Crée tous les sprites en un seul appel
 
-            EntityFactory.CreateSpriteEntities(world, positions, rects);
+            EntityFactory.CreateSpriteEntities(world, spriteAtlasE, positions, rects);
         }
 
         /// <summary>
         /// Calcule les dimensions de chaque sprite sur la grille
         /// </summary>
+        /// <param name="size">La taille de la carte à dessiner</param>
+        /// <param name="tex">La texture du SpritAtlas</param>
+        /// <param name="rows">Le nombre de lignes de l'atlas</param>
+        /// <param name="columns">Le nombre de colonnes de l'atlas</param>
         /// <returns>Les dimensions des sprites</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private UnsafeArray<Rectangle> GetSpritesRects()
+        private static UnsafeArray<Rectangle> GetSpritesRects(Point size, Texture2D tex, int rows, int columns)
         {
-            UnsafeArray<Rectangle> rects = new(this._size.X * this._size.Y);
-            Rectangle wallRect = this._spriteAtlas.GetSpriteRect(0);
-            Rectangle floorRect = this._spriteAtlas.GetSpriteRect(1);
+            UnsafeArray<Rectangle> rects = new(size.X * size.Y);
+            Rectangle wallRect = SpriteManager.GetSpriteRect(in tex, rows, columns, 0);
+            Rectangle floorRect = SpriteManager.GetSpriteRect(in tex, rows, columns, 1);
             int count = 0;
 
-            for (int i = 0; i < this._size.X; ++i)
+            for (int i = 0; i < size.X; ++i)
             {
                 rects[i] = wallRect;
             }
 
-            count += _size.X;
+            count += size.X;
 
-            for (int y = 1; y < this._size.Y - 1; ++y)
+            for (int y = 1; y < size.Y - 1; ++y)
             {
                 rects[count] = wallRect;
 
-                for (int x = 1; x < this._size.X - 1; ++x)
+                for (int x = 1; x < size.X - 1; ++x)
                 {
                     rects[x + count] = floorRect;
                 }
 
-                rects[count + this._size.X - 1] = wallRect;
-                count += _size.X;
+                rects[count + size.X - 1] = wallRect;
+                count += size.X;
             }
 
-            for (int i = count; i < count + this._size.X; ++i)
+            for (int i = count; i < count + size.X; ++i)
             {
                 rects[i] = wallRect;
             }
@@ -190,20 +178,22 @@ namespace Retard.Tests.ViewModels.Scenes
         /// Calcule les positions de chaque sprite sur la grille
         /// </summary>
         /// <returns>Les positions des sprites</returns>
+        /// <param name="size">La taille de la carte à dessiner</param>
+        /// <param name="spriteResolution">La résolution d'un sprite en pixels</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private UnsafeArray<Vector2> GetSpritesPositions()
+        private static UnsafeArray<Vector2> GetSpritesPositions(Point size, int spriteResolution)
         {
-            UnsafeArray<Vector2> positions = new(this._size.X * this._size.Y);
+            UnsafeArray<Vector2> positions = new(size.X * size.Y);
             int count = 0;
 
-            for (int y = 0; y < this._size.Y; ++y)
+            for (int y = 0; y < size.Y; ++y)
             {
-                for (int x = 0; x < this._size.X; ++x)
+                for (int x = 0; x < size.X; ++x)
                 {
-                    positions[x + count] = new Vector2(x, y) * this._spriteResolution;
+                    positions[x + count] = new Vector2(x, y) * spriteResolution;
                 }
 
-                count += this._size.X;
+                count += size.X;
             }
 
             return positions;

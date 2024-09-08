@@ -1,24 +1,24 @@
 ﻿using Arch.AOT.SourceGenerator;
 using Microsoft.Xna.Framework;
 
-namespace Retard.Rendering2D.Components
+namespace Retard.Rendering2D.Components.Sprite
 {
     /// <summary>
-    /// Les dimensions du sprite
+    /// La couleur d'un sprite
     /// </summary>
     /// <remarks>
     /// Constructeur
     /// </remarks>
-    /// <param name="rect">Les dimensions du sprite</param>
+    /// <param name="color">La couleur du sprite</param>
     [Component]
-    public struct SpriteRectCD(Rectangle rect)
+    public struct SpriteColorCD(Color color)
     {
         #region Variables d'instance
 
         /// <summary>
-        /// Les dimensions du sprite
+        /// La couleur du sprite
         /// </summary>
-        public Rectangle Value = rect;
+        public Color Value = color;
 
         #endregion
     }

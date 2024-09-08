@@ -1,6 +1,6 @@
 ﻿using Arch.AOT.SourceGenerator;
 
-namespace Retard.Rendering2D.Components
+namespace Retard.Rendering2D.Components.Sprite
 {
     /// <summary>
     /// L'ID du sprite à afficher dans l'atlas

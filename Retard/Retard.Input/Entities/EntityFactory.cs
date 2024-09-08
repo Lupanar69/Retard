@@ -14,7 +14,7 @@ namespace Retard.Input.Entities
     /// </summary>
     public static class EntityFactory
     {
-        #region Input
+        #region Méthodes statiques publiques
 
         /// <summary>
         /// Crée les entités des actions des entrées
@@ -280,7 +280,7 @@ namespace Retard.Input.Entities
 
         #endregion
 
-        #region Fonctions statiques privées
+        #region Méthodes statiques privées
 
         /// <summary>
         /// Convertit le KeySequenceElement
