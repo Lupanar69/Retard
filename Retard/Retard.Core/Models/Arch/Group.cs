@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Arch.Core;
 using Retard.Core.Models.ValueTypes;
 
 namespace Retard.Core.Models.Arch;
@@ -90,6 +91,18 @@ public readonly struct Group : ISystem
     }
 
     /// <summary>
+    ///     Removes a <see cref="ISystem"/> from this group.
+    /// </summary>
+    /// <param name="index">La position de l'objet dans la liste</param>
+    /// <returns>The same <see cref="Group"/>.</returns>
+    public Group RemoveAt(int index)
+    {
+        this._systems.RemoveAt(index);
+
+        return this;
+    }
+
+    /// <summary>
     ///     Return the first <see cref="G"/> which was found in the hierachy.
     /// </summary>
     /// <typeparam name="U">The Type.</typeparam>
@@ -155,28 +168,30 @@ public readonly struct Group : ISystem
     /// <summary>
     ///     Runs <see cref="ISystem.BeforeUpdate"/> on each <see cref="ISystem"/> of this <see cref="Group"/>.
     /// </summary>
-    public void BeforeUpdate()
+    /// <param name="w">Le monde contenant les entité</param>
+    public void BeforeUpdate(World w)
     {
         for (var index = 0; index < this._systems.Count; index++)
         {
             var entry = _systems[index];
 
 
-            entry.System.BeforeUpdate();
+            entry.System.BeforeUpdate(w);
         }
     }
 
     /// <summary>
     ///     Runs <see cref="ISystem.Update"/> on each <see cref="ISystem"/> of this <see cref="Group"/>.
     /// </summary>
-    public void Update()
+    /// <param name="w">Le monde contenant les entité</param>
+    public void Update(World w)
     {
         for (var index = 0; index < this._systems.Count; index++)
         {
             var entry = _systems[index];
 
 
-            entry.System.Update();
+            entry.System.Update(w);
 
         }
     }
@@ -184,13 +199,14 @@ public readonly struct Group : ISystem
     /// <summary>
     ///     Runs <see cref="ISystem.AfterUpdate"/> on each <see cref="ISystem"/> of this <see cref="Group"/>.
     /// </summary>
-    public void AfterUpdate()
+    /// <param name="w">Le monde contenant les entité</param>
+    public void AfterUpdate(World w)
     {
         for (var index = 0; index < this._systems.Count; index++)
         {
             var entry = _systems[index];
 
-            entry.System.AfterUpdate();
+            entry.System.AfterUpdate(w);
 
         }
     }
@@ -319,6 +335,18 @@ public readonly struct Group<T> : ISystem<T>
     }
 
     /// <summary>
+    ///     Removes a <see cref="ISystem{T}"/> from this group.
+    /// </summary>
+    /// <param name="index">La position de l'objet dans la liste</param>
+    /// <returns>The same <see cref="Group"/>.</returns>
+    public Group<T> RemoveAt(int index)
+    {
+        this._systems.RemoveAt(index);
+
+        return this;
+    }
+
+    /// <summary>
     ///     Return the first <see cref="G"/> which was found in the hierachy.
     /// </summary>
     /// <typeparam name="G">The Type.</typeparam>
@@ -384,39 +412,42 @@ public readonly struct Group<T> : ISystem<T>
     /// <summary>
     ///     Runs <see cref="ISystem{T}.BeforeUpdate"/> on each <see cref="ISystem{T}"/> of this <see cref="Group{T}"/>..
     /// </summary>
+    /// <param name="w">Le monde contenant les entité</param>
     /// <param name="t">An instance passed to each <see cref="ISystem{T}.Initialize"/> method.</param>
-    public void BeforeUpdate(in T t)
+    public void BeforeUpdate(World w, in T t)
     {
         for (var index = 0; index < _systems.Count; index++)
         {
             var entry = _systems[index];
-            entry.System.BeforeUpdate(in t);
+            entry.System.BeforeUpdate(w, in t);
         }
     }
 
     /// <summary>
     ///     Runs <see cref="ISystem{T}.Update"/> on each <see cref="ISystem{T}"/> of this <see cref="Group{T}"/>..
     /// </summary>
+    /// <param name="w">Le monde contenant les entité</param>
     /// <param name="t">An instance passed to each <see cref="ISystem{T}.Initialize"/> method.</param>
-    public void Update(in T t)
+    public void Update(World w, in T t)
     {
         for (var index = 0; index < _systems.Count; index++)
         {
             var entry = _systems[index];
-            entry.System.Update(in t);
+            entry.System.Update(w, in t);
         }
     }
 
     /// <summary>
     ///     Runs <see cref="ISystem{T}.AfterUpdate"/> on each <see cref="ISystem{T}"/> of this <see cref="Group{T}"/>..
     /// </summary>
+    /// <param name="w">Le monde contenant les entité</param>
     /// <param name="t">An instance passed to each <see cref="ISystem{T}.Initialize"/> method.</param>
-    public void AfterUpdate(in T t)
+    public void AfterUpdate(World w, in T t)
     {
         for (var index = 0; index < _systems.Count; index++)
         {
             var entry = _systems[index];
-            entry.System.AfterUpdate(in t);
+            entry.System.AfterUpdate(w, in t);
         }
     }
 

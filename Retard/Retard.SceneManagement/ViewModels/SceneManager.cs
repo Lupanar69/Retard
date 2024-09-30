@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Arch.Core;
 using Microsoft.Xna.Framework;
 using Retard.SceneManagement.Models;
 
@@ -86,13 +87,14 @@ namespace Retard.SceneManagement.ViewModels
         /// <summary>
         /// Màj la logique de chaque scène
         /// </summary>
+        /// <param name="w">Le monde contenant les entités</param>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        public void Update(GameTime gameTime)
+        public void Update(World w, GameTime gameTime)
         {
             for (int i = _activeScenes.Count - 1; i >= 0; --i)
             {
                 IScene scene = _activeScenes[i];
-                scene.OnUpdate(gameTime);
+                scene.OnUpdate(w, gameTime);
 
                 if (scene.ConsumeUpdate)
                 {
@@ -104,8 +106,9 @@ namespace Retard.SceneManagement.ViewModels
         /// <summary>
         /// Affiche le contenu des scènes à l'écran
         /// </summary>
+        /// <param name="w">Le monde contenant les entités</param>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        public void Draw(GameTime gameTime)
+        public void Draw(World w, GameTime gameTime)
         {
             int startDrawIndex = 0;
 
@@ -119,7 +122,7 @@ namespace Retard.SceneManagement.ViewModels
 
             for (int i = startDrawIndex; i < _activeScenes.Count; ++i)
             {
-                _activeScenes[i].OnDraw(gameTime);
+                _activeScenes[i].OnDraw(w, gameTime);
             }
         }
 
@@ -156,7 +159,7 @@ namespace Retard.SceneManagement.ViewModels
             Type t = typeof(T);
             _inactiveScenes.Remove(t, out IScene scene);
             _activeScenes.Add(scene);
-            scene.OnSetActive();
+            scene.OnEnable();
             SetScenesControlsActiveState();
         }
 
@@ -167,6 +170,7 @@ namespace Retard.SceneManagement.ViewModels
         {
             IScene scene = _activeScenes[^1];
             scene.DisableControls();
+            scene.OnDisable();
             Type t = scene.GetType();
             _activeScenes.Remove(scene);
             _inactiveScenes.Add(t, scene);
@@ -181,6 +185,7 @@ namespace Retard.SceneManagement.ViewModels
         {
             Type t = scene.GetType();
             scene.DisableControls();
+            scene.OnDisable();
             _activeScenes.Remove(scene);
             _inactiveScenes.Add(t, scene);
             SetScenesControlsActiveState();
@@ -199,6 +204,7 @@ namespace Retard.SceneManagement.ViewModels
                 IScene s = _activeScenes[i];
                 Type t = s.GetType();
                 s.DisableControls();
+                s.OnDisable();
                 _activeScenes.RemoveAt(i);
                 _inactiveScenes.Add(t, s);
             }

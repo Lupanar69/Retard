@@ -88,6 +88,7 @@ namespace Retard.Input.ViewModels
             this.ActionVector1DResources = new Resources<Action<int, float>>(1);
             this.ActionVector2DResources = new Resources<Action<int, Vector2>>(1);
             this.Handles = new InputHandles();
+            this._updateSystems = new Group("Update Systems");
         }
 
         #endregion
@@ -97,14 +98,15 @@ namespace Retard.Input.ViewModels
         /// <summary>
         /// Capture l'état des inputs lors de la frame actuelle
         /// </summary>
-        public void Update()
+        /// <param name="w">Le monde contenant les entités</param>
+        public void Update(World w)
         {
             foreach (KeyValuePair<Type, IInputScheme> pair in this._inputSchemes)
             {
                 pair.Value.Update();
             }
 
-            this._updateSystems.Update();
+            this._updateSystems.Update(w);
         }
 
         /// <summary>
@@ -118,6 +120,43 @@ namespace Retard.Input.ViewModels
             {
                 pair.Value.AfterUpdate();
             }
+        }
+
+        /// <summary>
+        /// Récupère le contrôleur du type souhaité
+        /// </summary>
+        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
+        /// <returns>Le contrôleur souhaité</returns>
+        public T GetScheme<T>() where T : IInputScheme, new()
+        {
+            return (T)this._inputSchemes[typeof(T)];
+        }
+
+        /// <summary>
+        /// Indique si le contrôleur du type souhaité existe et le retourne si c'est le cas
+        /// </summary>
+        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
+        /// <returns><see langword="true"/> si le contrôleur souhaité existe</returns>
+        public bool TryGetScheme<T>(out T scheme) where T : IInputScheme, new()
+        {
+            if (this.HasScheme<T>())
+            {
+                scheme = this.GetScheme<T>();
+                return true;
+            }
+
+            scheme = default;
+            return false;
+        }
+
+        /// <summary>
+        /// Indique si le type d'entrée est disponible pour ce jeu
+        /// </summary>
+        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
+        /// <returns><see langword="true"/> si le contrôleur souhaité existe</returns>
+        public bool HasScheme<T>() where T : IInputScheme, new()
+        {
+            return this._inputSchemes.ContainsKey(typeof(T));
         }
 
         /// <summary>
@@ -183,49 +222,48 @@ namespace Retard.Input.ViewModels
         /// <summary>
         /// Initialise les systèmes
         /// </summary>
-        /// <param name="world">Le monde contenant les entités</param>
-        public void InitializeSystems(World world, int nbMaxControllers)
+        public void InitializeSystems(int nbMaxControllers)
         {
             // Initalise les systèmes
 
-            this._updateSystems = new Group("Update Systems");
-            this._updateSystems.Add(new InputSystem(world, nbMaxControllers));
-            this._updateSystems.Initialize();
+            ISystem inputSystem = new InputSystem(nbMaxControllers);
+            inputSystem.Initialize();
+            this._updateSystems.Add(inputSystem);
         }
 
         /// <summary>
         /// Enregistre les inputActions renseignées dans la liste des actions actives
         /// </summary>
-        /// <param name="world">Le monde contenant les entités</param>
+        /// <param name="w">Le monde contenant les entités</param>
         /// <param name="nbMaxControllers">Le nombre max de contrôleurs pris en charge par l'InputSystem</param>
         /// <param name="inputActions">La liste des actions à convertir en entités</param>
-        public void RegisterInputActions(World world, int nbMaxControllers, params InputActionDTO[] inputActions)
+        public void RegisterInputActions(World w, int nbMaxControllers, params InputActionDTO[] inputActions)
         {
             // Doivent être appelées ensemble pour que les queries
             // puissent trouver l'ID du handle correspondant
 
-            this.AddInputEntities(world, nbMaxControllers, inputActions);
+            this.AddInputEntities(w, nbMaxControllers, inputActions);
             this.AddActionsIDsToHandles(inputActions);
         }
 
         /// <summary>
         /// Détruit toutes les entités des InputActions et InputBindings
         /// </summary>
-        /// <param name="world">Le monde contenant les entités</param>
-        public static void RemoveAllInputActions(World world)
+        /// <param name="w">Le monde contenant les entités</param>
+        public static void RemoveAllInputActions(World w)
         {
-            Queries.DestroyAllInputEntitiesQuery(world, world);
+            Queries.DestroyAllInputEntitiesQuery(w, w);
         }
 
         /// <summary>
         /// Détruit les entités des InputActions selon leurs IDs
         /// ainsi que leurs bindings
         /// </summary>
-        /// <param name="world">Le monde contenant les entités</param>
+        /// <param name="w">Le monde contenant les entités</param>
         /// <param name="actionsIDs">Les IDs des actions à supprimer</param>
-        public static void RemoveInputActions(World world, params NativeString[] actionsIDs)
+        public static void RemoveInputActions(World w, params NativeString[] actionsIDs)
         {
-            Queries.DestroyInputEntitiesQuery(world, world, actionsIDs);
+            Queries.DestroyInputEntitiesQuery(w, w, actionsIDs);
         }
 
         #endregion
@@ -233,49 +271,12 @@ namespace Retard.Input.ViewModels
         #region Méthodes internes
 
         /// <summary>
-        /// Récupère le contrôleur du type souhaité
-        /// </summary>
-        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
-        /// <returns>Le contrôleur souhaité</returns>
-        public T GetScheme<T>() where T : IInputScheme, new()
-        {
-            return (T)this._inputSchemes[typeof(T)];
-        }
-
-        /// <summary>
-        /// Indique si le contrôleur du type souhaité existe et le retourne si c'est le cas
-        /// </summary>
-        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
-        /// <returns><see langword="true"/> si le contrôleur souhaité existe</returns>
-        public bool TryGetScheme<T>(out T scheme) where T : IInputScheme, new()
-        {
-            if (this.HasScheme<T>())
-            {
-                scheme = this.GetScheme<T>();
-                return true;
-            }
-
-            scheme = default;
-            return false;
-        }
-
-        /// <summary>
-        /// Indique si le type d'entrée est disponible pour ce jeu
-        /// </summary>
-        /// <typeparam name="T">Le type du contrôleur souhaité</typeparam>
-        /// <returns><see langword="true"/> si le contrôleur souhaité existe</returns>
-        public bool HasScheme<T>() where T : IInputScheme, new()
-        {
-            return this._inputSchemes.ContainsKey(typeof(T));
-        }
-
-        /// <summary>
         /// Retourne l'état de la touche
         /// </summary>
         /// <param name="mouseKey">La touche de la souris à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        public InputKeySequenceState GetMouseKeyState(MouseKey mouseKey)
+        internal InputKeySequenceState GetMouseKeyState(MouseKey mouseKey)
         {
             MouseInput mouseInput = this.GetScheme<MouseInput>();
 
@@ -331,7 +332,7 @@ namespace Retard.Input.ViewModels
         /// <param name="keyboardKey">La touche du clavier à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        public InputKeySequenceState GetKeyboardKeyState(Keys keyboardKey)
+        internal InputKeySequenceState GetKeyboardKeyState(Keys keyboardKey)
         {
             KeyboardInput keyboardInput = this.GetScheme<KeyboardInput>();
 
@@ -350,7 +351,7 @@ namespace Retard.Input.ViewModels
         /// <param name="playerIndex">L'ID de la manette</param>
         /// <param name="gamePadKey">La touche de la manette à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
-        public InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey)
+        internal InputKeySequenceState GetGamePadKeyState(int playerIndex, Buttons gamePadKey)
         {
             GamePadInput gamePadInput = this.GetScheme<GamePadInput>();
 
@@ -370,7 +371,7 @@ namespace Retard.Input.ViewModels
         /// <param name="joystickKey">La touche de la manette à evaluer</param>
         /// <returns>L'état de l'élément de la séquence de l'InputBinding</returns>
         /// <exception cref="Exception">La touche renseignée est invalide</exception>
-        public InputKeySequenceState GetJoystickKeyState(int playerIndex, JoystickKey joystickKey)
+        internal InputKeySequenceState GetJoystickKeyState(int playerIndex, JoystickKey joystickKey)
         {
             GamePadInput gamePadInput = this.GetScheme<GamePadInput>();
             Vector2 leftAxis = gamePadInput.GetLeftThumbstickAxis(playerIndex);
@@ -516,10 +517,10 @@ namespace Retard.Input.ViewModels
         /// <summary>
         /// Crée les entités des inputs à partir des données de config
         /// </summary>
-        /// <param name="world">Le monde contenant les entités</param>
+        /// <param name="w">Le monde contenant les entités</param>
         /// <param name="nbMaxControllers">Le nombre max de contrôleurs pris en charge par l'InputSystem</param>
         /// <param name="inputActions">La liste des actions à convertir en entités</param>
-        private void AddInputEntities(World world, int nbMaxControllers, params InputActionDTO[] inputActions)
+        private void AddInputEntities(World w, int nbMaxControllers, params InputActionDTO[] inputActions)
         {
             bool usesMouse = this.HasScheme<MouseInput>();
             bool usesKeyboard = this.HasScheme<KeyboardInput>();
@@ -541,11 +542,11 @@ namespace Retard.Input.ViewModels
                 for (int j = 0; j < action.Bindings.Length; ++j)
                 {
                     InputBindingDTO binding = action.Bindings[j];
-                    Entity e1 = EntityFactory.CreateInputBindingKeySequenceEntity(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.KeySequence);
-                    Entity e2 = EntityFactory.CreateInputBindingVector1DKeysEntity(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.Vector1DKeys);
-                    Entity e3 = EntityFactory.CreateInputBindingVector2DKeysEntity(world, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.Vector2DKeys);
-                    Entity e4 = EntityFactory.CreateInputBindingJoystickEntity(world, nbMaxControllers, usesGamePad, binding.Joystick);
-                    Entity e5 = EntityFactory.CreateInputBindingTriggerEntity(world, nbMaxControllers, usesMouse, usesGamePad, binding.Trigger);
+                    Entity e1 = EntityFactory.CreateInputBindingKeySequenceEntity(w, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.KeySequence);
+                    Entity e2 = EntityFactory.CreateInputBindingVector1DKeysEntity(w, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.Vector1DKeys);
+                    Entity e3 = EntityFactory.CreateInputBindingVector2DKeysEntity(w, nbMaxControllers, usesMouse, usesKeyboard, usesGamePad, binding.Vector2DKeys);
+                    Entity e4 = EntityFactory.CreateInputBindingJoystickEntity(w, nbMaxControllers, usesGamePad, binding.Joystick);
+                    Entity e5 = EntityFactory.CreateInputBindingTriggerEntity(w, nbMaxControllers, usesMouse, usesGamePad, binding.Trigger);
 
                     // Si un binding est null (aucune touche renseignée ou aucun IScheme correspondant dans l'InputManager),
                     // on se contente de l'ignorer
@@ -582,11 +583,11 @@ namespace Retard.Input.ViewModels
 
                 if (bindingEs.Count > 0)
                 {
-                    Entity actionE = EntityFactory.CreateInputActionEntities(world, nbMaxControllers, action.Name, action.ValueType);
+                    Entity actionE = EntityFactory.CreateInputActionEntities(w, nbMaxControllers, action.Name, action.ValueType);
 
                     for (int j = 0; j < bindingEs.Count; ++j)
                     {
-                        world.AddRelationship<InputActionOf>(actionE, bindingEs[j]);
+                        w.AddRelationship<InputActionOf>(actionE, bindingEs[j]);
                     }
                 }
 

@@ -12,32 +12,21 @@ namespace Retard.Rendering2D.Systems
     /// <remarks>
     /// Constructeur
     /// </remarks>
-    /// <param name="world">Le monde contenant les entités des sprites</param>
+    /// <param name="w">Le monde contenant les entités des sprites</param>
     /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
     /// <param name="camera">La caméra du jeu</param>
-    public readonly struct SpriteDrawSystem(World world, SpriteBatch spriteBatch, OrthographicCamera camera) : ISystemWorld
+    public readonly struct SpriteDrawSystem(SpriteBatch spriteBatch, OrthographicCamera camera) : ISystem
     {
-        #region Propriétés
-
-        /// <summary>
-        /// Le monde contenant les entités
-        /// </summary>
-        public readonly World World { get; init; } = world;
-
-        #endregion
-
         #region Méthodes publiques
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        public void Update()
+        public void Update(World w)
         {
-            Queries.UpdateAnimatedSpriteRectQuery(this.World, this.World);
+            Queries.UpdateAnimatedSpriteRectQuery(w, w);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.GetViewMatrix());
 
-            Queries.DrawSpritesQuery(this.World, this.World, spriteBatch);
+            Queries.DrawSpritesQuery(w, w, spriteBatch);
 
             spriteBatch.End();
         }

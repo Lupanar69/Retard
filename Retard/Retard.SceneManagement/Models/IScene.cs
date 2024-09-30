@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Arch.Core;
+using Microsoft.Xna.Framework;
 using Retard.Input.Models.Assets;
 
 namespace Retard.SceneManagement.Models
@@ -44,7 +45,12 @@ namespace Retard.SceneManagement.Models
         /// <summary>
         /// Appelée à chaque fois que la scène devient active
         /// </summary>
-        public void OnSetActive() { }
+        public void OnEnable() { }
+
+        /// <summary>
+        /// Appelée à chaque fois que la scène devient active
+        /// </summary>
+        public void OnDisable() { }
 
         /// <summary>
         /// Active les contrôles
@@ -65,14 +71,16 @@ namespace Retard.SceneManagement.Models
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
+        /// <param name="w">Le monde contenant les entités</param>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        public void OnUpdate(GameTime gameTime) { }
+        public void OnUpdate(World w, GameTime gameTime) { }
 
         /// <summary>
         /// Pour afficher des éléments à l'écran
         /// </summary>
+        /// <param name="w">Le monde contenant les entités</param>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        public void OnDraw(GameTime gameTime) { }
+        public void OnDraw(World w, GameTime gameTime) { }
 
         #endregion
     }

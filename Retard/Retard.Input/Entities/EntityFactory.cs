@@ -19,25 +19,25 @@ namespace Retard.Input.Entities
         /// <summary>
         /// Crée les entités des actions des entrées
         /// </summary>
-        /// <param name="world">Le monde contenant ces entités</param>
+        /// <param name="w">Le monde contenant ces entités</param>
         /// <param name="nbMaxControllers">Le nombre de joueurs possibles</param>
         /// <param name="name">L'ID du contexte</param>
         /// <param name="valueType">La valeur retournée par l'action</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputActionEntities(World world, int nbMaxControllers, string name, InputActionReturnValueType valueType)
+        public static Entity CreateInputActionEntities(World w, int nbMaxControllers, string name, InputActionReturnValueType valueType)
         {
-            Entity e = world.Create(new InputActionIDCD { Value = name });
+            Entity e = w.Create(new InputActionIDCD { Value = name });
 
             switch (valueType)
             {
                 case InputActionReturnValueType.ButtonState:
-                    world.Add(e, new InputButtonStateValuesBU(nbMaxControllers));
+                    w.Add(e, new InputButtonStateValuesBU(nbMaxControllers));
                     break;
                 case InputActionReturnValueType.Vector1D:
-                    world.Add(e, new InputActionVector1DTag());
+                    w.Add(e, new InputActionVector1DTag());
                     break;
                 case InputActionReturnValueType.Vector2D:
-                    world.Add(e, new InputActionVector2DTag());
+                    w.Add(e, new InputActionVector2DTag());
                     break;
             }
 
@@ -47,14 +47,14 @@ namespace Retard.Input.Entities
         /// <summary>
         /// Crée les entités des entrées
         /// </summary>
-        /// <param name="world">Le monde contenant ces entités</param>
+        /// <param name="w">Le monde contenant ces entités</param>
         /// <param name="nbMaxControllers">Le nombre de joueurs possibles</param>
         /// <param name="usesMouse"><see langword="true"/> si l'InputManager prend en charge la souris</param>
         /// <param name="usesKeyboard"><see langword="true"/> si l'InputManager prend en charge le clavier</param>
         /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
         /// <param name="keySequence">La liste d'entrées à exécuter</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputBindingKeySequenceEntity(World world, int nbMaxControllers,
+        public static Entity CreateInputBindingKeySequenceEntity(World w, int nbMaxControllers,
             bool usesMouse, bool usesKeyboard, bool usesGamePad, InputKeySequenceElement[] keySequence)
         {
             if (keySequence == null || keySequence.Length == 0)
@@ -86,7 +86,7 @@ namespace Retard.Input.Entities
                 validStates[i] = element.ValidState;
             }
 
-            return world.Create
+            return w.Create
                 (
                 new InputBindingKeySequenceTypesBU(keyTypes),
                 new InputBindingKeySequenceIDsBU(keysIDs),
@@ -98,14 +98,14 @@ namespace Retard.Input.Entities
         /// <summary>
         /// Crée les entités des entrées
         /// </summary>
-        /// <param name="world">Le monde contenant ces entités</param>
+        /// <param name="w">Le monde contenant ces entités</param>
         /// <param name="nbMaxControllers">Le nombre de joueurs possibles</param>
         /// <param name="usesMouse"><see langword="true"/> si l'InputManager prend en charge la souris</param>
         /// <param name="usesKeyboard"><see langword="true"/> si l'InputManager prend en charge le clavier</param>
         /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
         /// <param name="vector1DKeys">Les touches pour actionner un seul axe (X ou Y)</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputBindingVector1DKeysEntity(World world, int nbMaxControllers,
+        public static Entity CreateInputBindingVector1DKeysEntity(World w, int nbMaxControllers,
             bool usesMouse, bool usesKeyboard, bool usesGamePad, InputKeyVector1DElement[] vector1DKeys)
         {
             if (vector1DKeys == null || vector1DKeys.Length != 2)
@@ -131,7 +131,7 @@ namespace Retard.Input.Entities
                 return Entity.Null;
             }
 
-            return world.Create
+            return w.Create
                 (
                 new InputBindingVector1DKeysIDsCD(positiveID, negativeID),
                 new InputBindingVector1DKeysTypesCD(positiveType, negativeType),
@@ -142,14 +142,14 @@ namespace Retard.Input.Entities
         /// <summary>
         /// Crée les entités des entrées
         /// </summary>
-        /// <param name="world">Le monde contenant ces entités</param>
+        /// <param name="w">Le monde contenant ces entités</param>
         /// <param name="nbMaxControllers">Le nombre de joueurs possibles</param>
         /// <param name="usesMouse"><see langword="true"/> si l'InputManager prend en charge la souris</param>
         /// <param name="usesKeyboard"><see langword="true"/> si l'InputManager prend en charge le clavier</param>
         /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
         /// <param name="vector2DKeys">Les touches pour actionner un axe 2D</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputBindingVector2DKeysEntity(World world, int nbMaxControllers,
+        public static Entity CreateInputBindingVector2DKeysEntity(World w, int nbMaxControllers,
             bool usesMouse, bool usesKeyboard, bool usesGamePad, InputKeyVector2DElement[] vector2DKeys)
         {
             if (vector2DKeys == null || vector2DKeys.Length != 4)
@@ -189,7 +189,7 @@ namespace Retard.Input.Entities
                 return Entity.Null;
             }
 
-            return world.Create
+            return w.Create
                 (
                     new InputBindingVector2DKeysIDsCD(positiveXID, negativeXID, positiveYID, negativeYID),
                     new InputBindingVector2DKeysTypesCD(positiveXType, negativeXType, positiveYType, negativeYType),
@@ -200,12 +200,12 @@ namespace Retard.Input.Entities
         /// <summary>
         /// Crée les entités des entrées
         /// </summary>
-        /// <param name="world">Le monde contenant ces entités</param>
+        /// <param name="w">Le monde contenant ces entités</param>
         /// <param name="nbMaxControllers">Le nombre de joueurs possibles</param>
         /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
         /// <param name="joystick">Le joystick utilisé</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputBindingJoystickEntity(World world, int nbMaxControllers,
+        public static Entity CreateInputBindingJoystickEntity(World w, int nbMaxControllers,
             bool usesGamePad, InputBindingJoystick joystick)
         {
             if (!usesGamePad || joystick.Type == JoystickType.None)
@@ -213,7 +213,7 @@ namespace Retard.Input.Entities
                 return Entity.Null;
             }
 
-            Entity e = world.Create
+            Entity e = w.Create
                 (
                     new InputBindingDeadZoneCD(joystick.DeadZone),
                     new InputBindingJoystickTypeCD(joystick.Type)
@@ -222,15 +222,15 @@ namespace Retard.Input.Entities
             switch (joystick.Axis)
             {
                 case JoystickAxisType.Both:
-                    world.Add(e, new InputVector2DValuesBU(nbMaxControllers));
+                    w.Add(e, new InputVector2DValuesBU(nbMaxControllers));
                     break;
                 case JoystickAxisType.XAxis:
-                    world.Add<InputBindingJoystickXAxisTag>(e);
-                    world.Add(e, new InputVector1DValuesBU(nbMaxControllers));
+                    w.Add<InputBindingJoystickXAxisTag>(e);
+                    w.Add(e, new InputVector1DValuesBU(nbMaxControllers));
                     break;
                 case JoystickAxisType.YAxis:
-                    world.Add<InputBindingJoystickYAxisTag>(e);
-                    world.Add(e, new InputVector1DValuesBU(nbMaxControllers));
+                    w.Add<InputBindingJoystickYAxisTag>(e);
+                    w.Add(e, new InputVector1DValuesBU(nbMaxControllers));
                     break;
             }
 
@@ -240,13 +240,13 @@ namespace Retard.Input.Entities
         /// <summary>
         /// Crée les entités des entrées
         /// </summary>
-        /// <param name="world">Le monde contenant ces entités</param>
+        /// <param name="w">Le monde contenant ces entités</param>
         /// <param name="nbMaxControllers">Le nombre de joueurs possibles</param>
         /// <param name="usesMouse"><see langword="true"/> si l'InputManager prend en charge la souris</param>
         /// <param name="usesGamePad"><see langword="true"/> si l'InputManager prend en charge la manette</param>
         /// <param name="trigger">Le trigger utilisé</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateInputBindingTriggerEntity(World world, int nbMaxControllers,
+        public static Entity CreateInputBindingTriggerEntity(World w, int nbMaxControllers,
             bool usesMouse, bool usesGamePad, InputBindingTrigger trigger)
         {
             switch (trigger.Type)
@@ -270,7 +270,7 @@ namespace Retard.Input.Entities
                     return Entity.Null;
             }
 
-            return world.Create
+            return w.Create
                     (
                         new InputBindingDeadZoneCD(trigger.DeadZone),
                         new InputBindingTriggerTypeCD(trigger.Type),

@@ -46,10 +46,4 @@
 	  <ProjectReference Include="..\Retard.Core\Retard.Core.csproj" />
 	  <ProjectReference Include="..\Retard.Input\Retard.Input.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Components\BoundingFrustum\" />
-	  <Folder Include="Components\Camera\" />
-	  <Folder Include="Components\ViewportAdapter\" />
-	</ItemGroup>
 </Project>

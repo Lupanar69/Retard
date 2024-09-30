@@ -10,26 +10,15 @@ namespace Retard.Rendering2D.Systems
     /// <remarks>
     /// Constructeur
     /// </remarks>
-    /// <param name="world">Le monde contenant les entités des sprites</param>
-    public readonly struct AnimatedSpriteUpdateSystem(World world) : ISystemWorld
+    /// <param name="w">Le monde contenant les entités des sprites</param>
+    public readonly struct AnimatedSpriteUpdateSystem : ISystem
     {
-        #region Propriétés
-
-        /// <summary>
-        /// Le monde contenant les entités
-        /// </summary>
-        public readonly World World { get; init; } = world;
-
-        #endregion
-
         #region Méthodes publiques
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        public void Update()
+        public void Update(World w)
         {
-            Queries.UpdateAnimatedSpriteFrameQuery(this.World);
+            Queries.UpdateAnimatedSpriteFrameQuery(w);
         }
 
         #endregion

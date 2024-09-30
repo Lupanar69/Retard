@@ -11,6 +11,7 @@ using Retard.Engine.Models.Assets;
 using Retard.Input.Models.Assets;
 using Retard.Input.Models.DTOs;
 using Retard.Input.ViewModels;
+using Retard.Rendering2D.ViewModels;
 using Retard.SceneManagement.ViewModels;
 
 namespace Retard.Engine.ViewModels
@@ -74,10 +75,10 @@ namespace Retard.Engine.ViewModels
             game.Activated += GameState.OnFocusEvent;
             game.Deactivated += GameState.OnFocusLostEvent;
 
-            _content = game.Content;
-            _spriteBatch = new SpriteBatch(game.GraphicsDevice);
-            _world = World.Create();
-            _game = game;
+            this._content = game.Content;
+            this._spriteBatch = new SpriteBatch(game.GraphicsDevice);
+            this._world = World.Create();
+            this._game = game;
 
             // Initialise les managers
 
@@ -88,11 +89,13 @@ namespace Retard.Engine.ViewModels
             WindowSettings ws = GetWindowSettings();
 
             InputManager.Instance.InitializeInputSchemes(inputSchemes);
-            InputManager.Instance.InitializeSystems(_world, nbMaxControllers);
+            InputManager.Instance.InitializeSystems(nbMaxControllers);
             InputManager.Instance.RegisterInputActions(_world, nbMaxControllers, inputConfig.Actions);
 
-            _appViewport = new AppViewport(game, graphicsDeviceManager, ws);
-            _appPerformance = new AppPerformance(game);
+            this._appViewport = new AppViewport(game, graphicsDeviceManager, ws);
+            this._appPerformance = new AppPerformance(game);
+
+            SpriteManager.Instance.SetSpriteBatch(this._spriteBatch);
         }
 
         // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
@@ -123,14 +126,12 @@ namespace Retard.Engine.ViewModels
                 game.Exit();
             }
 
-            // Màj les inputs
-
-            InputManager.Instance.Update();
-
-            // Màj les scènes
+            InputManager.Instance.Update(this._world);
 
             SceneManager.Instance.UpdateInput(gameTime);
-            SceneManager.Instance.Update(gameTime);
+            SceneManager.Instance.Update(this._world, gameTime);
+
+            SpriteManager.Instance.Update(this._world);
         }
 
         /// <summary>
@@ -152,7 +153,8 @@ namespace Retard.Engine.ViewModels
         {
             graphicsDevice.Clear(Color.Black);
 
-            SceneManager.Instance.Draw(gameTime);
+            SceneManager.Instance.Draw(this._world, gameTime);
+            SpriteManager.Instance.Draw(this._world);
         }
 
         /// <summary>

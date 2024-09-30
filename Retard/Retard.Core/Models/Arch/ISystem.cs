@@ -1,4 +1,6 @@
-﻿namespace Retard.Core.Models.Arch;
+﻿using Arch.Core;
+
+namespace Retard.Core.Models.Arch;
 
 /// <summary>
 ///     An interface providing several methods for a system. 
@@ -13,17 +15,20 @@ public interface ISystem
     /// <summary>
     ///     Runs before <see cref="Update"/>.
     /// </summary>
-    void BeforeUpdate() { }
+    /// <param name="w">Le monde contenant les entités</param>
+    void BeforeUpdate(World w) { }
 
     /// <summary>
     ///     Updates the system.
     /// </summary>
-    void Update() { }
+    /// <param name="w">Le monde contenant les entités</param>
+    void Update(World w) { }
 
     /// <summary>
     ///     Runs after <see cref="Update"/>.
     /// </summary>
-    void AfterUpdate() { }
+    /// <param name="w">Le monde contenant les entités</param>
+    void AfterUpdate(World w) { }
 }
 
 /// <summary>
@@ -40,18 +45,21 @@ public interface ISystem<T>
     /// <summary>
     ///     Runs before <see cref="Update"/>.
     /// </summary>
+    /// <param name="w">Le monde contenant les entités</param>
     /// <param name="t">An instance passed to it.</param>
-    void BeforeUpdate(in T t) { }
+    void BeforeUpdate(World w, in T t) { }
 
     /// <summary>
     ///     Updates the system.
     /// </summary>
+    /// <param name="w">Le monde contenant les entités</param>
     /// <param name="t">An instance passed to it.</param>
-    void Update(in T t) { }
+    void Update(World w, in T t) { }
 
     /// <summary>
     ///     Runs after <see cref="Update"/>.
     /// </summary>
+    /// <param name="w">Le monde contenant les entités</param>
     /// <param name="t">An instance passed to it.</param>
-    void AfterUpdate(in T t) { }
+    void AfterUpdate(World w, in T t) { }
 }
