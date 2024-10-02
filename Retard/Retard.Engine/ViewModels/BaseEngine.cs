@@ -11,7 +11,6 @@ using Retard.Engine.Models.Assets;
 using Retard.Input.Models.Assets;
 using Retard.Input.Models.DTOs;
 using Retard.Input.ViewModels;
-using Retard.Rendering2D.ViewModels;
 using Retard.SceneManagement.ViewModels;
 
 namespace Retard.Engine.ViewModels
@@ -94,8 +93,6 @@ namespace Retard.Engine.ViewModels
 
             this._appViewport = new AppViewport(game, graphicsDeviceManager, ws);
             this._appPerformance = new AppPerformance(game);
-
-            SpriteManager.Instance.SetSpriteBatch(this._spriteBatch);
         }
 
         // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
@@ -130,8 +127,6 @@ namespace Retard.Engine.ViewModels
 
             SceneManager.Instance.UpdateInput(gameTime);
             SceneManager.Instance.Update(this._world, gameTime);
-
-            SpriteManager.Instance.Update(this._world);
         }
 
         /// <summary>
@@ -154,7 +149,6 @@ namespace Retard.Engine.ViewModels
             graphicsDevice.Clear(Color.Black);
 
             SceneManager.Instance.Draw(this._world, gameTime);
-            SpriteManager.Instance.Draw(this._world);
         }
 
         /// <summary>

@@ -89,10 +89,7 @@ namespace Retard.Tests.ViewModels.Engine
 
         #region Méthodes privées
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <param name="gameResources"><inheritdoc/></param>
         protected sealed override void CreateScenes(in GameResources gameResources)
         {
             SceneManager.Instance.AddSceneToPool(new SpriteDrawTestScene
@@ -107,9 +104,7 @@ namespace Retard.Tests.ViewModels.Engine
             SceneManager.Instance.SetSceneAsActive<SpriteDrawTestScene>();
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
         protected sealed override void CreateDefaultConfigFiles()
         {
             AppConfigFileCreation.CreateDefaultConfigFiles
@@ -121,10 +116,7 @@ namespace Retard.Tests.ViewModels.Engine
                 );
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <returns>La liste des contrôleurs acceptés par le jeu</returns>
         protected sealed override IInputScheme[] GetInputSchemes()
         {
             return
@@ -135,10 +127,7 @@ namespace Retard.Tests.ViewModels.Engine
             ];
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <returns>Le fichier de configuration des entrées</returns>
         protected sealed override InputConfigDTO GetInputConfig()
         {
             string customInputConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_INPUT_CONFIG.CustomFilePath}";
@@ -146,9 +135,7 @@ namespace Retard.Tests.ViewModels.Engine
             return JsonUtilities.DeserializeObject<InputConfigDTO>(json);
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
         protected sealed override WindowSettings GetWindowSettings()
         {
             string customAppSettingsConfigPath = $"{Constants.GAME_DIR_PATH}/{Constants.DEFAULT_APP_SETTINGS.CustomFilePath}";

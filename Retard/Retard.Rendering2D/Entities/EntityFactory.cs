@@ -38,6 +38,28 @@ namespace Retard.Rendering2D.Entities
         }
 
         /// <summary>
+        /// Crée l'entité d'un sprite
+        /// </summary>
+        /// <param name="w">Le monde contenant ces entités</param>
+        /// <param name="spriteAtlasE">L'entité de leur SpriteAtlas</param>
+        /// <param name="position">La position du sprite</param>
+        /// <param name="rect">Les dimensions du sprite</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity CreateSpriteEntity(World w, Entity spriteAtlasE, Vector2 position, Rectangle rect)
+        {
+            Entity spriteE = w.Create
+            (
+                new SpritePositionCD(position),
+                new SpriteRectCD(rect),
+                new SpriteColorCD(Color.White)
+            );
+
+            w.AddRelationship<SpriteOf>(spriteE, spriteAtlasE);
+
+            return spriteE;
+        }
+
+        /// <summary>
         /// Crée les entités des sprites
         /// </summary>
         /// <param name="w">Le monde contenant ces entités</param>
@@ -49,14 +71,7 @@ namespace Retard.Rendering2D.Entities
         {
             for (int i = 0; i < positions.Length; ++i)
             {
-                Entity spriteE = w.Create
-                    (
-                        new SpritePositionCD(positions[i]),
-                        new SpriteRectCD(rects[i]),
-                        new SpriteColorCD(Color.White)
-                    );
-
-                w.AddRelationship<SpriteOf>(spriteE, spriteAtlasE);
+                EntityFactory.CreateSpriteEntity(w, spriteAtlasE, positions[i], rects[i]);
             }
         }
 

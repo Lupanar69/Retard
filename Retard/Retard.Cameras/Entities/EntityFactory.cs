@@ -30,7 +30,7 @@ namespace Retard.Cameras.Entities
                     new CameraPitchCD(1f, 1f, float.MaxValue),
                     new Camera2DViewportRectCD(viewportRect),
                     new Camera2DOriginCD(new Vector2(viewportRect.Width / 2f, viewportRect.Height / 2f)),
-                    new Camera2DMatrixCD()
+                    new Camera2DMatrixCD(Matrix.Identity)
                 );
         }
 

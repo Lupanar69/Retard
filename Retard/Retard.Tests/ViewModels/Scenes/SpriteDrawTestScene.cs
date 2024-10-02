@@ -4,10 +4,12 @@ using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using Retard.Core.Models.Arch;
 using Retard.Input.Models.Assets;
 using Retard.Rendering2D.Components.Sprite;
 using Retard.Rendering2D.Components.SpriteAtlas;
 using Retard.Rendering2D.Entities;
+using Retard.Rendering2D.Systems;
 using Retard.Rendering2D.ViewModels;
 using Retard.SceneManagement.Models;
 
@@ -34,28 +36,66 @@ namespace Retard.Tests.ViewModels.Scenes
 
         #endregion
 
+        #region Variables d'instance
+
+        /// <summary>
+        /// Les systèmes du monde à màj dans Update()
+        /// </summary>
+        private readonly Group _updateSystems;
+
+        /// <summary>
+        /// Les systèmes du monde à màj dans Draw()
+        /// </summary>
+        private readonly Group _drawSystems;
+
+        #endregion
+
         #region Constructeur
 
         /// <summary>
         /// Constructeur
         /// </summary>
-        /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="world">Le monde contenant les entités</param>
         /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
         /// <param name="camera">La caméra du jeu</param>
         /// <param name="debugTex">La texture de debug</param>
         /// <param name="size">La taille de la carte à dessiner</param>
         /// <param name="spriteResolution">La résolution d'un sprite en pixels</param>
-        public SpriteDrawTestScene(World w, SpriteBatch spriteBatch, OrthographicCamera camera, Texture2D debugTex, Point size, int spriteResolution)
+        public SpriteDrawTestScene(World world, SpriteBatch spriteBatch, OrthographicCamera camera, Texture2D debugTex, Point size, int spriteResolution)
         {
             // Charge les textures
 
-            Entity spriteAtlasE = EntityFactory.CreateSpriteAtlasEntity(w, debugTex, 4, 4);
+            Entity spriteAtlasE = EntityFactory.CreateSpriteAtlasEntity(world, debugTex, 4, 4);
 
             // Initialise les systèmes
 
-            w.Reserve([typeof(SpriteRectCD), typeof(SpritePositionCD), typeof(SpriteColorCD)], size.X * size.Y);
-            CreateSpriteEntities(w, spriteAtlasE, size, spriteResolution);
-            SpriteManager.Instance.RegisterCamera(camera);
+            world.Reserve([typeof(SpriteRectCD), typeof(SpritePositionCD), typeof(SpriteColorCD)], size.X * size.Y);
+            this._updateSystems = new Group("Update Systems");
+            this._drawSystems = new Group("Draw Systems");
+
+            this._drawSystems.Add(new SpriteDrawSystem(spriteBatch, camera));
+            this._updateSystems.Add(new AnimatedSpriteUpdateSystem());
+
+            this._updateSystems.Initialize();
+            this._drawSystems.Initialize();
+
+            SpriteDrawTestScene.CreateSpriteEntities(world, spriteAtlasE, size, spriteResolution);
+        }
+
+        #endregion
+
+        #region Méthodes publiques
+
+        /// <inheritdoc/>
+        public void OnUpdate(World w, GameTime gameTime)
+        {
+            this._updateSystems.Update(w);
+        }
+
+        /// <inheritdoc/>
+        public void OnDraw(World w, GameTime gameTime)
+        {
+            this._drawSystems.Update(w);
         }
 
         #endregion
@@ -66,21 +106,21 @@ namespace Retard.Tests.ViewModels.Scenes
         /// Crée les entités des sprites
         /// pour tester les systèmes d'affihage
         /// </summary>
-        /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="world">Le monde contenant les entités</param>
         /// <param name="size">La taille de la carte à dessiner</param>
         /// <param name="spriteAtlasE">L'entité du SpriteAtlas</param>
         /// <param name="spriteResolution">La résolution d'un sprite en pixels</param>
-        private static void CreateSpriteEntities(World w, Entity spriteAtlasE, Point size, int spriteResolution)
+        private static void CreateSpriteEntities(World world, Entity spriteAtlasE, Point size, int spriteResolution)
         {
-            SpriteAtlasTextureCD texCD = w.Get<SpriteAtlasTextureCD>(spriteAtlasE);
-            SpriteAtlasDimensionsCD dimensionsCD = w.Get<SpriteAtlasDimensionsCD>(spriteAtlasE);
+            SpriteAtlasTextureCD texCD = world.Get<SpriteAtlasTextureCD>(spriteAtlasE);
+            SpriteAtlasDimensionsCD dimensionsCD = world.Get<SpriteAtlasDimensionsCD>(spriteAtlasE);
 
             using UnsafeArray<Rectangle> rects = GetSpritesRects(size, texCD.Value, dimensionsCD.Rows, dimensionsCD.Columns);
             using UnsafeArray<Vector2> positions = GetSpritesPositions(size, spriteResolution);
 
             // Crée tous les sprites en un seul appel
 
-            EntityFactory.CreateSpriteEntities(w, spriteAtlasE, positions, rects);
+            EntityFactory.CreateSpriteEntities(world, spriteAtlasE, positions, rects);
         }
 
         /// <summary>
