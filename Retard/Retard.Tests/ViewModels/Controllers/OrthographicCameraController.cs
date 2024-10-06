@@ -1,5 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using MonoGame.Extended;
+﻿using Arch.Core;
+using Microsoft.Xna.Framework;
+using Retard.Cameras.ViewModels;
 using Retard.Engine.Models;
 using Retard.Input.Models;
 using Retard.Input.Models.Assets;
@@ -10,22 +11,14 @@ namespace Retard.Tests.ViewModels.Controllers
     /// <summary>
     /// Permet de déplacer la caméra dans la scène
     /// </summary>
-    public sealed class OrthographicCameraController
+    public readonly struct OrthographicCameraController
     {
-        #region Propriétés
+        #region Variables d'instance
 
         /// <summary>
-        /// La caméra du jeu
+        /// L'entité de la caméra du jeu
         /// </summary>
-        public OrthographicCamera Camera
-        {
-            get;
-            private set;
-        }
-
-        #endregion
-
-        #region Variables d'instance
+        private readonly Entity _camE;
 
         /// <summary>
         /// La vitesse de déplacement de la caméra (hors glisser de souris)
@@ -37,6 +30,11 @@ namespace Retard.Tests.ViewModels.Controllers
         /// </summary>
         private readonly MouseInput _mouseInput;
 
+        /// <summary>
+        /// Le monde contenant les entités
+        /// </summary>
+        private readonly World _world;
+
         #endregion
 
         #region Constructeur
@@ -44,11 +42,13 @@ namespace Retard.Tests.ViewModels.Controllers
         /// <summary>
         /// Constructeur
         /// </summary>
-        /// <param name="camera">La caméra du jeu</param>
+        /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="camE">L'entité de la caméra du jeu</param>
         /// <param name="controls">Permet de s'abonner à l'InputSystem</param>
-        public OrthographicCameraController(OrthographicCamera camera, InputControls controls)
+        public OrthographicCameraController(World w, Entity camE, InputControls controls)
         {
-            this.Camera = camera;
+            this._world = w;
+            this._camE = camE;
             this._mouseInput = InputManager.Instance.GetScheme<MouseInput>();
 
             controls.AddAction("Camera/Move", this.MoveCamera);
@@ -68,7 +68,7 @@ namespace Retard.Tests.ViewModels.Controllers
         /// </summary>
         private void ResetCameraPos(int _)
         {
-            this.Camera.Position = Vector2.Zero;
+            CameraManager.SetCamera2DPosition(this._world, this._camE, Vector2.Zero);
         }
 
         /// <summary>
@@ -81,13 +81,7 @@ namespace Retard.Tests.ViewModels.Controllers
             if (playerIndex == 0)
             {
                 value.Y *= -1;
-                this.Camera.Move(value * this._moveSpeed);
-
-                // Arrondit la position pour éviter des artefacts lors du rendu
-
-                Vector2 camPos = this.Camera.Position;
-                camPos = new Vector2((int)camPos.X, (int)camPos.Y);
-                this.Camera.Position = camPos;
+                CameraManager.MoveCamera2D(this._world, this._camE, value * this._moveSpeed);
             }
         }
 
@@ -98,7 +92,7 @@ namespace Retard.Tests.ViewModels.Controllers
         {
             if (this._mouseInput.IsCursorInsideWindow)
             {
-                this.Camera.Move(-this._mouseInput.MousePosDelta);
+                CameraManager.MoveCamera2D(this._world, this._camE, -this._mouseInput.MousePosDelta);
             }
         }
 

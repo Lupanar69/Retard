@@ -22,7 +22,7 @@ namespace Retard.Rendering2D.Components.SpriteAtlas
         /// </summary>
         public readonly Texture2D Value
         {
-            get => SpriteManager.Instance.Texture2DResources.Get(in this._value);
+            get => SpriteManager.Instance.GetTexture(in this._value);
         }
 
         #endregion

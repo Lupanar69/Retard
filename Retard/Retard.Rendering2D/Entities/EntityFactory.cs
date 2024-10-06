@@ -30,7 +30,7 @@ namespace Retard.Rendering2D.Entities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Entity CreateSpriteAtlasEntity(World w, Texture2D texture, int rows, int columns)
         {
-            Handle<Texture2D> handle = SpriteManager.Instance.Texture2DResources.Add(in texture);
+            Handle<Texture2D> handle = SpriteManager.Instance.RegisterTexture(in texture);
 
             return w.Create
                 (

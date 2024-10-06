@@ -2,7 +2,6 @@
 using Arch.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 using Retard.App.Models;
 using Retard.App.Models.DTOs;
 using Retard.App.ViewModels;
@@ -41,11 +40,6 @@ namespace Retard.Tests.ViewModels.Engine
         private readonly OrthographicCameraController _cameraController;
 
         /// <summary>
-        /// La caméra du jeu
-        /// </summary>
-        private readonly OrthographicCamera _camera;
-
-        /// <summary>
         /// L'entité de la caméra du jeu
         /// </summary>
         private readonly Entity _camE;
@@ -59,16 +53,14 @@ namespace Retard.Tests.ViewModels.Engine
         /// </summary>
         public GameEngine(Game game, GraphicsDeviceManager graphicsDeviceManager) : base(game, graphicsDeviceManager)
         {
-            this._camE = EntityFactory.CreateOrthographicCamera(this._world, Vector2.Zero, game.GraphicsDevice.Viewport.Bounds, RenderingLayer.Default | RenderingLayer.UI);
-
             // Initialise les components
 
             this._controls = new InputControls();
             this._controls.AddAction("Exit", InputEventHandleType.Started, (_) => { game.Exit(); });
             this._controls.Enable();
 
-            this._camera = new OrthographicCamera(game.GraphicsDevice);
-            this._cameraController = new OrthographicCameraController(this._camera, this._controls);
+            this._camE = EntityFactory.CreateOrthographicCamera(this._world, Vector2.Zero, game.GraphicsDevice.Viewport.Bounds, RenderingLayer.Default | RenderingLayer.UI);
+            this._cameraController = new OrthographicCameraController(this._world, this._camE, this._controls);
         }
 
         #endregion

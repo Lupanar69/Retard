@@ -1,7 +1,7 @@
 ﻿using Arch.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Retard.Cameras.Components.Camera;
+using Retard.Cameras.ViewModels;
 using Retard.Core.Models.Arch;
 using Retard.Rendering2D.Entities;
 
@@ -22,7 +22,7 @@ namespace Retard.Rendering2D.Systems
         /// <inheritdoc/>
         public void Update(World w)
         {
-            Matrix m = w.Get<Camera2DViewMatrixCD>(camE).Value;
+            Matrix m = CameraManager.GetCamera2DViewMatrix(w, camE);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, m);
 

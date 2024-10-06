@@ -24,12 +24,12 @@ namespace Retard.Rendering2D.ViewModels
 
         #endregion
 
-        #region Propriétés
+        #region Variables d'instance
 
         /// <summary>
         /// Permet d'accéder aux texture2Ds depuis les queries
         /// </summary>
-        public Resources<Texture2D> Texture2DResources { get; init; }
+        private Resources<Texture2D> _texture2DResources { get; init; }
 
         #endregion
 
@@ -40,7 +40,40 @@ namespace Retard.Rendering2D.ViewModels
         /// </summary>
         private SpriteManager()
         {
-            this.Texture2DResources = new Resources<Texture2D>(1);
+            this._texture2DResources = new Resources<Texture2D>(1);
+        }
+
+        #endregion
+
+        #region Méthodes publiques
+
+        /// <summary>
+        /// Enregistre la texture2D et retourne un handle pour permettre 
+        /// de l'associer à une entité
+        /// </summary>
+        /// <param name="texture">La texture à enregistrer</param>
+        /// <returns>Une référence unsafe à la texture</returns>
+        public Handle<Texture2D> RegisterTexture(in Texture2D texture)
+        {
+            return this._texture2DResources.Add(in texture);
+        }
+
+        /// <summary>
+        /// Retire la texture2D de la liste de ressources
+        /// </summary>
+        /// <param name="handle">La référence de la texture à enregistrer</param>
+        public void UnregisterTexture(in Handle<Texture2D> handle)
+        {
+            this._texture2DResources.Remove(in handle);
+        }
+
+        /// <summary>
+        /// Obtient la texture2D depuis la liste de ressources
+        /// </summary>
+        /// <param name="handle">La référence de la texture à récupérer</param>
+        public Texture2D GetTexture(in Handle<Texture2D> handle)
+        {
+            return this._texture2DResources.Get(in handle);
         }
 
         #endregion
