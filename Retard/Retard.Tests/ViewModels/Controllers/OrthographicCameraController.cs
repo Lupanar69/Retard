@@ -1,10 +1,10 @@
 ﻿using Arch.Core;
 using Microsoft.Xna.Framework;
 using Retard.Cameras.ViewModels;
+using Retard.Engine.Models;
 using Retard.Input.Models;
 using Retard.Input.Models.Assets;
 using Retard.Input.ViewModels;
-using Retard.Tests.ViewModels.Engine;
 
 namespace Retard.Tests.ViewModels.Controllers
 {
@@ -55,8 +55,8 @@ namespace Retard.Tests.ViewModels.Controllers
             controls.AddAction("Camera/Reset", InputEventHandleType.Started, this.ResetCameraPos);
             controls.AddAction("Camera/LeftMouseHeld", InputEventHandleType.Performed, this.MoveCamera);
 
-            GameState.OnFocusEvent += (_, _) => controls.Enable();
-            GameState.OnFocusLostEvent += (_, _) => controls.Disable();
+            GameState.OnFocusEvent += (_, _) => { controls.Enable(); p("focus"); };
+            GameState.OnFocusLostEvent += (_, _) => { controls.Disable(); p("focus lost"); };
         }
 
         #endregion

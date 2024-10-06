@@ -52,7 +52,7 @@ namespace Retard.Engine.ViewModels
         /// <summary>
         /// L'instance du jeu
         /// </summary>
-        private readonly Game _game;
+        protected readonly Game _game;
 
         /// <summary>
         /// TRUE si l'objet a été disposé
@@ -70,6 +70,9 @@ namespace Retard.Engine.ViewModels
         /// <param name="graphicsDeviceManager">Configurateur des paramètres de la fenêtre du jeu</param>
         public BaseEngine(Game game, GraphicsDeviceManager graphicsDeviceManager)
         {
+            game.Activated += GameState.OnFocusEvent;
+            game.Deactivated += GameState.OnFocusLostEvent;
+
             // Initialise les components
 
             this._content = game.Content;
