@@ -1,10 +1,10 @@
 ﻿using Arch.Core;
 using Microsoft.Xna.Framework;
 using Retard.Cameras.ViewModels;
-using Retard.Engine.Models;
 using Retard.Input.Models;
 using Retard.Input.Models.Assets;
 using Retard.Input.ViewModels;
+using Retard.Tests.ViewModels.Engine;
 
 namespace Retard.Tests.ViewModels.Controllers
 {

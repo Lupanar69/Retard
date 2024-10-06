@@ -72,9 +72,6 @@ namespace Retard.Engine.ViewModels
         {
             // Initialise les components
 
-            game.Activated += GameState.OnFocusEvent;
-            game.Deactivated += GameState.OnFocusLostEvent;
-
             this._content = game.Content;
             this._spriteBatch = new SpriteBatch(game.GraphicsDevice);
             this._world = World.Create();

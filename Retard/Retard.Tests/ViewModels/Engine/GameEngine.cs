@@ -9,6 +9,7 @@ using Retard.Cameras.Entities;
 using Retard.Cameras.Models;
 using Retard.Core.Models.ValueTypes;
 using Retard.Core.ViewModels.Utilities;
+using Retard.Engine.Models;
 using Retard.Engine.Models.Assets;
 using Retard.Engine.ViewModels;
 using Retard.Input.Models;
@@ -54,6 +55,9 @@ namespace Retard.Tests.ViewModels.Engine
         public GameEngine(Game game, GraphicsDeviceManager graphicsDeviceManager) : base(game, graphicsDeviceManager)
         {
             // Initialise les components
+
+            game.Activated += GameState.OnFocusEvent;
+            game.Deactivated += GameState.OnFocusLostEvent;
 
             this._controls = new InputControls();
             this._controls.AddAction("Exit", InputEventHandleType.Started, (_) => { game.Exit(); });
