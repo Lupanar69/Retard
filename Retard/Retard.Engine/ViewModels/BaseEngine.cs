@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Retard.App.Models;
 using Retard.App.ViewModels;
+using Retard.Cameras.ViewModels;
 using Retard.Engine.Models;
 using Retard.Engine.Models.Assets;
 using Retard.Input.Models.Assets;
@@ -127,6 +128,8 @@ namespace Retard.Engine.ViewModels
 
             SceneManager.Instance.UpdateInput(gameTime);
             SceneManager.Instance.Update(this._world, gameTime);
+
+            CameraManager.Instance.Update(this._world);
         }
 
         /// <summary>

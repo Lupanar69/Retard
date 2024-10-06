@@ -19,6 +19,7 @@ namespace Retard.Rendering2D.Systems
         public void Update(World w)
         {
             Queries.UpdateAnimatedSpriteFrameQuery(w);
+            Queries.UpdateAnimatedSpriteRectQuery(w, w);
         }
 
         #endregion

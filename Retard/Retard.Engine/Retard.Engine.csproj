@@ -47,6 +47,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Retard.App\Retard.App.csproj" />
+	  <ProjectReference Include="..\Retard.Cameras\Retard.Cameras.csproj" />
 	  <ProjectReference Include="..\Retard.Core\Retard.Core.csproj" />
 	  <ProjectReference Include="..\Retard.Input\Retard.Input.csproj" />
 	  <ProjectReference Include="..\Retard.Rendering2D\Retard.Rendering2D.csproj" />

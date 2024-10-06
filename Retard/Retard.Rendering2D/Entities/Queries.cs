@@ -4,6 +4,7 @@ using Arch.Relationships;
 using Arch.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Retard.Cameras.Components.Layers;
 using Retard.Rendering2D.Components.Sprite;
 using Retard.Rendering2D.Components.SpriteAtlas;
 
@@ -15,6 +16,30 @@ namespace Retard.Rendering2D.Entities
     internal static partial class Queries
     {
         #region Sprites
+
+        /// <summary>
+        /// Màj la frame du sprite
+        /// </summary>
+        /// <param name="frame">L'ID du sprite actuel</param>
+        /// <param name="relativeFrame">L'ID du sprite dans l'animation</param>
+        /// <param name="animation">Les IDs de début et fin de l'animation</param>
+        /// <param name="speed">La vitesse de l'animation</param>
+        [Query]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void UpdateAnimatedSpriteFrame(ref SpriteFrameCD frame,
+            ref AnimatedSpriteRelativeFrameCD relativeFrame,
+            in AnimatedSpriteAnimationCD animation,
+            ref AnimatedSpriteSpeedCD speed)
+        {
+            speed.ElapsedFrames++;
+
+            if (speed.ElapsedFrames == speed.TotalFrames)
+            {
+                speed.ElapsedFrames = 0;
+                relativeFrame.Value = (relativeFrame.Value + 1) % animation.Length;
+                frame.Value = animation.StartFrame + relativeFrame.Value;
+            }
+        }
 
         /// <summary>
         /// Màj le rect du sprite
@@ -67,6 +92,7 @@ namespace Retard.Rendering2D.Entities
             in SpriteColorCD color)
         {
             ref Relationship<SpriteOf> rel = ref w.GetRelationships<SpriteOf>(spriteE);
+
             foreach (var child in rel)
             {
                 Entity atlasE = child.Key;
@@ -77,26 +103,64 @@ namespace Retard.Rendering2D.Entities
         }
 
         /// <summary>
-        /// Màj la frame du sprite
+        /// Màj le rect des sprites sur le layer Default
         /// </summary>
-        /// <param name="frame">L'ID du sprite actuel</param>
-        /// <param name="relativeFrame">L'ID du sprite dans l'animation</param>
-        /// <param name="animation">Les IDs de début et fin de l'animation</param>
-        /// <param name="speed">La vitesse de l'animation</param>
+        /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
+        /// <param name="spriteE">L'entité du sprite</param>
+        /// <param name="pos">La position du sprite</param>
+        /// <param name="rect">Les dimensions du sprite dans le SpriteAtlas</param>
+        /// <param name="color">La couleur du sprite</param>
+        [All(typeof(DefaultLayerTag))]
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void UpdateAnimatedSpriteFrame(ref SpriteFrameCD frame,
-            ref AnimatedSpriteRelativeFrameCD relativeFrame,
-            in AnimatedSpriteAnimationCD animation,
-            ref AnimatedSpriteSpeedCD speed)
+        internal static void DrawDefaultLayerSprites(
+            [Data] World w,
+            [Data] SpriteBatch spriteBatch,
+            in Entity spriteE,
+            in SpritePositionCD pos,
+            in SpriteRectCD rect,
+            in SpriteColorCD color)
         {
-            speed.ElapsedFrames++;
+            ref Relationship<SpriteOf> rel = ref w.GetRelationships<SpriteOf>(spriteE);
 
-            if (speed.ElapsedFrames == speed.TotalFrames)
+            foreach (var child in rel)
             {
-                speed.ElapsedFrames = 0;
-                relativeFrame.Value = (relativeFrame.Value + 1) % animation.Length;
-                frame.Value = animation.StartFrame + relativeFrame.Value;
+                Entity atlasE = child.Key;
+                SpriteAtlasTextureCD tex = w.Get<SpriteAtlasTextureCD>(atlasE);
+                Rectangle destinationRectangle = new((int)pos.Value.X, (int)pos.Value.Y, rect.Value.Width, rect.Value.Height);
+                spriteBatch.Draw(tex.Value, destinationRectangle, rect.Value, color.Value);
+            }
+        }
+
+        /// <summary>
+        /// Màj le rect des sprites sur le layer UI
+        /// </summary>
+        /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
+        /// <param name="spriteE">L'entité du sprite</param>
+        /// <param name="pos">La position du sprite</param>
+        /// <param name="rect">Les dimensions du sprite dans le SpriteAtlas</param>
+        /// <param name="color">La couleur du sprite</param>
+        [All(typeof(UILayerTag))]
+        [Query]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void DrawUILayerSprites(
+            [Data] World w,
+            [Data] SpriteBatch spriteBatch,
+            in Entity spriteE,
+            in SpritePositionCD pos,
+            in SpriteRectCD rect,
+            in SpriteColorCD color)
+        {
+            ref Relationship<SpriteOf> rel = ref w.GetRelationships<SpriteOf>(spriteE);
+
+            foreach (var child in rel)
+            {
+                Entity atlasE = child.Key;
+                SpriteAtlasTextureCD tex = w.Get<SpriteAtlasTextureCD>(atlasE);
+                Rectangle destinationRectangle = new((int)pos.Value.X, (int)pos.Value.Y, rect.Value.Width, rect.Value.Height);
+                spriteBatch.Draw(tex.Value, destinationRectangle, rect.Value, color.Value);
             }
         }
 

@@ -15,7 +15,7 @@ namespace Retard.Rendering2D.Systems
     /// </remarks>
     /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
     /// <param name="camE">La caméra du jeu</param>
-    public readonly struct SpriteDrawSystem(SpriteBatch spriteBatch, Entity camE) : ISystem
+    public readonly struct SpriteDefaultLayerDrawSystem(SpriteBatch spriteBatch, Entity camE) : ISystem
     {
         #region Méthodes publiques
 
@@ -27,7 +27,7 @@ namespace Retard.Rendering2D.Systems
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, m);
 
-            Queries.DrawSpritesQuery(w, w, spriteBatch);
+            Queries.DrawDefaultLayerSpritesQuery(w, w, spriteBatch);
 
             spriteBatch.End();
         }

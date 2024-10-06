@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using Arch.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Retard.App.Models;
 using Retard.App.Models.DTOs;
 using Retard.App.ViewModels;
+using Retard.Cameras.Entities;
+using Retard.Cameras.Models;
 using Retard.Core.Models.ValueTypes;
 using Retard.Core.ViewModels.Utilities;
 using Retard.Engine.Models.Assets;
@@ -42,6 +45,11 @@ namespace Retard.Tests.ViewModels.Engine
         /// </summary>
         private readonly OrthographicCamera _camera;
 
+        /// <summary>
+        /// L'entité de la caméra du jeu
+        /// </summary>
+        private readonly Entity _camE;
+
         #endregion
 
         #region Constructeur
@@ -51,6 +59,8 @@ namespace Retard.Tests.ViewModels.Engine
         /// </summary>
         public GameEngine(Game game, GraphicsDeviceManager graphicsDeviceManager) : base(game, graphicsDeviceManager)
         {
+            this._camE = EntityFactory.CreateOrthographicCamera(this._world, Vector2.Zero, game.GraphicsDevice.Viewport.Bounds, RenderingLayer.Default | RenderingLayer.UI);
+
             // Initialise les components
 
             this._controls = new InputControls();
@@ -96,7 +106,7 @@ namespace Retard.Tests.ViewModels.Engine
                 (
                 this._world,
                 this._spriteBatch,
-                this._camera,
+                this._camE,
                 gameResources.Textures2D["tiles_test2"],
                 new Point(100),
                 Constants.SPRITE_SIZE_PIXELS));

@@ -50,6 +50,9 @@ namespace Retard.Rendering2D.ViewModels
         /// <summary>
         /// Calcule les dimensions du sprite
         /// </summary>
+        /// <param name="texture">La source</param>
+        /// <param name="rows">Le nombre de lignes de l'atlas</param>
+        /// <param name="columns">Le nombre de colonnes de l'atlas</param>
         /// <param name="frame">L'id du sprite dans l'atlas à afficher</param>
         /// <returns>Les dimensions du sprite</returns>
         public static Rectangle GetSpriteRect(in Texture2D texture, int rows, int columns, int frame)

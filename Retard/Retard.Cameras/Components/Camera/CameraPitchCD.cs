@@ -16,7 +16,7 @@ namespace Retard.Cameras.Components.Camera
         /// <summary>
         /// Le niveau de pitch de la caméra
         /// </summary>
-        public float Pitch = pitch;
+        public float Value = pitch;
 
         /// <summary>
         /// Le niveau de pitch min de la caméra

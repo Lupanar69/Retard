@@ -4,11 +4,11 @@ using Microsoft.Xna.Framework;
 namespace Retard.Cameras.Components.Camera
 {
     /// <summary>
-    /// La matrice de la vue de la caméra
+    /// La matrice d'échelle de la caméra
     /// </summary>
-    /// <param name="value">La matrice de la vue de la caméra</param>
+    /// <param name="value">La matrice d'échelle de la caméra</param>
     [Component]
-    public struct Camera2DMatrixCD(Matrix value)
+    public struct Camera2DScaleMatrixCD(Matrix value)
     {
         #region Variables d'instance
 

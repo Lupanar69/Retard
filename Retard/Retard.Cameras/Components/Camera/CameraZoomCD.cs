@@ -16,7 +16,7 @@ namespace Retard.Cameras.Components.Camera
         /// <summary>
         /// Le niveau d'agrandissement de la caméra
         /// </summary>
-        public float Zoom = zoom;
+        public float Value = zoom;
 
         /// <summary>
         /// Le niveau d'agrandissement min de la caméra

@@ -15,7 +15,7 @@ namespace Retard.Cameras.Components.Camera
         #region Propriétés
 
         /// <summary>
-        /// Le centre du Viewport
+        /// Les limites du Viewport
         /// </summary>
         public readonly Rectangle BoundingRectangle => new(0, 0, this.Value.Width, this.Value.Height);
 

@@ -43,6 +43,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Retard.Cameras\Retard.Cameras.csproj" />
 	  <ProjectReference Include="..\Retard.Core\Retard.Core.csproj" />
 	</ItemGroup>
 </Project>
