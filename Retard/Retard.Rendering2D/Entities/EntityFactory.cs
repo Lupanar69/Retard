@@ -8,6 +8,7 @@ using Retard.Cameras.Components.Layers;
 using Retard.Cameras.Models;
 using Retard.Rendering2D.Components.Sprite;
 using Retard.Rendering2D.Components.SpriteAtlas;
+using Retard.Rendering2D.Components.UI;
 using Retard.Rendering2D.ViewModels;
 
 namespace Retard.Rendering2D.Entities
@@ -104,6 +105,35 @@ namespace Retard.Rendering2D.Entities
         }
 
         /// <summary>
+        /// Crée l'entité d'un sprite devant apparaître en tant qu'UI. Recommendé pour les sprites d'UI au lieu de CreateSpriteEntity().
+        /// </summary>
+        /// <param name="w">Le monde contenant ces entités</param>
+        /// <param name="spriteAtlasE">L'entité de leur SpriteAtlas</param>
+        /// <param name="position">La position du sprite</param>
+        /// <param name="rect">Les dimensions du sprite</param>
+        /// <param name="worldSpace"><see langword="true"/> si l'ui est fixe sur l'écran, <see langword="false"/> si elle dépend de la matrice de la caméra</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity CreateUISpriteEntity(World w, Entity spriteAtlasE, Vector2 position, Rectangle rect, bool worldSpace = false)
+        {
+            Entity spriteE = w.Create
+            (
+                new SpritePositionCD(position),
+                new SpriteRectCD(rect),
+                new SpriteColorCD(Color.White),
+                new UILayerTag()
+            );
+
+            if (worldSpace)
+            {
+                w.Add<WorldSpaceUITag>(spriteE);
+            }
+
+            w.AddRelationship<SpriteOf>(spriteE, spriteAtlasE);
+
+            return spriteE;
+        }
+
+        /// <summary>
         /// Crée les entités des sprites
         /// </summary>
         /// <param name="w">Le monde contenant ces entités</param>
@@ -157,6 +187,24 @@ namespace Retard.Rendering2D.Entities
                 }
 
                 flagMask >>= 1;  // bit-shift the flag value one bit to the right
+            }
+        }
+
+        /// <summary>
+        /// Crée les entités des sprites devant apparaître en tant qu'UI. Recommendé pour les sprites d'UI au lieu de CreateSpriteEntities().
+        /// </summary>
+        /// <param name="w">Le monde contenant ces entités</param>
+        /// <param name="spriteAtlasE">L'entité de leur SpriteAtlas</param>
+        /// <param name="count">Le nombre de sprites à créer</param>
+        /// <param name="positions">Les positions des sprites</param>
+        /// <param name="rects">Les dimensions des sprites</param>
+        /// <param name="worldSpace"><see langword="true"/> si l'ui est fixe sur l'écran, <see langword="false"/> si elle dépend de la matrice de la caméra</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void CreateUISpriteEntities(World w, Entity spriteAtlasE, int count, UnsafeArray<Vector2> positions, UnsafeArray<Rectangle> rects, bool worldSpace = false)
+        {
+            for (int i = 0; i < count; ++i)
+            {
+                EntityFactory.CreateUISpriteEntity(w, spriteAtlasE, positions[i], rects[i], worldSpace);
             }
         }
 

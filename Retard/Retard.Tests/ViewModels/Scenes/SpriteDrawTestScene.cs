@@ -12,6 +12,7 @@ using Retard.Rendering2D.Entities;
 using Retard.Rendering2D.Systems;
 using Retard.Rendering2D.ViewModels;
 using Retard.SceneManagement.Models;
+using Retard.Tests.ViewModels.Controllers;
 
 namespace Retard.Tests.ViewModels.Scenes
 {
@@ -39,6 +40,11 @@ namespace Retard.Tests.ViewModels.Scenes
         #region Variables d'instance
 
         /// <summary>
+        /// Le contrôleur de la caméra du jeu
+        /// </summary>
+        private readonly OrthographicCameraController _cameraController;
+
+        /// <summary>
         /// Les systèmes du monde à màj dans Update()
         /// </summary>
         private readonly Group _updateSystems;
@@ -57,15 +63,14 @@ namespace Retard.Tests.ViewModels.Scenes
         /// </summary>
         /// <param name="world">Le monde contenant les entités</param>
         /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
-        /// <param name="camera">La caméra du jeu</param>
+        /// <param name="camE">L'entité de la caméra du jeu</param>
         /// <param name="debugTex">La texture de debug</param>
         /// <param name="size">La taille de la carte à dessiner</param>
         /// <param name="spriteResolution">La résolution d'un sprite en pixels</param>
         public SpriteDrawTestScene(World world, SpriteBatch spriteBatch, Entity camE, Texture2D debugTex, Point size, int spriteResolution)
         {
-            // Charge les textures
-
-            Entity spriteAtlasE = EntityFactory.CreateSpriteAtlasEntity(world, debugTex, 4, 4);
+            this.Controls = new InputControls();
+            this._cameraController = new OrthographicCameraController(world, camE, this.Controls);
 
             // Initialise les systèmes
 
@@ -81,6 +86,9 @@ namespace Retard.Tests.ViewModels.Scenes
             this._updateSystems.Initialize();
             this._drawSystems.Initialize();
 
+            // Crée les sprites
+
+            Entity spriteAtlasE = EntityFactory.CreateSpriteAtlasEntity(world, debugTex, 4, 4);
             SpriteDrawTestScene.CreateSpriteEntities(world, spriteAtlasE, size, spriteResolution);
         }
 
@@ -120,9 +128,10 @@ namespace Retard.Tests.ViewModels.Scenes
             using UnsafeArray<Rectangle> rects = GetSpritesRects(size, texCD.Value, dimensionsCD.Rows, dimensionsCD.Columns);
             using UnsafeArray<Vector2> positions = GetSpritesPositions(size, spriteResolution);
 
-            // Crée un sprite sur le layer UI
+            // Crée 2 sprites sur le layer UI, un en worldSpace et l'autre à une position fixe
 
-            EntityFactory.CreateSpriteEntity(w, spriteAtlasE, Vector2.Zero, SpriteManager.GetSpriteRect(texCD.Value, 1, 1, 0), RenderingLayer.UI);
+            EntityFactory.CreateUISpriteEntity(w, spriteAtlasE, Vector2.Zero, SpriteManager.GetSpriteRect(texCD.Value, 1, 1, 0), true);
+            EntityFactory.CreateUISpriteEntity(w, spriteAtlasE, Vector2.Zero, SpriteManager.GetSpriteRect(texCD.Value, 1, 1, 0));
 
             // Crée tous les sprites en un seul appel
 

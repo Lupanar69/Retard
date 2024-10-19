@@ -17,7 +17,6 @@ using Retard.Input.Models.DTOs;
 using Retard.Input.ViewModels;
 using Retard.SceneManagement.ViewModels;
 using Retard.Tests.Models;
-using Retard.Tests.ViewModels.Controllers;
 using Retard.Tests.ViewModels.Scenes;
 
 namespace Retard.Tests.ViewModels.Engine
@@ -33,11 +32,6 @@ namespace Retard.Tests.ViewModels.Engine
         /// Pour s'abonner aux inputs
         /// </summary>
         private readonly InputControls _controls;
-
-        /// <summary>
-        /// Le contrôleur de la caméra du jeu
-        /// </summary>
-        private readonly OrthographicCameraController _cameraController;
 
         /// <summary>
         /// L'entité de la caméra du jeu
@@ -60,7 +54,6 @@ namespace Retard.Tests.ViewModels.Engine
             this._controls.Enable();
 
             this._camE = EntityFactory.CreateOrthographicCamera(this._world, Vector2.Zero, game.GraphicsDevice.Viewport.Bounds, RenderingLayer.Default | RenderingLayer.UI);
-            this._cameraController = new OrthographicCameraController(this._world, this._camE, this._controls);
         }
 
         #endregion

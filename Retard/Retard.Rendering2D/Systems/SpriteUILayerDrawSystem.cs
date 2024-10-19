@@ -26,6 +26,12 @@ namespace Retard.Rendering2D.Systems
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, m);
 
+            Queries.DrawWorldSpaceUILayerSpritesQuery(w, w, spriteBatch);
+
+            spriteBatch.End();
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, null);
+
             Queries.DrawUILayerSpritesQuery(w, w, spriteBatch);
 
             spriteBatch.End();
