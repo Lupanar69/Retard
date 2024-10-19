@@ -113,20 +113,16 @@ namespace Retard.Rendering2D.Entities
         /// <param name="rect">Les dimensions du sprite</param>
         /// <param name="worldSpace"><see langword="true"/> si l'ui est fixe sur l'écran, <see langword="false"/> si elle dépend de la matrice de la caméra</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateUISpriteEntity(World w, Entity spriteAtlasE, Vector2 position, Rectangle rect, bool worldSpace = false)
+        public static Entity CreateWorldSpaceUISpriteEntity(World w, Entity spriteAtlasE, Vector2 position, Rectangle rect)
         {
             Entity spriteE = w.Create
             (
                 new SpritePositionCD(position),
                 new SpriteRectCD(rect),
                 new SpriteColorCD(Color.White),
-                new UILayerTag()
+                new UILayerTag(),
+                new WorldSpaceUITag()
             );
-
-            if (worldSpace)
-            {
-                w.Add<WorldSpaceUITag>(spriteE);
-            }
 
             w.AddRelationship<SpriteOf>(spriteE, spriteAtlasE);
 
@@ -200,11 +196,11 @@ namespace Retard.Rendering2D.Entities
         /// <param name="rects">Les dimensions des sprites</param>
         /// <param name="worldSpace"><see langword="true"/> si l'ui est fixe sur l'écran, <see langword="false"/> si elle dépend de la matrice de la caméra</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CreateUISpriteEntities(World w, Entity spriteAtlasE, int count, UnsafeArray<Vector2> positions, UnsafeArray<Rectangle> rects, bool worldSpace = false)
+        public static void CreateWorldSpaceUISpriteEntities(World w, Entity spriteAtlasE, int count, UnsafeArray<Vector2> positions, UnsafeArray<Rectangle> rects)
         {
             for (int i = 0; i < count; ++i)
             {
-                EntityFactory.CreateUISpriteEntity(w, spriteAtlasE, positions[i], rects[i], worldSpace);
+                EntityFactory.CreateWorldSpaceUISpriteEntity(w, spriteAtlasE, positions[i], rects[i]);
             }
         }
 

@@ -130,8 +130,8 @@ namespace Retard.Tests.ViewModels.Scenes
 
             // Crée 2 sprites sur le layer UI, un en worldSpace et l'autre à une position fixe
 
-            EntityFactory.CreateUISpriteEntity(w, spriteAtlasE, Vector2.Zero, SpriteManager.GetSpriteRect(texCD.Value, 1, 1, 0), true);
-            EntityFactory.CreateUISpriteEntity(w, spriteAtlasE, Vector2.Zero, SpriteManager.GetSpriteRect(texCD.Value, 1, 1, 0));
+            EntityFactory.CreateWorldSpaceUISpriteEntity(w, spriteAtlasE, Vector2.Zero, SpriteManager.GetSpriteRect(texCD.Value, 1, 1, 0));
+            EntityFactory.CreateSpriteEntity(w, spriteAtlasE, Vector2.Zero, SpriteManager.GetSpriteRect(texCD.Value, 1, 1, 0), RenderingLayer.UI);
 
             // Crée tous les sprites en un seul appel
 
