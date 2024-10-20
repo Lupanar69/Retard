@@ -16,7 +16,7 @@
         /// Le framerate par défaut de l'appli si inactive
         /// (ne peut pas être plus bas que 2 FPS)
         /// </summary>
-        internal const double DEFAULT_UNFOCUSED_FRAMERATE = 1d;
+        internal const double DEFAULT_UNFOCUSED_FRAMERATE = 2d;
 
         #endregion
     }

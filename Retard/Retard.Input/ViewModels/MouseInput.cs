@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Retard.App.ViewModels;
 using Retard.Input.Models.Assets;
 
 namespace Retard.Input.ViewModels
@@ -26,15 +25,6 @@ namespace Retard.Input.ViewModels
         /// et la précédente
         /// </summary>
         public Vector2 MousePosDelta
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// <see langword="true"/> si le curseur de la souris est dans la fenêtre
-        /// </summary>
-        public bool IsCursorInsideWindow
         {
             get;
             private set;
@@ -69,7 +59,6 @@ namespace Retard.Input.ViewModels
             Point mouseDelta = this._curState.Position - this._previousState.Position;
             this.MousePosDelta = new Vector2(mouseDelta.X, mouseDelta.Y);
             this.MousePos = new Vector2(curMousePos.X, curMousePos.Y);
-            this.IsCursorInsideWindow = this.MousePos.X > 0 && this.MousePos.X < AppViewport.WindowResolution.X && this.MousePos.Y > 0 && this.MousePos.Y < AppViewport.WindowResolution.Y;
         }
 
         /// <summary>

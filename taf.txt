@@ -1,5 +1,3 @@
 Camera:
 
-- Passer l'appViewport au controller pour détecter le focus
-- Passer l'appViewport au Mouse Input pour appeler l'update en fonction de l'App Viewport passé
 - Créer plusieurs caméras et tester le partage d'écran entre elles

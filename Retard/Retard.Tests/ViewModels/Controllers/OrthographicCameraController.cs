@@ -1,7 +1,8 @@
-﻿using Arch.Core;
+﻿using System;
+using Arch.Core;
 using Microsoft.Xna.Framework;
+using Retard.App.ViewModels;
 using Retard.Cameras.ViewModels;
-using Retard.Engine.Models;
 using Retard.Input.Models;
 using Retard.Input.Models.Assets;
 using Retard.Input.ViewModels;
@@ -11,7 +12,7 @@ namespace Retard.Tests.ViewModels.Controllers
     /// <summary>
     /// Permet de déplacer la caméra dans la scène
     /// </summary>
-    public readonly struct OrthographicCameraController
+    public sealed class OrthographicCameraController : IDisposable
     {
         #region Variables d'instance
 
@@ -35,6 +36,11 @@ namespace Retard.Tests.ViewModels.Controllers
         /// </summary>
         private readonly World _world;
 
+        /// <summary>
+        /// Gère la fenêtre
+        /// </summary>
+        private readonly AppViewport _appViewport;
+
         #endregion
 
         #region Constructeur
@@ -45,23 +51,50 @@ namespace Retard.Tests.ViewModels.Controllers
         /// <param name="w">Le monde contenant les entités</param>
         /// <param name="camE">L'entité de la caméra du jeu</param>
         /// <param name="controls">Permet de s'abonner à l'InputSystem</param>
-        public OrthographicCameraController(World w, Entity camE, InputControls controls)
+        /// <param name="appViewport">Gère la fenêtre</param>
+        public OrthographicCameraController(World w, Entity camE, InputControls controls, AppViewport appViewport)
         {
             this._world = w;
             this._camE = camE;
-            this._mouseInput = InputManager.Instance.GetScheme<MouseInput>();
+            this._appViewport = appViewport;
+
+            appViewport.OnWindowResolutionSetEvent += this.OnWindowResolutionSetCallback;
+
+            InputManager.Instance.TryGetScheme(out this._mouseInput);
 
             controls.AddAction("Camera/Move", this.MoveCamera);
             controls.AddAction("Camera/Reset", InputEventHandleType.Started, this.ResetCameraPos);
-            controls.AddAction("Camera/LeftMouseHeld", InputEventHandleType.Performed, this.MoveCamera);
 
-            GameState.OnFocusEvent += (_, _) => { controls.Enable(); p("focus"); };
-            GameState.OnFocusLostEvent += (_, _) => { controls.Disable(); p("focus lost"); };
+            if (this._mouseInput != null)
+            {
+                controls.AddAction("Camera/LeftMouseHeld", InputEventHandleType.Performed, this.MoveCamera);
+            }
+        }
+
+        #endregion
+
+        #region Méthodes publiques
+
+        /// <summary>
+        /// Nettoyage
+        /// </summary>
+        public void Dispose()
+        {
+            this._appViewport.OnWindowResolutionSetEvent -= this.OnWindowResolutionSetCallback;
         }
 
         #endregion
 
         #region Méthodes privées
+
+        /// <summary>
+        /// Appelée quand la résolution de la fenêtre change
+        /// </summary>
+        /// <param name="windowResolution">La nouvelle résolution</param>
+        private void OnWindowResolutionSetCallback(object _, Point windowResolution)
+        {
+            CameraManager.SetCamera2DViewport(this._world, this._camE, windowResolution);
+        }
 
         /// <summary>
         /// Remet la position de la caméra à son origine
@@ -90,7 +123,11 @@ namespace Retard.Tests.ViewModels.Controllers
         /// </summary>
         private void MoveCamera(int _)
         {
-            if (this._mouseInput.IsCursorInsideWindow)
+            bool isCursorInsideWindow =
+                this._mouseInput.MousePos.X > 0 && this._mouseInput.MousePos.X < this._appViewport.WindowResolution.X &&
+                this._mouseInput.MousePos.Y > 0 && this._mouseInput.MousePos.Y < this._appViewport.WindowResolution.Y;
+
+            if (isCursorInsideWindow)
             {
                 CameraManager.MoveCamera2D(this._world, this._camE, -this._mouseInput.MousePosDelta);
             }

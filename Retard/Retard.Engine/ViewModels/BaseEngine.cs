@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Retard.App.Models;
 using Retard.App.ViewModels;
 using Retard.Cameras.ViewModels;
-using Retard.Engine.Models;
 using Retard.Engine.Models.Assets;
 using Retard.Input.Models.Assets;
 using Retard.Input.Models.DTOs;
@@ -70,9 +69,6 @@ namespace Retard.Engine.ViewModels
         /// <param name="graphicsDeviceManager">Configurateur des paramètres de la fenêtre du jeu</param>
         public BaseEngine(Game game, GraphicsDeviceManager graphicsDeviceManager)
         {
-            game.Activated += GameState.OnFocusEvent;
-            game.Deactivated += GameState.OnFocusLostEvent;
-
             // Initialise les components
 
             this._content = game.Content;
@@ -207,9 +203,6 @@ namespace Retard.Engine.ViewModels
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects)
-
-                    _game.Activated -= GameState.OnFocusEvent;
-                    _game.Deactivated -= GameState.OnFocusLostEvent;
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer
