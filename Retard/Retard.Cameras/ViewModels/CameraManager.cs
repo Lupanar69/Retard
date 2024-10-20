@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Arch.Core;
 using Microsoft.Xna.Framework;
 using Retard.Cameras.Components.Camera;
+using Retard.Cameras.Entities;
+using Retard.Cameras.Models;
 using Retard.Cameras.Systems;
 using Retard.Core.Models.Arch;
 
@@ -65,6 +68,20 @@ namespace Retard.Cameras.ViewModels
         #region Méthodes statiques publiques
 
         /// <summary>
+        /// Crée une caméra orthographique
+        /// </summary>
+        /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="pos">La position de l'entité dans la scène</param>
+        /// <param name="viewportRect">Le cadre d'affichage de la caméra à l'écran</param>
+        /// <param name="layers">Les layers à appliquer à la caméra</param>
+        /// <returns>L'entité représentant une caméra orthographique</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity CreateOrthographicCamera(World w, Vector2 pos, Rectangle viewportRect, RenderingLayer layers = RenderingLayer.Default)
+        {
+            return EntityFactory.CreateOrthographicCamera(w, pos, viewportRect, layers);
+        }
+
+        /// <summary>
         /// Déplace une caméra 2D dans l'espace
         /// </summary>
         /// <param name="w">Le monde contenant les entités</param>
@@ -84,7 +101,7 @@ namespace Retard.Cameras.ViewModels
 
             // Marque la caméra comme modifiée
 
-            w.Add<CameraMatrixIsDirtyTag>(camE);
+            CameraManager.SetCameraDirty(w, camE);
         }
 
         /// <summary>
@@ -105,7 +122,7 @@ namespace Retard.Cameras.ViewModels
 
             // Marque la caméra comme modifiée
 
-            w.Add<CameraMatrixIsDirtyTag>(camE);
+            CameraManager.SetCameraDirty(w, camE);
         }
 
         /// <summary>
@@ -118,7 +135,39 @@ namespace Retard.Cameras.ViewModels
             return w.Get<Camera2DViewMatrixCD>(camE).Value;
         }
 
+        /// <summary>
+        /// Recaulcule le viewport de la caméra lorsque la fenêtre change de résolution
+        /// </summary>
+        /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="camE">L'entité de la caméra</param>
+        /// <param name="windowResolution">La résolution de la fenêtre</param>
+        public static void SetCamera2DViewport(World w, Entity camE, Point windowResolution)
+        {
+            Rectangle viewportRect = new(0, 0, windowResolution.X, windowResolution.Y);
+
+            w.Set(camE, new Camera2DViewportRectCD(viewportRect));
+            w.Set(camE, new Camera2DOriginCD(new Vector2(windowResolution.X / 2f, windowResolution.Y / 2f)));
+
+            // Marque la caméra comme modifiée
+
+            CameraManager.SetCameraDirty(w, camE);
+        }
+
         #endregion
 
+        #region Méthodes statiques privées
+
+        /// <summary>
+        /// Marque la caméra comme modifiée
+        /// </summary>
+        /// <param name="w">Le monde contenant les entités</param>
+        /// <param name="camE">L'entité de la caméra</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void SetCameraDirty(World w, Entity camE)
+        {
+            w.Add<CameraMatrixIsDirtyTag>(camE);
+        }
+
+        #endregion
     }
 }

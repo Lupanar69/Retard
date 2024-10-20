@@ -3,12 +3,12 @@ using Arch.Core;
 using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Retard.App.ViewModels;
 using Retard.Cameras.Models;
 using Retard.Core.Models.Arch;
 using Retard.Input.Models.Assets;
 using Retard.Rendering2D.Components.Sprite;
 using Retard.Rendering2D.Components.SpriteAtlas;
-using Retard.Rendering2D.Entities;
 using Retard.Rendering2D.Systems;
 using Retard.Rendering2D.ViewModels;
 using Retard.SceneManagement.Models;
@@ -67,10 +67,11 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <param name="debugTex">La texture de debug</param>
         /// <param name="size">La taille de la carte à dessiner</param>
         /// <param name="spriteResolution">La résolution d'un sprite en pixels</param>
-        public SpriteDrawTestScene(World world, SpriteBatch spriteBatch, Entity camE, Texture2D debugTex, Point size, int spriteResolution)
+        /// <param name="appViewport">Gère la fenêtre</param>
+        public SpriteDrawTestScene(World world, SpriteBatch spriteBatch, Entity camE, Texture2D debugTex, Point size, int spriteResolution, AppViewport appViewport)
         {
             this.Controls = new InputControls();
-            this._cameraController = new OrthographicCameraController(world, camE, this.Controls);
+            this._cameraController = new OrthographicCameraController(world, camE, this.Controls, appViewport);
 
             // Initialise les systèmes
 
@@ -88,7 +89,7 @@ namespace Retard.Tests.ViewModels.Scenes
 
             // Crée les sprites
 
-            Entity spriteAtlasE = EntityFactory.CreateSpriteAtlasEntity(world, debugTex, 4, 4);
+            Entity spriteAtlasE = SpriteManager.CreateSpriteAtlasEntity(world, debugTex, 4, 4);
             SpriteDrawTestScene.CreateSpriteEntities(world, spriteAtlasE, size, spriteResolution);
         }
 
@@ -130,12 +131,12 @@ namespace Retard.Tests.ViewModels.Scenes
 
             // Crée 2 sprites sur le layer UI, un en worldSpace et l'autre à une position fixe
 
-            EntityFactory.CreateWorldSpaceUISpriteEntity(w, spriteAtlasE, Vector2.Zero, SpriteManager.GetSpriteRect(texCD.Value, 1, 1, 0));
-            EntityFactory.CreateSpriteEntity(w, spriteAtlasE, Vector2.Zero, SpriteManager.GetSpriteRect(texCD.Value, 1, 1, 0), RenderingLayer.UI);
+            SpriteManager.CreateWorldSpaceUISpriteEntity(w, spriteAtlasE, Vector2.Zero, SpriteManager.GetSpriteRect(texCD.Value, 1, 1, 0));
+            SpriteManager.CreateSpriteEntity(w, spriteAtlasE, Vector2.Zero, SpriteManager.GetSpriteRect(texCD.Value, 1, 1, 0), RenderingLayer.UI);
 
             // Crée tous les sprites en un seul appel
 
-            EntityFactory.CreateSpriteEntities(w, spriteAtlasE, size.X * size.Y, positions, rects, RenderingLayer.Default);
+            SpriteManager.CreateSpriteEntities(w, spriteAtlasE, size.X * size.Y, positions, rects, RenderingLayer.Default);
         }
 
         /// <summary>

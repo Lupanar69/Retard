@@ -512,7 +512,7 @@ namespace Retard.Input.ViewModels
 
         #endregion
 
-        #region Mééthodes privées
+        #region Méthodes privées
 
         /// <summary>
         /// Crée les entités des inputs à partir des données de config

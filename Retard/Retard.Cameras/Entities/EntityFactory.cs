@@ -1,4 +1,5 @@
-﻿using Arch.Core;
+﻿using System.Runtime.CompilerServices;
+using Arch.Core;
 using Microsoft.Xna.Framework;
 using Retard.Cameras.Components.Camera;
 using Retard.Cameras.Components.Layers;
@@ -10,7 +11,7 @@ namespace Retard.Cameras.Entities
     /// Contient les méthodes de création
     /// des différentes entités
     /// </summary>
-    public static class EntityFactory
+    internal static class EntityFactory
     {
         #region Méthodes statiques publiques
 
@@ -22,7 +23,8 @@ namespace Retard.Cameras.Entities
         /// <param name="viewportRect">Le cadre d'affichage de la caméra à l'écran</param>
         /// <param name="layers">Les layers à appliquer à la caméra</param>
         /// <returns>L'entité représentant une caméra orthographique</returns>
-        public static Entity CreateOrthographicCamera(World w, Vector2 pos, Rectangle viewportRect, RenderingLayer layers = RenderingLayer.Default)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Entity CreateOrthographicCamera(World w, Vector2 pos, Rectangle viewportRect, RenderingLayer layers = RenderingLayer.Default)
         {
             Entity camE = w.Create
             (

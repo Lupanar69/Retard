@@ -17,7 +17,7 @@ namespace Retard.Rendering2D.Entities
     /// Contient les méthodes de création
     /// des différentes entités
     /// </summary>
-    public static class EntityFactory
+    internal static class EntityFactory
     {
         #region Méthodes statiques publiques
 
@@ -29,7 +29,7 @@ namespace Retard.Rendering2D.Entities
         /// <param name="rows">Le nombre de lignes de sprite</param>
         /// <param name="columns">Le nombre de colonnes de sprite</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateSpriteAtlasEntity(World w, Texture2D texture, int rows, int columns)
+        internal static Entity CreateSpriteAtlasEntity(World w, Texture2D texture, int rows, int columns)
         {
             Handle<Texture2D> handle = SpriteManager.Instance.RegisterTexture(in texture);
 
@@ -48,7 +48,7 @@ namespace Retard.Rendering2D.Entities
         /// <param name="position">La position du sprite</param>
         /// <param name="rect">Les dimensions du sprite</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateSpriteEntity(World w, Entity spriteAtlasE, Vector2 position, Rectangle rect)
+        internal static Entity CreateSpriteEntity(World w, Entity spriteAtlasE, Vector2 position, Rectangle rect)
         {
             Entity spriteE = w.Create
             (
@@ -71,7 +71,7 @@ namespace Retard.Rendering2D.Entities
         /// <param name="rect">Les dimensions du sprite</param>
         /// <param name="layers">Les layers à appliquer au sprite</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateSpriteEntity(World w, Entity spriteAtlasE, Vector2 position, Rectangle rect, RenderingLayer layers = RenderingLayer.Default)
+        internal static Entity CreateSpriteEntity(World w, Entity spriteAtlasE, Vector2 position, Rectangle rect, RenderingLayer layers = RenderingLayer.Default)
         {
             Entity spriteE = w.Create
             (
@@ -113,7 +113,7 @@ namespace Retard.Rendering2D.Entities
         /// <param name="rect">Les dimensions du sprite</param>
         /// <param name="worldSpace"><see langword="true"/> si l'ui est fixe sur l'écran, <see langword="false"/> si elle dépend de la matrice de la caméra</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateWorldSpaceUISpriteEntity(World w, Entity spriteAtlasE, Vector2 position, Rectangle rect)
+        internal static Entity CreateWorldSpaceUISpriteEntity(World w, Entity spriteAtlasE, Vector2 position, Rectangle rect)
         {
             Entity spriteE = w.Create
             (
@@ -138,12 +138,16 @@ namespace Retard.Rendering2D.Entities
         /// <param name="positions">Les positions des sprites</param>
         /// <param name="rects">Les dimensions des sprites</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CreateSpriteEntities(World w, Entity spriteAtlasE, int count, UnsafeArray<Vector2> positions, UnsafeArray<Rectangle> rects)
+        internal static UnsafeArray<Entity> CreateSpriteEntities(World w, Entity spriteAtlasE, int count, UnsafeArray<Vector2> positions, UnsafeArray<Rectangle> rects)
         {
+            UnsafeArray<Entity> spriteEs = new(count);
+
             for (int i = 0; i < count; ++i)
             {
-                EntityFactory.CreateSpriteEntity(w, spriteAtlasE, positions[i], rects[i]);
+                spriteEs[i] = EntityFactory.CreateSpriteEntity(w, spriteAtlasE, positions[i], rects[i]);
             }
+
+            return spriteEs;
         }
 
         /// <summary>
@@ -156,8 +160,10 @@ namespace Retard.Rendering2D.Entities
         /// <param name="rects">Les dimensions des sprites</param>
         /// <param name="layers">Les layers à appliquer au sprite</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CreateSpriteEntities(World w, Entity spriteAtlasE, int count, UnsafeArray<Vector2> positions, UnsafeArray<Rectangle> rects, RenderingLayer layers = RenderingLayer.Default)
+        internal static UnsafeArray<Entity> CreateSpriteEntities(World w, Entity spriteAtlasE, int count, UnsafeArray<Vector2> positions, UnsafeArray<Rectangle> rects, RenderingLayer layers = RenderingLayer.Default)
         {
+            UnsafeArray<Entity> spriteEs = new(count);
+
             // Crée un LayerTag pour chaque layer renseigné
 
             int flagMask = 1 << 30; // start with high-order bit...
@@ -170,20 +176,26 @@ namespace Retard.Rendering2D.Entities
                     case RenderingLayer.Default:
                         for (int j = 0; j < count; ++j)
                         {
-                            w.Add<DefaultLayerTag>(EntityFactory.CreateSpriteEntity(w, spriteAtlasE, positions[j], rects[j]));
+                            Entity spriteE = EntityFactory.CreateSpriteEntity(w, spriteAtlasE, positions[j], rects[j]);
+                            w.Add<DefaultLayerTag>(spriteE);
+                            spriteEs[j] = spriteE;
                         }
                         break;
 
                     case RenderingLayer.UI:
                         for (int j = 0; j < count; ++j)
                         {
-                            w.Add<UILayerTag>(EntityFactory.CreateSpriteEntity(w, spriteAtlasE, positions[j], rects[j]));
+                            Entity spriteE = EntityFactory.CreateSpriteEntity(w, spriteAtlasE, positions[j], rects[j]);
+                            w.Add<UILayerTag>(spriteE);
+                            spriteEs[j] = spriteE;
                         }
                         break;
                 }
 
                 flagMask >>= 1;  // bit-shift the flag value one bit to the right
             }
+
+            return spriteEs;
         }
 
         /// <summary>
@@ -196,12 +208,16 @@ namespace Retard.Rendering2D.Entities
         /// <param name="rects">Les dimensions des sprites</param>
         /// <param name="worldSpace"><see langword="true"/> si l'ui est fixe sur l'écran, <see langword="false"/> si elle dépend de la matrice de la caméra</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CreateWorldSpaceUISpriteEntities(World w, Entity spriteAtlasE, int count, UnsafeArray<Vector2> positions, UnsafeArray<Rectangle> rects)
+        internal static UnsafeArray<Entity> CreateWorldSpaceUISpriteEntities(World w, Entity spriteAtlasE, int count, UnsafeArray<Vector2> positions, UnsafeArray<Rectangle> rects)
         {
+            UnsafeArray<Entity> spriteEs = new(count);
+
             for (int i = 0; i < count; ++i)
             {
-                EntityFactory.CreateWorldSpaceUISpriteEntity(w, spriteAtlasE, positions[i], rects[i]);
+                spriteEs[i] = EntityFactory.CreateWorldSpaceUISpriteEntity(w, spriteAtlasE, positions[i], rects[i]);
             }
+
+            return spriteEs;
         }
 
         #endregion

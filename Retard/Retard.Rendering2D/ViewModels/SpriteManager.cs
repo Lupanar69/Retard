@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using Arch.Core;
 using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Retard.Cameras.Models;
+using Retard.Rendering2D.Entities;
 
 namespace Retard.Rendering2D.ViewModels
 {
@@ -81,6 +85,104 @@ namespace Retard.Rendering2D.ViewModels
         #region Méthodes statiques publiques
 
         /// <summary>
+        /// Crée l'entité d'un SpriteAtlas
+        /// </summary>
+        /// <param name="w">Le monde contenant ces entités</param>
+        /// <param name="texture">La texture source du sprite</param>
+        /// <param name="rows">Le nombre de lignes de sprite</param>
+        /// <param name="columns">Le nombre de colonnes de sprite</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity CreateSpriteAtlasEntity(World w, Texture2D texture, int rows, int columns)
+        {
+            return EntityFactory.CreateSpriteAtlasEntity(w, texture, rows, columns);
+        }
+
+        /// <summary>
+        /// Crée l'entité d'un sprite
+        /// </summary>
+        /// <param name="w">Le monde contenant ces entités</param>
+        /// <param name="spriteAtlasE">L'entité de leur SpriteAtlas</param>
+        /// <param name="position">La position du sprite</param>
+        /// <param name="rect">Les dimensions du sprite</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity CreateSpriteEntity(World w, Entity spriteAtlasE, Vector2 position, Rectangle rect)
+        {
+            return EntityFactory.CreateSpriteEntity(w, spriteAtlasE, position, rect);
+        }
+
+        /// <summary>
+        /// Crée l'entité d'un sprite
+        /// </summary>
+        /// <param name="w">Le monde contenant ces entités</param>
+        /// <param name="spriteAtlasE">L'entité de leur SpriteAtlas</param>
+        /// <param name="position">La position du sprite</param>
+        /// <param name="rect">Les dimensions du sprite</param>
+        /// <param name="layers">Les layers à appliquer au sprite</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity CreateSpriteEntity(World w, Entity spriteAtlasE, Vector2 position, Rectangle rect, RenderingLayer layers = RenderingLayer.Default)
+        {
+            return EntityFactory.CreateSpriteEntity(w, spriteAtlasE, position, rect, layers);
+        }
+
+        /// <summary>
+        /// Crée l'entité d'un sprite devant apparaître en tant qu'UI. Recommendé pour les sprites d'UI au lieu de CreateSpriteEntity().
+        /// </summary>
+        /// <param name="w">Le monde contenant ces entités</param>
+        /// <param name="spriteAtlasE">L'entité de leur SpriteAtlas</param>
+        /// <param name="position">La position du sprite</param>
+        /// <param name="rect">Les dimensions du sprite</param>
+        /// <param name="worldSpace"><see langword="true"/> si l'ui est fixe sur l'écran, <see langword="false"/> si elle dépend de la matrice de la caméra</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity CreateWorldSpaceUISpriteEntity(World w, Entity spriteAtlasE, Vector2 position, Rectangle rect)
+        {
+            return EntityFactory.CreateWorldSpaceUISpriteEntity(w, spriteAtlasE, position, rect);
+        }
+
+        /// <summary>
+        /// Crée les entités des sprites
+        /// </summary>
+        /// <param name="w">Le monde contenant ces entités</param>
+        /// <param name="spriteAtlasE">L'entité de leur SpriteAtlas</param>
+        /// <param name="count">Le nombre de sprites à créer</param>
+        /// <param name="positions">Les positions des sprites</param>
+        /// <param name="rects">Les dimensions des sprites</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UnsafeArray<Entity> CreateSpriteEntities(World w, Entity spriteAtlasE, int count, UnsafeArray<Vector2> positions, UnsafeArray<Rectangle> rects)
+        {
+            return EntityFactory.CreateSpriteEntities(w, spriteAtlasE, count, positions, rects);
+        }
+
+        /// <summary>
+        /// Crée les entités des sprites
+        /// </summary>
+        /// <param name="w">Le monde contenant ces entités</param>
+        /// <param name="spriteAtlasE">L'entité de leur SpriteAtlas</param>
+        /// <param name="count">Le nombre de sprites à créer</param>
+        /// <param name="positions">Les positions des sprites</param>
+        /// <param name="rects">Les dimensions des sprites</param>
+        /// <param name="layers">Les layers à appliquer au sprite</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UnsafeArray<Entity> CreateSpriteEntities(World w, Entity spriteAtlasE, int count, UnsafeArray<Vector2> positions, UnsafeArray<Rectangle> rects, RenderingLayer layers = RenderingLayer.Default)
+        {
+            return EntityFactory.CreateSpriteEntities(w, spriteAtlasE, count, positions, rects, layers);
+        }
+
+        /// <summary>
+        /// Crée les entités des sprites devant apparaître en tant qu'UI. Recommendé pour les sprites d'UI au lieu de CreateSpriteEntities().
+        /// </summary>
+        /// <param name="w">Le monde contenant ces entités</param>
+        /// <param name="spriteAtlasE">L'entité de leur SpriteAtlas</param>
+        /// <param name="count">Le nombre de sprites à créer</param>
+        /// <param name="positions">Les positions des sprites</param>
+        /// <param name="rects">Les dimensions des sprites</param>
+        /// <param name="worldSpace"><see langword="true"/> si l'ui est fixe sur l'écran, <see langword="false"/> si elle dépend de la matrice de la caméra</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UnsafeArray<Entity> CreateWorldSpaceUISpriteEntities(World w, Entity spriteAtlasE, int count, UnsafeArray<Vector2> positions, UnsafeArray<Rectangle> rects)
+        {
+            return EntityFactory.CreateWorldSpaceUISpriteEntities(w, spriteAtlasE, count, positions, rects);
+        }
+
+        /// <summary>
         /// Calcule les dimensions du sprite
         /// </summary>
         /// <param name="texture">La source</param>
@@ -88,6 +190,7 @@ namespace Retard.Rendering2D.ViewModels
         /// <param name="columns">Le nombre de colonnes de l'atlas</param>
         /// <param name="frame">L'id du sprite dans l'atlas à afficher</param>
         /// <returns>Les dimensions du sprite</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Rectangle GetSpriteRect(in Texture2D texture, int rows, int columns, int frame)
         {
             int width = texture.Width / columns;
