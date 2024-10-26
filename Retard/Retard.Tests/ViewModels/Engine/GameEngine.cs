@@ -15,6 +15,7 @@ using Retard.Input.Models;
 using Retard.Input.Models.Assets;
 using Retard.Input.Models.DTOs;
 using Retard.Input.ViewModels;
+using Retard.Rendering2D.Models;
 using Retard.SceneManagement.ViewModels;
 using Retard.Tests.Models;
 using Retard.Tests.ViewModels.Scenes;
@@ -53,7 +54,7 @@ namespace Retard.Tests.ViewModels.Engine
             this._controls.AddAction("Exit", InputEventHandleType.Started, (_) => { game.Exit(); });
             this._controls.Enable();
 
-            this._camE = CameraManager.CreateOrthographicCamera(this._world, Vector2.Zero, game.GraphicsDevice.Viewport.Bounds, RenderingLayer.Default | RenderingLayer.UI);
+            this._camE = CameraManager.CreateOrthographicCamera(this._world, Vector2.Zero, game.GraphicsDevice.Viewport, RenderingLayer.Default | RenderingLayer.UI);
         }
 
         #endregion
@@ -87,11 +88,10 @@ namespace Retard.Tests.ViewModels.Engine
         /// <inheritdoc/>
         protected sealed override void CreateScenes(in GameResources gameResources)
         {
-            SceneManager.Instance.AddSceneToPool(new SpriteDrawTestScene
+            SceneManager.Instance.AddSceneToPool(new MultiCamTestScene
                 (
                     this._world,
-                    this._spriteBatch,
-                    this._camE,
+                    new RenderingComponents2D(this._spriteBatch, this._game.GraphicsDevice),
                     gameResources.Textures2D["tiles_test2"],
                     new Point(100),
                     Constants.SPRITE_SIZE_PIXELS,
@@ -99,7 +99,7 @@ namespace Retard.Tests.ViewModels.Engine
                 )
             );
 
-            SceneManager.Instance.SetSceneAsActive<SpriteDrawTestScene>();
+            SceneManager.Instance.SetSceneAsActive<MultiCamTestScene>();
         }
 
         /// <inheritdoc/>

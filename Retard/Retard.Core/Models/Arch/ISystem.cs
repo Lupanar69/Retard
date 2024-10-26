@@ -47,19 +47,19 @@ public interface ISystem<T>
     /// </summary>
     /// <param name="w">Le monde contenant les entités</param>
     /// <param name="t">An instance passed to it.</param>
-    void BeforeUpdate(World w, in T t) { }
+    void BeforeUpdate(World w, T t) { }
 
     /// <summary>
     ///     Updates the system.
     /// </summary>
     /// <param name="w">Le monde contenant les entités</param>
     /// <param name="t">An instance passed to it.</param>
-    void Update(World w, in T t) { }
+    void Update(World w, T t) { }
 
     /// <summary>
     ///     Runs after <see cref="Update"/>.
     /// </summary>
     /// <param name="w">Le monde contenant les entités</param>
     /// <param name="t">An instance passed to it.</param>
-    void AfterUpdate(World w, in T t) { }
+    void AfterUpdate(World w, T t) { }
 }

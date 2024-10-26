@@ -1,7 +1,9 @@
 ﻿using System;
 using Arch.Core;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Retard.App.ViewModels;
+using Retard.Cameras.Components.Camera;
 using Retard.Cameras.ViewModels;
 using Retard.Input.Models;
 using Retard.Input.Models.Assets;
@@ -93,7 +95,8 @@ namespace Retard.Tests.ViewModels.Controllers
         /// <param name="windowResolution">La nouvelle résolution</param>
         private void OnWindowResolutionSetCallback(object _, Point windowResolution)
         {
-            CameraManager.SetCamera2DViewport(this._world, this._camE, windowResolution);
+            Viewport viewport = new(0, 0, windowResolution.X, windowResolution.Y);
+            CameraManager.SetCamera2DViewport(this._world, this._camE, viewport);
         }
 
         /// <summary>
@@ -123,11 +126,14 @@ namespace Retard.Tests.ViewModels.Controllers
         /// </summary>
         private void MoveCamera(int _)
         {
-            bool isCursorInsideWindow =
-                this._mouseInput.MousePos.X > 0 && this._mouseInput.MousePos.X < this._appViewport.WindowResolution.X &&
-                this._mouseInput.MousePos.Y > 0 && this._mouseInput.MousePos.Y < this._appViewport.WindowResolution.Y;
+            Camera2DViewportCD camViewport = this._world.Get<Camera2DViewportCD>(this._camE);
+            Vector2 window = new(camViewport.Value.Width, camViewport.Value.Height);
 
-            if (isCursorInsideWindow)
+            bool isCursorInsideViewport =
+                this._mouseInput.MousePos.X > 0 && this._mouseInput.MousePos.X < window.X &&
+                this._mouseInput.MousePos.Y > 0 && this._mouseInput.MousePos.Y < window.Y;
+
+            if (isCursorInsideViewport)
             {
                 CameraManager.MoveCamera2D(this._world, this._camE, -this._mouseInput.MousePosDelta);
             }

@@ -1,9 +1,11 @@
 ﻿using Arch.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Retard.Cameras.Components.Camera;
 using Retard.Cameras.ViewModels;
 using Retard.Core.Models.Arch;
 using Retard.Rendering2D.Entities;
+using Retard.Rendering2D.Models;
 
 namespace Retard.Rendering2D.Systems
 {
@@ -15,20 +17,23 @@ namespace Retard.Rendering2D.Systems
     /// </remarks>
     /// <param name="spriteBatch">Pour afficher les sprites à l'écran</param>
     /// <param name="camE">La caméra du jeu</param>
-    public readonly struct SpriteDefaultLayerDrawSystem(SpriteBatch spriteBatch, Entity camE) : ISystem
+    public readonly struct SpriteDefaultLayerDrawSystem(Entity camE) : ISystem<RenderingComponents2D>
     {
         #region Méthodes publiques
 
         /// <inheritdoc/>
-        public void Update(World w)
+        public void Update(World w, RenderingComponents2D components)
         {
+            Viewport viewport = w.Get<Camera2DViewportCD>(camE).Value;
+            components.GraphicsDevice.Viewport = viewport;
+
             Matrix m = CameraManager.GetCamera2DViewMatrix(w, camE);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, m);
+            components.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, m);
 
-            Queries.DrawDefaultLayerSpritesQuery(w, w, spriteBatch);
+            Queries.DrawDefaultLayerSpritesQuery(w, w, components.SpriteBatch);
 
-            spriteBatch.End();
+            components.SpriteBatch.End();
         }
 
         #endregion

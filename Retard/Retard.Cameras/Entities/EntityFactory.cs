@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using Arch.Core;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Retard.Cameras.Components.Camera;
 using Retard.Cameras.Components.Layers;
 using Retard.Cameras.Models;
@@ -20,11 +21,11 @@ namespace Retard.Cameras.Entities
         /// </summary>
         /// <param name="w">Le monde contenant les entités</param>
         /// <param name="pos">La position de l'entité dans la scène</param>
-        /// <param name="viewportRect">Le cadre d'affichage de la caméra à l'écran</param>
+        /// <param name="viewport">Le cadre d'affichage de la caméra à l'écran</param>
         /// <param name="layers">Les layers à appliquer à la caméra</param>
         /// <returns>L'entité représentant une caméra orthographique</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static Entity CreateOrthographicCamera(World w, Vector2 pos, Rectangle viewportRect, RenderingLayer layers = RenderingLayer.Default)
+        internal static Entity CreateOrthographicCamera(World w, Vector2 pos, Viewport viewport, RenderingLayer layers = RenderingLayer.Default)
         {
             Entity camE = w.Create
             (
@@ -34,10 +35,11 @@ namespace Retard.Cameras.Entities
                 new Camera2DRotationCD(0f),
                 new CameraZoomCD(1f, 1f, float.MaxValue),
                 new CameraPitchCD(1f, 1f, float.MaxValue),
-                new Camera2DViewportRectCD(viewportRect),
-                new Camera2DOriginCD(new Vector2(viewportRect.Width / 2f, viewportRect.Height / 2f)),
+                new Camera2DViewportCD(viewport),
+                new Camera2DOriginCD(new Vector2(viewport.Width / 2f, viewport.Height / 2f)),
                 new Camera2DViewMatrixCD(Matrix.Identity),
-                new Camera2DScaleMatrixCD(Matrix.Identity)
+                new Camera2DScaleMatrixCD(Matrix.Identity),
+                new Camera2DProjectionMatrixCD(Matrix.CreateOrthographicOffCenter(viewport.Bounds, 1f, 10000f))
             );
 
             // Crée un LayerTag pour chaque layer renseigné

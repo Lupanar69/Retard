@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Retard.App.ViewModels;
 using Retard.Cameras.Models;
+using Retard.Cameras.ViewModels;
 using Retard.Core.Models.Arch;
+using Retard.Input.Models;
 using Retard.Input.Models.Assets;
 using Retard.Rendering2D.Components.Sprite;
 using Retard.Rendering2D.Components.SpriteAtlas;
@@ -18,9 +20,9 @@ using Retard.Tests.ViewModels.Controllers;
 namespace Retard.Tests.ViewModels.Scenes
 {
     /// <summary>
-    /// Scène de test
+    /// Scène de test de rendu de plusieurs caméras
     /// </summary>
-    public sealed class SpriteDrawTestScene : IScene
+    public sealed class MultiCamTestScene : IScene
     {
         #region Properties
 
@@ -41,14 +43,19 @@ namespace Retard.Tests.ViewModels.Scenes
         #region Variables d'instance
 
         /// <summary>
-        /// Le contrôleur de la caméra du jeu
+        /// Le contrôleur des caméras du jeu
         /// </summary>
-        private readonly OrthographicCameraController _cameraController;
+        private readonly MultiOrthographicCameraController _cameraController;
 
         /// <summary>
         /// Components utilisés pour le rendu des sprites
         /// </summary>
         private readonly RenderingComponents2D _renderingComponents;
+
+        /// <summary>
+        /// Le monde contenant les entités
+        /// </summary>
+        private readonly World _world;
 
         /// <summary>
         /// Les systèmes du monde à màj dans Update()
@@ -58,7 +65,12 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <summary>
         /// Les systèmes du monde à màj dans Draw()
         /// </summary>
-        private readonly Group<RenderingComponents2D> _drawSystems;
+        private readonly Group<RenderingComponents2D> _drawDefaultSystems;
+
+        /// <summary>
+        /// Les systèmes du monde à màj dans Draw()
+        /// </summary>
+        private readonly Group<RenderingComponents2D> _drawUISystems;
 
         #endregion
 
@@ -69,35 +81,45 @@ namespace Retard.Tests.ViewModels.Scenes
         /// </summary>
         /// <param name="world">Le monde contenant les entités</param>
         /// <param name="renderingComponents">Components utilisés pour le rendu des sprites</param>
-        /// <param name="camE">L'entité de la caméra du jeu</param>
         /// <param name="debugTex">La texture de debug</param>
         /// <param name="size">La taille de la carte à dessiner</param>
         /// <param name="spriteResolution">La résolution d'un sprite en pixels</param>
         /// <param name="appViewport">Gère la fenêtre</param>
-        public SpriteDrawTestScene(World world, RenderingComponents2D renderingComponents, Entity camE, Texture2D debugTex, Point size, int spriteResolution, AppViewport appViewport)
+        public MultiCamTestScene(World world, RenderingComponents2D renderingComponents, Texture2D debugTex, Point size, int spriteResolution, AppViewport appViewport)
         {
+            int camCapacity = 1;
+
             this.Controls = new InputControls();
-            this._cameraController = new OrthographicCameraController(world, camE, this.Controls, appViewport);
             this._renderingComponents = renderingComponents;
+            this._world = world;
+            this._cameraController = new MultiOrthographicCameraController(world, camCapacity, this.Controls, appViewport);
+
+            this.Controls.AddAction("Test/Space", InputEventHandleType.Started, this.AddCamera);
+            this.Controls.AddAction("Test/Enter", InputEventHandleType.Started, this.RemoveCamera);
 
             // Initialise les systèmes
 
             world.Reserve([typeof(SpriteRectCD), typeof(SpritePositionCD), typeof(SpriteColorCD)], size.X * size.Y);
             this._updateSystems = new Group("Update Systems");
-            this._drawSystems = new Group<RenderingComponents2D>("Draw Systems");
+            this._drawDefaultSystems = new Group<RenderingComponents2D>("Draw Default Layer Systems");
+            this._drawUISystems = new Group<RenderingComponents2D>("Draw UI Layer Systems");
 
             this._updateSystems.Add(new AnimatedSpriteUpdateSystem());
-            //this._drawSystems.Add(new SpriteDrawSystem(renderingComponents.SpriteBatch, camE));
-            this._drawSystems.Add(new SpriteDefaultLayerDrawSystem(camE));
-            this._drawSystems.Add(new SpriteUILayerDrawSystem(camE));
 
             this._updateSystems.Initialize();
-            this._drawSystems.Initialize();
+            this._drawDefaultSystems.Initialize();
+
+            // Initialise les caméras
+
+            for (int i = 0; i < camCapacity; ++i)
+            {
+                this.AddCamera(0);
+            }
 
             // Crée les sprites
 
             Entity spriteAtlasE = SpriteManager.CreateSpriteAtlasEntity(world, debugTex, 4, 4);
-            SpriteDrawTestScene.CreateSpriteEntities(world, spriteAtlasE, size, spriteResolution);
+            MultiCamTestScene.CreateSpriteEntities(world, spriteAtlasE, size, spriteResolution);
         }
 
         #endregion
@@ -113,7 +135,42 @@ namespace Retard.Tests.ViewModels.Scenes
         /// <inheritdoc/>
         public void OnDraw(World w, GameTime gameTime)
         {
-            this._drawSystems.Update(w, this._renderingComponents);
+            this._drawDefaultSystems.Update(w, this._renderingComponents);
+            this._drawUISystems.Update(w, this._renderingComponents);
+        }
+
+        #endregion
+
+        #region Méthodes privées
+
+        /// <summary>
+        /// Ajoute une caméra au contrôleur
+        /// </summary>
+        private void AddCamera(int _)
+        {
+            Entity camE = CameraManager.CreateOrthographicCamera(this._world, Vector2.Zero, default, RenderingLayer.Default | RenderingLayer.UI);
+            this._cameraController.AddCamera(camE);
+            ISystem<RenderingComponents2D> sys1 = new SpriteDefaultLayerDrawSystem(camE);
+            ISystem<RenderingComponents2D> sys2 = new SpriteUILayerDrawSystem(camE);
+            this._drawDefaultSystems.Add(sys1);
+            this._drawUISystems.Add(sys2);
+            sys1.Initialize();
+            sys2.Initialize();
+        }
+
+        /// <summary>
+        /// Retire une caméra au contrôleur
+        /// </summary>
+        private void RemoveCamera(int _)
+        {
+            int count = this._cameraController.CamCount;
+
+            if (count > 0)
+            {
+                this._cameraController.RemoveCamera(count - 1);
+                this._drawDefaultSystems.RemoveAt(count - 1);
+                this._drawUISystems.RemoveAt(count - 1);
+            }
         }
 
         #endregion

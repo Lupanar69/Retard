@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Retard.App.Models;
 
 namespace Retard.App.ViewModels
 {
@@ -52,15 +51,10 @@ namespace Retard.App.ViewModels
         /// </summary>
         /// <param name="game">Le script de lancement du jeu</param>
         /// <param name="graphicsDeviceManager">Configurateur des paramètres de la fenêtre du jeu</param>
-        /// <param name="ws">Les paramètres de la fenêtre</param>
-        public AppViewport(Game game, GraphicsDeviceManager graphicsDeviceManager, WindowSettings ws)
+        public AppViewport(Game game, GraphicsDeviceManager graphicsDeviceManager)
         {
             this._game = game;
             this._graphicsDeviceManager = graphicsDeviceManager;
-            this.WindowResolution = new Point(game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
-
-            this.SetViewportResolution(ws.WindowSize, ws.FullScreen);
-            this.SetGameProperties(ws.MouseVisible, ws.AllowUserResizing);
 
             game.Window.ClientSizeChanged += this.OnWindowResolutionSetCallback;
         }

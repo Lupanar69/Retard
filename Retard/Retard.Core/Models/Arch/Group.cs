@@ -414,12 +414,12 @@ public readonly struct Group<T> : ISystem<T>
     /// </summary>
     /// <param name="w">Le monde contenant les entité</param>
     /// <param name="t">An instance passed to each <see cref="ISystem{T}.Initialize"/> method.</param>
-    public void BeforeUpdate(World w, in T t)
+    public void BeforeUpdate(World w, T t)
     {
         for (var index = 0; index < _systems.Count; index++)
         {
             var entry = _systems[index];
-            entry.System.BeforeUpdate(w, in t);
+            entry.System.BeforeUpdate(w, t);
         }
     }
 
@@ -428,12 +428,12 @@ public readonly struct Group<T> : ISystem<T>
     /// </summary>
     /// <param name="w">Le monde contenant les entité</param>
     /// <param name="t">An instance passed to each <see cref="ISystem{T}.Initialize"/> method.</param>
-    public void Update(World w, in T t)
+    public void Update(World w, T t)
     {
         for (var index = 0; index < _systems.Count; index++)
         {
             var entry = _systems[index];
-            entry.System.Update(w, in t);
+            entry.System.Update(w, t);
         }
     }
 
@@ -442,12 +442,12 @@ public readonly struct Group<T> : ISystem<T>
     /// </summary>
     /// <param name="w">Le monde contenant les entité</param>
     /// <param name="t">An instance passed to each <see cref="ISystem{T}.Initialize"/> method.</param>
-    public void AfterUpdate(World w, in T t)
+    public void AfterUpdate(World w, T t)
     {
         for (var index = 0; index < _systems.Count; index++)
         {
             var entry = _systems[index];
-            entry.System.AfterUpdate(w, in t);
+            entry.System.AfterUpdate(w, t);
         }
     }
 

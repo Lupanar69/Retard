@@ -54,6 +54,11 @@ namespace Retard.Engine.ViewModels
         protected readonly Game _game;
 
         /// <summary>
+        /// Le viewport par défaut du jeu (par défaut aux dimensions de la fenêtre)
+        /// </summary>
+        protected Viewport _defaultViewport;
+
+        /// <summary>
         /// TRUE si l'objet a été disposé
         /// </summary>
         private bool disposedValue;
@@ -76,6 +81,7 @@ namespace Retard.Engine.ViewModels
             this._world = World.Create();
             this._game = game;
 
+
             // Initialise les managers
 
             CreateDefaultConfigFiles();
@@ -88,8 +94,13 @@ namespace Retard.Engine.ViewModels
             InputManager.Instance.InitializeSystems(nbMaxControllers);
             InputManager.Instance.RegisterInputActions(_world, nbMaxControllers, inputConfig.Actions);
 
-            this._appViewport = new AppViewport(game, graphicsDeviceManager, ws);
+            this._appViewport = new AppViewport(game, graphicsDeviceManager);
             this._appPerformance = new AppPerformance(game);
+
+            this._appViewport.OnWindowResolutionSetEvent += this.SetGraphicsDeviceDefaultViewport;
+            this._appViewport.SetViewportResolution(ws.WindowSize, ws.FullScreen);
+            this._appViewport.SetGameProperties(ws.MouseVisible, ws.AllowUserResizing);
+
         }
 
         // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
@@ -145,6 +156,7 @@ namespace Retard.Engine.ViewModels
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
         public void Draw(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
+            graphicsDevice.Viewport = this._defaultViewport;
             graphicsDevice.Clear(Color.Black);
 
             SceneManager.Instance.Draw(this._world, gameTime);
@@ -203,6 +215,7 @@ namespace Retard.Engine.ViewModels
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects)
+                    this._appViewport.OnWindowResolutionSetEvent -= this.SetGraphicsDeviceDefaultViewport;
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer
@@ -214,6 +227,15 @@ namespace Retard.Engine.ViewModels
         #endregion
 
         #region Méthodes privées
+
+        /// <summary>
+        /// Assigne un nouveau viewport par défaut quand la résolution la fenêtre change
+        /// </summary>
+        /// <param name="windowResolution">Les dimensions de la fenêtre</param>
+        private void SetGraphicsDeviceDefaultViewport(object _, Point windowResolution)
+        {
+            this._defaultViewport = new Viewport(0, 0, windowResolution.X, windowResolution.Y);
+        }
 
         /// <summary>
         /// Récupère le nombre max de contrôleurs évalués par l'InputManager.

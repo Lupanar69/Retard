@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using Arch.Core;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Retard.Cameras.Components.Camera;
 using Retard.Cameras.Entities;
 using Retard.Cameras.Models;
@@ -72,13 +73,13 @@ namespace Retard.Cameras.ViewModels
         /// </summary>
         /// <param name="w">Le monde contenant les entités</param>
         /// <param name="pos">La position de l'entité dans la scène</param>
-        /// <param name="viewportRect">Le cadre d'affichage de la caméra à l'écran</param>
+        /// <param name="viewport">Le cadre d'affichage de la caméra à l'écran</param>
         /// <param name="layers">Les layers à appliquer à la caméra</param>
         /// <returns>L'entité représentant une caméra orthographique</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity CreateOrthographicCamera(World w, Vector2 pos, Rectangle viewportRect, RenderingLayer layers = RenderingLayer.Default)
+        public static Entity CreateOrthographicCamera(World w, Vector2 pos, Viewport viewport, RenderingLayer layers = RenderingLayer.Default)
         {
-            return EntityFactory.CreateOrthographicCamera(w, pos, viewportRect, layers);
+            return EntityFactory.CreateOrthographicCamera(w, pos, viewport, layers);
         }
 
         /// <summary>
@@ -140,13 +141,12 @@ namespace Retard.Cameras.ViewModels
         /// </summary>
         /// <param name="w">Le monde contenant les entités</param>
         /// <param name="camE">L'entité de la caméra</param>
-        /// <param name="windowResolution">La résolution de la fenêtre</param>
-        public static void SetCamera2DViewport(World w, Entity camE, Point windowResolution)
+        /// <param name="newViewport">Le nouveau rect du viewport</param>
+        public static void SetCamera2DViewport(World w, Entity camE, Viewport newViewport)
         {
-            Rectangle viewportRect = new(0, 0, windowResolution.X, windowResolution.Y);
-
-            w.Set(camE, new Camera2DViewportRectCD(viewportRect));
-            w.Set(camE, new Camera2DOriginCD(new Vector2(windowResolution.X / 2f, windowResolution.Y / 2f)));
+            w.Set(camE, new Camera2DViewportCD(newViewport));
+            w.Set(camE, new Camera2DOriginCD(new Vector2(newViewport.X / 2f, newViewport.Y / 2f)));
+            w.Set(camE, new Camera2DProjectionMatrixCD(Matrix.CreateOrthographicOffCenter(newViewport.Bounds, 1f, 10000f)));
 
             // Marque la caméra comme modifiée
 
