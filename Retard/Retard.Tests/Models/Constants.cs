@@ -1,9 +1,11 @@
 ﻿using System;
+using FixedStrings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Retard.App.Models;
 using Retard.App.Models.DTOs;
 using Retard.Core.Models.DTOs;
+using Retard.Core.Models.ValueTypes;
 using Retard.Input.Models;
 using Retard.Input.Models.Assets;
 using Retard.Input.Models.DTOs;
@@ -170,17 +172,17 @@ namespace Retard.Tests.Models
         /// <summary>
         /// Le chemin d'accès au dossier contenant l'exécutable du jeu
         /// </summary>
-        public static readonly string GAME_DIR_PATH = AppDomain.CurrentDomain.BaseDirectory;
+        public static readonly NativeString GAME_DIR_PATH = AppDomain.CurrentDomain.BaseDirectory;
 
         /// <summary>
         /// Le chemin d'accès aux textures du projet
         /// </summary>
-        public const string TEXTURES_DIR_PATH = "Resources/Textures";
+        public static readonly FixedString32 TEXTURES_DIR_PATH = "Resources/Textures";
 
         /// <summary>
         /// Le chemin d'accès aux textures de débogage du projet
         /// </summary>
-        public const string TEXTURES_DIR_PATH_DEBUG = "Resources/Textures/Test";
+        public static readonly FixedString32 TEXTURES_DIR_PATH_DEBUG = "Resources/Textures/Test";
 
         #endregion
 

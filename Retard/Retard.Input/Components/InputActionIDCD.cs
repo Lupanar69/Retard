@@ -1,5 +1,5 @@
 ﻿using Arch.AOT.SourceGenerator;
-using Retard.Core.Models.ValueTypes;
+using FixedStrings;
 
 namespace Retard.Input.Components
 {
@@ -8,14 +8,14 @@ namespace Retard.Input.Components
     /// </summary>
     /// <param name="value">L'ID d'une InputAction</param>
     [Component]
-    public struct InputActionIDCD(NativeString value)
+    public struct InputActionIDCD(FixedString32 value)
     {
         #region Variables d'instance
 
         /// <summary>
         /// L'ID d'une InputAction
         /// </summary>
-        public NativeString Value = value;
+        public FixedString32 Value = value;
 
         #endregion
     }

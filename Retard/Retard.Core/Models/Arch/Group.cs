@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Arch.Core;
-using Retard.Core.Models.ValueTypes;
+using FixedStrings;
 
 namespace Retard.Core.Models.Arch;
 
@@ -16,7 +16,7 @@ public readonly struct Group : ISystem
     /// <summary>
     /// A unique name to identify this group
     /// </summary>
-    public NativeString Name { get; }
+    public FixedString16 Name { get; }
 
     /// <summary>
     /// All <see cref="SystemEntry"/>'s in this group. 
@@ -259,7 +259,7 @@ public readonly struct Group<T> : ISystem<T>
     /// <summary>
     /// A unique name to identify this group
     /// </summary>
-    public NativeString Name { get; }
+    public FixedString16 Name { get; }
 
     /// <summary>
     /// All <see cref="SystemEntry"/>'s in this group. 

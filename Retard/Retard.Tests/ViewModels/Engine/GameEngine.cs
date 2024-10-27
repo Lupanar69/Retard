@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Arch.Core;
+using FixedStrings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Retard.App.Models;
@@ -7,7 +8,6 @@ using Retard.App.Models.DTOs;
 using Retard.App.ViewModels;
 using Retard.Cameras.Models;
 using Retard.Cameras.ViewModels;
-using Retard.Core.Models.ValueTypes;
 using Retard.Core.ViewModels.Utilities;
 using Retard.Engine.Models.Assets;
 using Retard.Engine.ViewModels;
@@ -66,7 +66,7 @@ namespace Retard.Tests.ViewModels.Engine
         /// </summary>
         public sealed override void LoadContent()
         {
-            Dictionary<NativeString, Texture2D> textures2D = new()
+            Dictionary<FixedString16, Texture2D> textures2D = new()
             {
                 { "tiles_test2", this._content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}/tiles_test2") }
             };

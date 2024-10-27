@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using FixedStrings;
 using Microsoft.Xna.Framework.Graphics;
-using Retard.Core.Models.ValueTypes;
 
 namespace Retard.Engine.Models.Assets
 {
@@ -15,7 +15,7 @@ namespace Retard.Engine.Models.Assets
         /// <summary>
         /// Les textures du jeu
         /// </summary>
-        public readonly Dictionary<NativeString, Texture2D> Textures2D { get; init; }
+        public readonly Dictionary<FixedString16, Texture2D> Textures2D { get; init; }
 
         #endregion
     }

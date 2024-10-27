@@ -1,5 +1,6 @@
 ﻿using System;
 using Arch.LowLevel;
+using FixedStrings;
 
 namespace Retard.Core.Models.ValueTypes
 {
@@ -13,7 +14,7 @@ namespace Retard.Core.Models.ValueTypes
         /// <summary>
         /// Longueur de la string
         /// </summary>
-        public readonly int Length;
+        public readonly short Length;
 
         /// <summary>
         /// Le tableau contenant chaque caractère de la string.
@@ -44,9 +45,18 @@ namespace Retard.Core.Models.ValueTypes
         /// Constructeur
         /// </summary>
         /// <param name="str">La string à convertir en NativeString</param>
-        public NativeString(string str)
+        public NativeString(string str) : this(str.AsSpan())
         {
-            this.Length = str.Length;
+
+        }
+
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        /// <param name="str">La string à convertir en NativeString</param>
+        public NativeString(ReadOnlySpan<char> str)
+        {
+            this.Length = (short)str.Length;
             this._arr = new UnsafeArray<char>(this.Length);
 
             for (int i = 0; i < this.Length; ++i)
@@ -186,7 +196,52 @@ namespace Retard.Core.Models.ValueTypes
         /// <param name="str">La string à convertir</param>
         public static implicit operator NativeString(string str)
         {
+            return new NativeString(str.AsSpan());
+        }
+
+        /// <summary>
+        /// Convertisseur
+        /// </summary>
+        /// <param name="str">La string à convertir</param>
+        public static implicit operator NativeString(ReadOnlySpan<char> str)
+        {
             return new NativeString(str);
+        }
+
+        /// <summary>
+        /// Convertisseur
+        /// </summary>
+        /// <param name="str">La string à convertir</param>
+        public static implicit operator NativeString(FixedString8 str)
+        {
+            return new NativeString(str.AsSpan());
+        }
+
+        /// <summary>
+        /// Convertisseur
+        /// </summary>
+        /// <param name="str">La string à convertir</param>
+        public static implicit operator NativeString(FixedString16 str)
+        {
+            return new NativeString(str.AsSpan());
+        }
+
+        /// <summary>
+        /// Convertisseur
+        /// </summary>
+        /// <param name="str">La string à convertir</param>
+        public static implicit operator NativeString(FixedString32 str)
+        {
+            return new NativeString(str.AsSpan());
+        }
+
+        /// <summary>
+        /// Convertisseur
+        /// </summary>
+        /// <param name="str">La string à convertir</param>
+        public static implicit operator NativeString(FixedString64 str)
+        {
+            return new NativeString(str.AsSpan());
         }
 
         /// <summary>
@@ -196,6 +251,15 @@ namespace Retard.Core.Models.ValueTypes
         public static implicit operator string(NativeString str)
         {
             return str.ToString();
+        }
+
+        /// <summary>
+        /// Convertisseur
+        /// </summary>
+        /// <param name="str">La string à convertir</param>
+        public static implicit operator ReadOnlySpan<char>(NativeString str)
+        {
+            return str.AsSpan();
         }
 
         /// <summary>
@@ -213,6 +277,15 @@ namespace Retard.Core.Models.ValueTypes
         public readonly override string ToString()
         {
             return this._arr.AsSpan().ToString();
+        }
+
+        /// <summary>
+        /// Convertit la NativeString en string
+        /// </summary>
+        /// <returns>La chaîne de caractère contenue dans cette struct</returns>
+        public readonly ReadOnlySpan<char> AsSpan()
+        {
+            return this._arr.AsSpan();
         }
 
         #endregion

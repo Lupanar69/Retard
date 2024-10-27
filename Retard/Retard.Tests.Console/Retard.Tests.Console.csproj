@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
+    <PackageReference Include="FixedStrings" Version="1.1.0" />
   </ItemGroup>
 
 	<ItemGroup>

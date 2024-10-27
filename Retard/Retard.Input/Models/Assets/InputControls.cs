@@ -1,6 +1,6 @@
 ﻿using System;
+using FixedStrings;
 using Microsoft.Xna.Framework;
-using Retard.Core.Models.ValueTypes;
 using Retard.Input.ViewModels;
 
 namespace Retard.Input.Models.Assets
@@ -78,7 +78,7 @@ namespace Retard.Input.Models.Assets
         /// <param name="key">L'ID de l'action</param>
         /// <param name="handleType">Le type de handle auquel s'abonner</param>
         /// <param name="callback">La méthode à exécuter</param>
-        public void AddAction(NativeString key, InputEventHandleType handleType, Action<int> callback)
+        public void AddAction(FixedString32 key, InputEventHandleType handleType, Action<int> callback)
         {
             // Si cette action n'existe pas dans la liste, on la crée
 
@@ -138,7 +138,7 @@ namespace Retard.Input.Models.Assets
         /// </summary>
         /// <param name="key">L'ID de l'action</param>
         /// <param name="callback">La méthode à exécuter</param>
-        public void AddAction(NativeString key, Action<int, float> callback)
+        public void AddAction(FixedString32 key, Action<int, float> callback)
         {
             // Si cette action n'existe pas dans la liste, on la crée
 
@@ -174,7 +174,7 @@ namespace Retard.Input.Models.Assets
         /// </summary>
         /// <param name="key">L'ID de l'action</param>
         /// <param name="callback">La méthode à exécuter</param>
-        public void AddAction(NativeString key, Action<int, Vector2> callback)
+        public void AddAction(FixedString32 key, Action<int, Vector2> callback)
         {
             // Si cette action n'existe pas dans la liste, on la crée
 

@@ -4,9 +4,9 @@ using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.Relationships;
 using Arch.System;
+using FixedStrings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Retard.Core.Models.ValueTypes;
 using Retard.Input.Components;
 using Retard.Input.Models;
 using Retard.Input.ViewModels;
@@ -52,7 +52,7 @@ namespace Retard.Engine.Entities
         /// <param name="actionE">L'entité de l'InputAction</param>
         [Query]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void DestroyInputEntities([Data] World w, [Data] NativeString[] actionsIDs, in Entity actionE, in InputActionIDCD actionID)
+        internal static void DestroyInputEntities([Data] World w, [Data] ReadOnlySpan<FixedString32> actionsIDs, in Entity actionE, in InputActionIDCD actionID)
         {
             for (int i = 0; i < actionsIDs.Length; ++i)
             {

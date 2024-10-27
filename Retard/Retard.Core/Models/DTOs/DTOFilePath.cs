@@ -1,4 +1,4 @@
-﻿using Retard.Core.Models.ValueTypes;
+﻿using FixedStrings;
 
 namespace Retard.Core.Models.DTOs
 {
@@ -13,12 +13,12 @@ namespace Retard.Core.Models.DTOs
         /// <summary>
         /// Chemin d'accès du fichier de réserve
         /// </summary>
-        public NativeString DefaultFilePath { get; init; }
+        public FixedString32 DefaultFilePath { get; init; }
 
         /// <summary>
         /// Chemin d'accès du fichier modifiable par le joueur
         /// </summary>
-        public NativeString CustomFilePath { get; init; }
+        public FixedString32 CustomFilePath { get; init; }
 
         /// <summary>
         /// Le DTO à sauvegarder
@@ -43,7 +43,7 @@ namespace Retard.Core.Models.DTOs
         /// <param name="defaultFilePath">Chemin d'accès du fichier de réserve</param>
         /// <param name="customFilePath">Chemin d'accès du fichier modifiable par le joueur</param>
         /// <param name="dto">Le DTO à sauvegarder</param>
-        public DTOFilePath(NativeString defaultFilePath, NativeString customFilePath, DataTransferObject dto)
+        public DTOFilePath(FixedString32 defaultFilePath, FixedString32 customFilePath, DataTransferObject dto)
         {
             this.DefaultFilePath = defaultFilePath;
             this.CustomFilePath = customFilePath;

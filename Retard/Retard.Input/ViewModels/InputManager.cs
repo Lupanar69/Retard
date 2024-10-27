@@ -4,10 +4,10 @@ using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.LowLevel;
 using Arch.Relationships;
+using FixedStrings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Retard.Core.Models.Arch;
-using Retard.Core.Models.ValueTypes;
 using Retard.Engine.Entities;
 using Retard.Input.Components;
 using Retard.Input.Entities;
@@ -165,7 +165,7 @@ namespace Retard.Input.ViewModels
         /// <param name="key">L'ID de l'action</param>
         /// <returns>Les actions liées à cet id</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref readonly InputActionButtonStateHandles GetButtonEvent(NativeString key)
+        public ref readonly InputActionButtonStateHandles GetButtonEvent(FixedString32 key)
         {
             return ref this.Handles.GetButtonEvent(key);
         }
@@ -176,7 +176,7 @@ namespace Retard.Input.ViewModels
         /// <param name="key">L'ID de l'action</param>
         /// <returns>Les actions liées à cet id</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref readonly InputActionVector1DHandles GetVector1DEvent(NativeString key)
+        public ref readonly InputActionVector1DHandles GetVector1DEvent(FixedString32 key)
         {
             return ref this.Handles.GetVector1DEvent(key);
         }
@@ -187,7 +187,7 @@ namespace Retard.Input.ViewModels
         /// <param name="key">L'ID de l'action</param>
         /// <returns>Les actions liées à cet id</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref readonly InputActionVector2DHandles GetVector2DEvent(NativeString key)
+        public ref readonly InputActionVector2DHandles GetVector2DEvent(FixedString32 key)
         {
             return ref this.Handles.GetVector2DEvent(key);
         }
@@ -261,7 +261,7 @@ namespace Retard.Input.ViewModels
         /// </summary>
         /// <param name="w">Le monde contenant les entités</param>
         /// <param name="actionsIDs">Les IDs des actions à supprimer</param>
-        public static void RemoveInputActions(World w, params NativeString[] actionsIDs)
+        public static void RemoveInputActions(World w, params FixedString32[] actionsIDs)
         {
             Queries.DestroyInputEntitiesQuery(w, w, actionsIDs);
         }

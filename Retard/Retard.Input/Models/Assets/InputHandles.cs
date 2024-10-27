@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using Arch.LowLevel;
-using Retard.Core.Models.ValueTypes;
+using FixedStrings;
 using Retard.Input.ViewModels;
 
 namespace Retard.Input.Models.Assets
@@ -15,17 +15,17 @@ namespace Retard.Input.Models.Assets
         /// <summary>
         /// La liste des abonnements pour chaque Input action de type ButtonState
         /// </summary>
-        private UnsafeList<NativeString> _buttonStateHandlesIDs;
+        private UnsafeList<FixedString32> _buttonStateHandlesIDs;
 
         /// <summary>
         /// La liste des abonnements pour chaque Input action de type Vector1D
         /// </summary>
-        private UnsafeList<NativeString> _vector1DHandlesIDs;
+        private UnsafeList<FixedString32> _vector1DHandlesIDs;
 
         /// <summary>
         /// La liste des abonnements pour chaque Input action de type Vector2D
         /// </summary>
-        private UnsafeList<NativeString> _vector2DHandlesIDs;
+        private UnsafeList<FixedString32> _vector2DHandlesIDs;
 
         /// <summary>
         /// La liste des abonnements pour chaque Input action de type ButtonState
@@ -51,9 +51,9 @@ namespace Retard.Input.Models.Assets
         /// </summary>
         public InputHandles()
         {
-            this._buttonStateHandlesIDs = new UnsafeList<NativeString>(1);
-            this._vector1DHandlesIDs = new UnsafeList<NativeString>(1);
-            this._vector2DHandlesIDs = new UnsafeList<NativeString>(1);
+            this._buttonStateHandlesIDs = new UnsafeList<FixedString32>(1);
+            this._vector1DHandlesIDs = new UnsafeList<FixedString32>(1);
+            this._vector2DHandlesIDs = new UnsafeList<FixedString32>(1);
 
             this._buttonStateHandles = new UnsafeList<InputActionButtonStateHandles>(1);
             this._vector1DHandles = new UnsafeList<InputActionVector1DHandles>(1);
@@ -70,7 +70,7 @@ namespace Retard.Input.Models.Assets
         /// <param name="key">L'ID de l'action</param>
         /// <returns>TRUE si l'action est enregistrée</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool ButtonStateHandleExists(NativeString key)
+        public bool ButtonStateHandleExists(FixedString32 key)
         {
             return this._buttonStateHandlesIDs.Contains(key);
         }
@@ -81,7 +81,7 @@ namespace Retard.Input.Models.Assets
         /// <param name="key">L'ID de l'action</param>
         /// <returns>TRUE si l'action est enregistrée</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Vector1DHandleExists(NativeString key)
+        public bool Vector1DHandleExists(FixedString32 key)
         {
             return this._vector1DHandlesIDs.Contains(key);
         }
@@ -92,7 +92,7 @@ namespace Retard.Input.Models.Assets
         /// <param name="key">L'ID de l'action</param>
         /// <returns>TRUE si l'action est enregistrée</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Vector2DHandleExists(NativeString key)
+        public bool Vector2DHandleExists(FixedString32 key)
         {
             return this._vector2DHandlesIDs.Contains(key);
         }
@@ -102,7 +102,7 @@ namespace Retard.Input.Models.Assets
         /// </summary>
         /// <param name="key">L'ID de l'action</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddButtonStateEvent(NativeString key)
+        public void AddButtonStateEvent(FixedString32 key)
         {
             var started = InputManager.Instance.ActionButtonResources.Add(delegate
             { });
@@ -120,7 +120,7 @@ namespace Retard.Input.Models.Assets
         /// </summary>
         /// <param name="key">L'ID de l'action</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddVector1DEvent(NativeString key)
+        public void AddVector1DEvent(FixedString32 key)
         {
             var performed = InputManager.Instance.ActionVector1DResources.Add(delegate
             { });
@@ -134,7 +134,7 @@ namespace Retard.Input.Models.Assets
         /// </summary>
         /// <param name="key">L'ID de l'action</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddVector2DEvent(NativeString key)
+        public void AddVector2DEvent(FixedString32 key)
         {
             var performed = InputManager.Instance.ActionVector2DResources.Add(delegate
             { });
@@ -149,7 +149,7 @@ namespace Retard.Input.Models.Assets
         /// <param name="key">L'ID de l'action</param>
         /// <returns>Les actions liées à cet id</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref readonly InputActionButtonStateHandles GetButtonEvent(NativeString key)
+        public ref readonly InputActionButtonStateHandles GetButtonEvent(FixedString32 key)
         {
             return ref this._buttonStateHandles[this._buttonStateHandlesIDs.IndexOf(key)];
         }
@@ -160,7 +160,7 @@ namespace Retard.Input.Models.Assets
         /// <param name="key">L'ID de l'action</param>
         /// <returns>Les actions liées à cet id</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref readonly InputActionVector1DHandles GetVector1DEvent(NativeString key)
+        public ref readonly InputActionVector1DHandles GetVector1DEvent(FixedString32 key)
         {
             return ref this._vector1DHandles[this._vector1DHandlesIDs.IndexOf(key)];
         }
@@ -171,7 +171,7 @@ namespace Retard.Input.Models.Assets
         /// <param name="key">L'ID de l'action</param>
         /// <returns>Les actions liées à cet id</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref readonly InputActionVector2DHandles GetVector2DEvent(NativeString key)
+        public ref readonly InputActionVector2DHandles GetVector2DEvent(FixedString32 key)
         {
             return ref this._vector2DHandles[this._vector2DHandlesIDs.IndexOf(key)];
         }
@@ -190,7 +190,7 @@ namespace Retard.Input.Models.Assets
         {
             for (int i = 0; i < right._buttonStateHandlesIDs.Count; ++i)
             {
-                NativeString rKey = right._buttonStateHandlesIDs[i];
+                FixedString32 rKey = right._buttonStateHandlesIDs[i];
 
                 if (!left._buttonStateHandlesIDs.Contains(rKey))
                 {
@@ -216,7 +216,7 @@ namespace Retard.Input.Models.Assets
 
             for (int i = 0; i < right._vector1DHandlesIDs.Count; ++i)
             {
-                NativeString rKey = right._vector1DHandlesIDs[i];
+                FixedString32 rKey = right._vector1DHandlesIDs[i];
 
                 if (!left._vector1DHandlesIDs.Contains(rKey))
                 {
@@ -236,7 +236,7 @@ namespace Retard.Input.Models.Assets
 
             for (int i = 0; i < right._vector2DHandlesIDs.Count; ++i)
             {
-                NativeString rKey = right._vector2DHandlesIDs[i];
+                FixedString32 rKey = right._vector2DHandlesIDs[i];
 
                 if (!left._vector2DHandlesIDs.Contains(rKey))
                 {

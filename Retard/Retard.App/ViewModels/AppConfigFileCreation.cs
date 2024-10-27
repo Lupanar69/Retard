@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Retard.Core.Models.DTOs;
-using Retard.Core.Models.ValueTypes;
 using Retard.Core.ViewModels.Utilities;
 
 namespace Retard.App.ViewModels
@@ -18,7 +18,7 @@ namespace Retard.App.ViewModels
         /// <param name="rootPath">Emplacement des dossiers</param>
         /// <param name="overrideCustomFiles">Si <see langword="true"/>, écrase les fichiers créés par l'utilisateur</param>
         /// <param name="defaultConfigFiles">Fichiers de config par défaut</param>
-        public static void CreateDefaultConfigFiles(NativeString rootPath, bool overrideCustomFiles = false, params DTOFilePath[] defaultConfigFiles)
+        public static void CreateDefaultConfigFiles(ReadOnlySpan<char> rootPath, bool overrideCustomFiles = false, params DTOFilePath[] defaultConfigFiles)
         {
             foreach (DTOFilePath item in defaultConfigFiles)
             {
