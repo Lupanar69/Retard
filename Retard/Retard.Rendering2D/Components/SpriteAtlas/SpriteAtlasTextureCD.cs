@@ -1,9 +1,9 @@
 ﻿using Arch.AOT.SourceGenerator;
 using Arch.LowLevel;
 using Microsoft.Xna.Framework.Graphics;
-using Retard.Rendering2D.ViewModels;
+using Retard.Sprites.ViewModels;
 
-namespace Retard.Rendering2D.Components.SpriteAtlas
+namespace Retard.Sprites.Components.SpriteAtlas
 {
     /// <summary>
     /// La Texture2D liée à ce SpriteAtlas

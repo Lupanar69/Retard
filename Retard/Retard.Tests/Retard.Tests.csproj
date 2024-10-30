@@ -31,7 +31,8 @@
     <ProjectReference Include="..\Retard.Core\Retard.Core.csproj" />
     <ProjectReference Include="..\Retard.Engine\Retard.Engine.csproj" />
     <ProjectReference Include="..\Retard.Input\Retard.Input.csproj" />
-    <ProjectReference Include="..\Retard.Rendering2D\Retard.Rendering2D.csproj" />
+    <ProjectReference Include="..\Retard.Rendering2D\Retard.Sprites.csproj" />
     <ProjectReference Include="..\Retard.SceneManagement\Retard.SceneManagement.csproj" />
+    <ProjectReference Include="..\Retard.UI\Retard.UI.csproj" />
   </ItemGroup>
 </Project>

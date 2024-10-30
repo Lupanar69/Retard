@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace Retard.Rendering2D.Models
+namespace Retard.Sprites.Models
 {
     /// <summary>
     /// Components utilisés pour le rendu des sprites

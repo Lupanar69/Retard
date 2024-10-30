@@ -4,10 +4,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Retard.Cameras.Components.Camera;
 using Retard.Cameras.ViewModels;
 using Retard.Core.Models.Arch;
-using Retard.Rendering2D.Entities;
-using Retard.Rendering2D.Models;
+using Retard.Sprites.Entities;
+using Retard.Sprites.Models;
 
-namespace Retard.Rendering2D.Systems
+namespace Retard.Sprites.Systems
 {
     /// <summary>
     /// Affiche les sprites à l'écran

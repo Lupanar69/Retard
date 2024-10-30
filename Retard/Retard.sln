@@ -15,13 +15,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Retard.Core", "Retard.Core\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Retard.Input", "Retard.Input\Retard.Input.csproj", "{CB480584-2CCB-469A-9346-88A87EA61E0D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Retard.Rendering2D", "Retard.Rendering2D\Retard.Rendering2D.csproj", "{25C6181E-113F-43AA-BA98-1C77E3E34F9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Retard.Sprites", "Retard.Rendering2D\Retard.Sprites.csproj", "{25C6181E-113F-43AA-BA98-1C77E3E34F9B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Retard.SceneManagement", "Retard.SceneManagement\Retard.SceneManagement.csproj", "{E430F03A-7BB2-434E-A5FD-CBF1DCBEBB4B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Retard.App", "Retard.App\Retard.App.csproj", "{B5517858-E084-4B83-9C7A-D5B89377992D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Retard.Cameras", "Retard.Cameras\Retard.Cameras.csproj", "{5C78AFA7-57DE-46A3-92A9-07F66AAE678D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retard.UI", "Retard.UI\Retard.UI.csproj", "{C4018F7C-9BCE-4CD1-84EF-C01D26BB5E7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,14 @@ Global
 		{5C78AFA7-57DE-46A3-92A9-07F66AAE678D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5C78AFA7-57DE-46A3-92A9-07F66AAE678D}.Release|x86.ActiveCfg = Release|Any CPU
 		{5C78AFA7-57DE-46A3-92A9-07F66AAE678D}.Release|x86.Build.0 = Release|Any CPU
+		{C4018F7C-9BCE-4CD1-84EF-C01D26BB5E7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4018F7C-9BCE-4CD1-84EF-C01D26BB5E7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4018F7C-9BCE-4CD1-84EF-C01D26BB5E7F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C4018F7C-9BCE-4CD1-84EF-C01D26BB5E7F}.Debug|x86.Build.0 = Debug|Any CPU
+		{C4018F7C-9BCE-4CD1-84EF-C01D26BB5E7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4018F7C-9BCE-4CD1-84EF-C01D26BB5E7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4018F7C-9BCE-4CD1-84EF-C01D26BB5E7F}.Release|x86.ActiveCfg = Release|Any CPU
+		{C4018F7C-9BCE-4CD1-84EF-C01D26BB5E7F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

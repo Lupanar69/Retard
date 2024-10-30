@@ -1,6 +1,6 @@
 ﻿using Arch.AOT.SourceGenerator;
 
-namespace Retard.Rendering2D.Components.Sprite
+namespace Retard.Sprites.Components.Sprite
 {
     /// <summary>
     /// Tag relationnel entre un Sprite et son SpriteAtlas

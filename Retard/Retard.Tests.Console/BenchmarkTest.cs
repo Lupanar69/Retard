@@ -1,5 +1,4 @@
-﻿using Arch.LowLevel;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using FixedStrings;
 using Retard.Core.Models.ValueTypes;
 
@@ -24,7 +23,7 @@ namespace Retard.Tests.Console
         [Benchmark]
         public NativeString Benchmark2()
         {
-            using UnsafeArray<NativeString> s = new(10000);
+            Span<NativeString> s = stackalloc NativeString[10000];
 
             for (int i = 0; i < s.Length; ++i)
             {

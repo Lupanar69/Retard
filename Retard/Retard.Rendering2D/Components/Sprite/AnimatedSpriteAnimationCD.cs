@@ -1,6 +1,6 @@
 ﻿using Arch.AOT.SourceGenerator;
 
-namespace Retard.Rendering2D.Components.Sprite
+namespace Retard.Sprites.Components.Sprite
 {
     /// <summary>
     /// Les IDs des sprites de début et fin de l'animation

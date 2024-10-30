@@ -5,9 +5,9 @@ using Arch.LowLevel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Retard.Cameras.Models;
-using Retard.Rendering2D.Entities;
+using Retard.Sprites.Entities;
 
-namespace Retard.Rendering2D.ViewModels
+namespace Retard.Sprites.ViewModels
 {
     /// <summary>
     /// Gère la création et destruction des entités des sprites

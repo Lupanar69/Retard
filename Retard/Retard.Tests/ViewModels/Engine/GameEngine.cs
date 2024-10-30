@@ -15,7 +15,7 @@ using Retard.Input.Models;
 using Retard.Input.Models.Assets;
 using Retard.Input.Models.DTOs;
 using Retard.Input.ViewModels;
-using Retard.Rendering2D.Models;
+using Retard.Sprites.Models;
 using Retard.SceneManagement.ViewModels;
 using Retard.Tests.Models;
 using Retard.Tests.ViewModels.Scenes;

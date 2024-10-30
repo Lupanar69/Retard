@@ -1,7 +1,7 @@
 ﻿using Arch.AOT.SourceGenerator;
 using Microsoft.Xna.Framework;
 
-namespace Retard.Rendering2D.Components.Sprite
+namespace Retard.Sprites.Components.Sprite
 {
     /// <summary>
     /// La couleur d'un sprite

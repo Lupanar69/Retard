@@ -5,11 +5,11 @@ using Arch.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Retard.Cameras.Components.Layers;
-using Retard.Rendering2D.Components.Sprite;
-using Retard.Rendering2D.Components.SpriteAtlas;
-using Retard.Rendering2D.Components.UI;
+using Retard.Sprites.Components.Sprite;
+using Retard.Sprites.Components.SpriteAtlas;
+using Retard.Sprites.Components.UI;
 
-namespace Retard.Rendering2D.Entities
+namespace Retard.Sprites.Entities
 {
     /// <summary>
     /// Regroupe les queries Arch pouvant être parallélisées

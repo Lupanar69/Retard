@@ -1,8 +1,8 @@
 ﻿using Arch.Core;
 using Retard.Core.Models.Arch;
-using Retard.Rendering2D.Entities;
+using Retard.Sprites.Entities;
 
-namespace Retard.Rendering2D.Systems
+namespace Retard.Sprites.Systems
 {
     /// <summary>
     /// Màj les frames des des sprites animés

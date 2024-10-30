@@ -1,6 +1,6 @@
 ﻿using Arch.AOT.SourceGenerator;
 
-namespace Retard.Rendering2D.Components.UI
+namespace Retard.Sprites.Components.UI
 {
     /// <summary>
     /// Tag indiquant que l'affichage de l'élément ui

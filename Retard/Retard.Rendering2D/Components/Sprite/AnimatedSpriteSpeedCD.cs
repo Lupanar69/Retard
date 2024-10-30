@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Arch.AOT.SourceGenerator;
 
-namespace Retard.Rendering2D.Components.Sprite
+namespace Retard.Sprites.Components.Sprite
 {
     /// <summary>
     /// Le nombre de frames à attendre avant de màj la frame du sprite.

@@ -50,7 +50,7 @@
 	  <ProjectReference Include="..\Retard.Cameras\Retard.Cameras.csproj" />
 	  <ProjectReference Include="..\Retard.Core\Retard.Core.csproj" />
 	  <ProjectReference Include="..\Retard.Input\Retard.Input.csproj" />
-	  <ProjectReference Include="..\Retard.Rendering2D\Retard.Rendering2D.csproj" />
+	  <ProjectReference Include="..\Retard.Rendering2D\Retard.Sprites.csproj" />
 	  <ProjectReference Include="..\Retard.SceneManagement\Retard.SceneManagement.csproj" />
 	</ItemGroup>
 </Project>

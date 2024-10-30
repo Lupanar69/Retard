@@ -7,11 +7,11 @@ using Retard.App.ViewModels;
 using Retard.Cameras.Models;
 using Retard.Core.Models.Arch;
 using Retard.Input.Models.Assets;
-using Retard.Rendering2D.Components.Sprite;
-using Retard.Rendering2D.Components.SpriteAtlas;
-using Retard.Rendering2D.Models;
-using Retard.Rendering2D.Systems;
-using Retard.Rendering2D.ViewModels;
+using Retard.Sprites.Components.Sprite;
+using Retard.Sprites.Components.SpriteAtlas;
+using Retard.Sprites.Models;
+using Retard.Sprites.Systems;
+using Retard.Sprites.ViewModels;
 using Retard.SceneManagement.Models;
 using Retard.Tests.ViewModels.Controllers;
 
