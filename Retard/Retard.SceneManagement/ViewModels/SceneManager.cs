@@ -133,6 +133,7 @@ namespace Retard.SceneManagement.ViewModels
         public void AddSceneToPool(IScene scene)
         {
             Type t = scene.GetType();
+            _inactiveScenes.EnsureCapacity(_inactiveScenes.Count + 1);
             _inactiveScenes.Add(t, scene);
         }
 
