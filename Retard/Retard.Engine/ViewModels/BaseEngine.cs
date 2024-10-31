@@ -127,7 +127,7 @@ namespace Retard.Engine.ViewModels
         /// </summary>
         /// <param name="game">L'application</param>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        public void Update(Game game, GameTime gameTime)
+        public virtual void Update(Game game, GameTime gameTime)
         {
             if (SceneManager.Instance.IsEmpty)
             {
@@ -145,7 +145,7 @@ namespace Retard.Engine.ViewModels
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
-        public void AfterUpdate()
+        public virtual void AfterUpdate()
         {
             // Appelé en dernier pour ne pas écraser le précédent KeyboardState
             // avant les comparaisons
@@ -157,7 +157,7 @@ namespace Retard.Engine.ViewModels
         /// Pour afficher des éléments à l'écran
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        public void Draw(GraphicsDevice graphicsDevice, GameTime gameTime)
+        public virtual void Draw(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
             graphicsDevice.Viewport = this._defaultViewport;
             graphicsDevice.Clear(Color.Black);

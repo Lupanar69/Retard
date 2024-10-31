@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
-using Arch.Core;
 using FixedStrings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Retard.App.Models;
 using Retard.App.Models.DTOs;
 using Retard.App.ViewModels;
-using Retard.Cameras.Models;
-using Retard.Cameras.ViewModels;
 using Retard.Core.ViewModels.Utilities;
 using Retard.Engine.Models.Assets;
 using Retard.Engine.ViewModels;
@@ -15,8 +12,8 @@ using Retard.Input.Models;
 using Retard.Input.Models.Assets;
 using Retard.Input.Models.DTOs;
 using Retard.Input.ViewModels;
-using Retard.Sprites.Models;
 using Retard.SceneManagement.ViewModels;
+using Retard.Sprites.Models;
 using Retard.Tests.Models;
 using Retard.Tests.ViewModels.Scenes;
 
@@ -34,11 +31,6 @@ namespace Retard.Tests.ViewModels.Engine
         /// </summary>
         private readonly InputControls _controls;
 
-        /// <summary>
-        /// L'entité de la caméra du jeu
-        /// </summary>
-        private readonly Entity _camE;
-
         #endregion
 
         #region Constructeur
@@ -53,8 +45,6 @@ namespace Retard.Tests.ViewModels.Engine
             this._controls = new InputControls();
             this._controls.AddAction("Exit", InputEventHandleType.Started, (_) => { game.Exit(); });
             this._controls.Enable();
-
-            this._camE = CameraManager.CreateOrthographicCamera(this._world, Vector2.Zero, game.GraphicsDevice.Viewport, RenderingLayer.Default | RenderingLayer.UI);
         }
 
         #endregion
