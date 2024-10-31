@@ -1,9 +1,11 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
+using MonoGame.ImGuiNet;
 
 namespace Retard.UI.ViewModels
 {
     /// <summary>
-    /// Gère la création et gestions des éléments d'UI
+    /// Gère la création et destruction des éléments d'ui
     /// </summary>
     public sealed class UIManager
     {
@@ -21,6 +23,15 @@ namespace Retard.UI.ViewModels
 
         #endregion
 
+        #region Variables d'instance
+
+        /// <summary>
+        /// Affiche les éléments d'ui à l'écran
+        /// </summary>
+        private ImGuiRenderer _imGuiRenderer;
+
+        #endregion
+
         #region Constructeur
 
         /// <summary>
@@ -29,6 +40,27 @@ namespace Retard.UI.ViewModels
         private UIManager()
         {
 
+        }
+
+        #endregion
+
+        #region Méthodes publiques
+
+        /// <summary>
+        /// Initialise le ImGUIRenderer
+        /// </summary>
+        /// <param name="game">Le jeu</param>
+        public void CreateImGUIRenderer(Game game)
+        {
+            this._imGuiRenderer = new ImGuiRenderer(game);
+        }
+
+        /// <summary>
+        /// A appeler dans Game.OnLoadContent pour initaliser le ImGUIRenderer
+        /// </summary>
+        public void OnLoadContent()
+        {
+            this._imGuiRenderer.RebuildFontAtlas();
         }
 
         #endregion

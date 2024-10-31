@@ -12,6 +12,7 @@ using Retard.Input.Models.Assets;
 using Retard.Input.Models.DTOs;
 using Retard.Input.ViewModels;
 using Retard.SceneManagement.ViewModels;
+using Retard.UI.ViewModels;
 
 namespace Retard.Engine.ViewModels
 {
@@ -100,6 +101,8 @@ namespace Retard.Engine.ViewModels
             this._appViewport.OnWindowResolutionSetEvent += this.SetGraphicsDeviceDefaultViewport;
             this._appViewport.SetViewportResolution(ws.WindowSize, ws.FullScreen);
             this._appViewport.SetGameProperties(ws.MouseVisible, ws.AllowUserResizing);
+
+            UIManager.Instance.CreateImGUIRenderer(game);
 
         }
 
