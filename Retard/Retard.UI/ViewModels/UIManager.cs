@@ -58,7 +58,7 @@ namespace Retard.UI.ViewModels
         /// <summary>
         /// A appeler dans Game.OnLoadContent pour initaliser le ImGUIRenderer
         /// </summary>
-        public void OnLoadContent()
+        public void RebuildFontAtlas()
         {
             this._imGuiRenderer.RebuildFontAtlas();
         }

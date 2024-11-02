@@ -12,7 +12,6 @@ using Retard.Input.Models.Assets;
 using Retard.Input.Models.DTOs;
 using Retard.Input.ViewModels;
 using Retard.SceneManagement.ViewModels;
-using Retard.UI.ViewModels;
 
 namespace Retard.Engine.ViewModels
 {
@@ -98,12 +97,9 @@ namespace Retard.Engine.ViewModels
             this._appViewport = new AppViewport(game, graphicsDeviceManager);
             this._appPerformance = new AppPerformance(game);
 
-            this._appViewport.OnWindowResolutionSetEvent += this.SetGraphicsDeviceDefaultViewport;
+            this._appViewport.OnWindowResolutionSetEvent += this.OnWindowResolutionSetCallback;
             this._appViewport.SetViewportResolution(ws.WindowSize, ws.FullScreen);
             this._appViewport.SetGameProperties(ws.MouseVisible, ws.AllowUserResizing);
-
-            UIManager.Instance.CreateImGUIRenderer(game);
-
         }
 
         // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
@@ -127,7 +123,7 @@ namespace Retard.Engine.ViewModels
         /// </summary>
         /// <param name="game">L'application</param>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        public virtual void Update(Game game, GameTime gameTime)
+        public void Update(Game game, GameTime gameTime)
         {
             if (SceneManager.Instance.IsEmpty)
             {
@@ -145,7 +141,7 @@ namespace Retard.Engine.ViewModels
         /// <summary>
         /// Màj à chaque frame
         /// </summary>
-        public virtual void AfterUpdate()
+        public void AfterUpdate()
         {
             // Appelé en dernier pour ne pas écraser le précédent KeyboardState
             // avant les comparaisons
@@ -157,7 +153,7 @@ namespace Retard.Engine.ViewModels
         /// Pour afficher des éléments à l'écran
         /// </summary>
         /// <param name="gameTime">Le temps écoulé depuis le début du jeu</param>
-        public virtual void Draw(GraphicsDevice graphicsDevice, GameTime gameTime)
+        public void Draw(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
             graphicsDevice.Viewport = this._defaultViewport;
             graphicsDevice.Clear(Color.Black);
@@ -218,7 +214,7 @@ namespace Retard.Engine.ViewModels
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects)
-                    this._appViewport.OnWindowResolutionSetEvent -= this.SetGraphicsDeviceDefaultViewport;
+                    this._appViewport.OnWindowResolutionSetEvent -= this.OnWindowResolutionSetCallback;
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer
@@ -235,7 +231,7 @@ namespace Retard.Engine.ViewModels
         /// Assigne un nouveau viewport par défaut quand la résolution la fenêtre change
         /// </summary>
         /// <param name="windowResolution">Les dimensions de la fenêtre</param>
-        private void SetGraphicsDeviceDefaultViewport(object _, Point windowResolution)
+        private void OnWindowResolutionSetCallback(object _, Point windowResolution)
         {
             this._defaultViewport = new Viewport(0, 0, windowResolution.X, windowResolution.Y);
         }

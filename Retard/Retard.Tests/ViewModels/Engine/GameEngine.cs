@@ -16,6 +16,7 @@ using Retard.SceneManagement.ViewModels;
 using Retard.Sprites.Models;
 using Retard.Tests.Models;
 using Retard.Tests.ViewModels.Scenes;
+using Retard.UI.ViewModels;
 
 namespace Retard.Tests.ViewModels.Engine
 {
@@ -45,6 +46,10 @@ namespace Retard.Tests.ViewModels.Engine
             this._controls = new InputControls();
             this._controls.AddAction("Exit", InputEventHandleType.Started, (_) => { game.Exit(); });
             this._controls.Enable();
+
+            // Initialise les managers
+
+            UIManager.Instance.CreateImGUIRenderer(game);
         }
 
         #endregion
@@ -56,6 +61,8 @@ namespace Retard.Tests.ViewModels.Engine
         /// </summary>
         public sealed override void LoadContent()
         {
+            // Récupère les ressources
+
             Dictionary<FixedString16, Texture2D> textures2D = new()
             {
                 { "tiles_test2", this._content.Load<Texture2D>($"{Constants.TEXTURES_DIR_PATH_DEBUG}/tiles_test2") }
@@ -69,6 +76,10 @@ namespace Retard.Tests.ViewModels.Engine
             };
 
             this.CreateScenes(in gameResources);
+
+            // Initialise les managers
+
+            UIManager.Instance.RebuildFontAtlas();
         }
 
         #endregion
