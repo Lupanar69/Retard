@@ -63,6 +63,23 @@ namespace Retard.UI.ViewModels
             this._imGuiRenderer.RebuildFontAtlas();
         }
 
+        /// <summary>
+        /// Démarre le rendu
+        /// </summary>
+        /// <param name="gameTime">Temps écoulé</param>
+        public void StartDraw(GameTime gameTime)
+        {
+            this._imGuiRenderer.BeginLayout(gameTime);
+        }
+
+        /// <summary>
+        /// Arrête le rendu
+        /// </summary>
+        public void EndDraw()
+        {
+            this._imGuiRenderer.EndLayout();
+        }
+
         #endregion
     }
 }
