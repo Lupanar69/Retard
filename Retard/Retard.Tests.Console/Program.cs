@@ -6,7 +6,7 @@ namespace Retard.Tests.Console
     {
         static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<BenchmarkTest>();
+            var summary = BenchmarkRunner.Run<StringBenchmarkTest>();
             System.Console.ReadLine();
         }
     }

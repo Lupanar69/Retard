@@ -14,7 +14,7 @@ namespace Retard.Core.Models.ValueTypes
         /// <summary>
         /// Longueur de la string
         /// </summary>
-        public readonly short Length;
+        public readonly int Length;
 
         /// <summary>
         /// Le tableau contenant chaque caractère de la string.
@@ -30,15 +30,9 @@ namespace Retard.Core.Models.ValueTypes
         /// Constructeur
         /// </summary>
         /// <param name="str">La string à convertir en NativeString</param>
-        public NativeString(NativeString str)
+        public NativeString(NativeString str) : this(str.AsSpan())
         {
-            this.Length = str.Length;
-            this._arr = new UnsafeArray<char>(this.Length);
 
-            for (int i = 0; i < this.Length; ++i)
-            {
-                this._arr[i] = str[i];
-            }
         }
 
         /// <summary>
@@ -56,7 +50,7 @@ namespace Retard.Core.Models.ValueTypes
         /// <param name="str">La string à convertir en NativeString</param>
         public NativeString(ReadOnlySpan<char> str)
         {
-            this.Length = (short)str.Length;
+            this.Length = str.Length;
             this._arr = new UnsafeArray<char>(this.Length);
 
             for (int i = 0; i < this.Length; ++i)
@@ -242,6 +236,42 @@ namespace Retard.Core.Models.ValueTypes
         public static implicit operator NativeString(FixedString64 str)
         {
             return new NativeString(str.AsSpan());
+        }
+
+        /// <summary>
+        /// Convertisseur
+        /// </summary>
+        /// <param name="str">La string à convertir</param>
+        public static implicit operator FixedString8(NativeString str)
+        {
+            return new FixedString8(str.ToString());
+        }
+
+        /// <summary>
+        /// Convertisseur
+        /// </summary>
+        /// <param name="str">La string à convertir</param>
+        public static implicit operator FixedString16(NativeString str)
+        {
+            return new FixedString16(str.ToString());
+        }
+
+        /// <summary>
+        /// Convertisseur
+        /// </summary>
+        /// <param name="str">La string à convertir</param>
+        public static implicit operator FixedString32(NativeString str)
+        {
+            return new FixedString32(str.ToString());
+        }
+
+        /// <summary>
+        /// Convertisseur
+        /// </summary>
+        /// <param name="str">La string à convertir</param>
+        public static implicit operator FixedString64(NativeString str)
+        {
+            return new FixedString64(str.ToString());
         }
 
         /// <summary>

@@ -29,7 +29,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Using Include="Retard.Core.ViewModels.Debug.Log" Static="True" />
+		<Using Include="Retard.Core.ViewModels.Utilities.Log" Static="True" />
 	</ItemGroup>
 
 	<ItemGroup>
