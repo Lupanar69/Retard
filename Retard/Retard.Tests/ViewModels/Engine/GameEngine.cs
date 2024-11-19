@@ -61,6 +61,8 @@ namespace Retard.Tests.ViewModels.Engine
         /// </summary>
         public sealed override void LoadContent()
         {
+            base.LoadContent();
+
             // Récupère les ressources
 
             Dictionary<FixedString16, Texture2D> textures2D = new()

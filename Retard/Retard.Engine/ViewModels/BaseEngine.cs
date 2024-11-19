@@ -116,7 +116,7 @@ namespace Retard.Engine.ViewModels
         /// <summary>
         /// Charge le contenu externe du jeu
         /// </summary>
-        public abstract void LoadContent();
+        public virtual void LoadContent() { }
 
         /// <summary>
         /// Màj à chaque frame

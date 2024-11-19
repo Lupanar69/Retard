@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Resources/Shaders/SpritesheetInstancingShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Resources/Shaders/SpritesheetInstancingShader.fx
+
 #begin Resources/Textures/Test/tiles_test2.png
 /importer:TextureImporter
 /processor:TextureProcessor

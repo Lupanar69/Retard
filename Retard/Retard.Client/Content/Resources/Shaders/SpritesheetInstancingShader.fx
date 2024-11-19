@@ -1,17 +1,17 @@
-//#define VS_SHADERMODEL vs_4_0 // Dx10
+﻿//#define VS_SHADERMODEL vs_4_0 // Dx10
 //#define PS_SHADERMODEL ps_4_0
 
 #define VS_SHADERMODEL vs_5_0 // Dx11
 #define PS_SHADERMODEL ps_5_0
 
-float2 DisplaySize;       // Size of the game in Pixel x and y (Not Monitor size, Gamesize!)
-float2 TextureSize;       // Spritesheet size in x and y
+float2 DisplaySize; // Size of the game in Pixel x and y (Not Monitor size, Gamesize!)
+float2 TextureSize; // Spritesheet size in x and y
 float4x4 View_projection; // Matrix (I Testet, Translation, Scale, RotationZ(They are working like the Spritebatch))
 sampler TextureSampler : register(s0);
 
 // Vertex shader
 struct VertexInput
-{        
+{
     float4 V_Position : POSITION0;
     float4 V_uv : TEXCOORD0;
 };
@@ -39,7 +39,7 @@ struct PixelInput
 // Rotation around the origin
 // theta = Roatation in radians 2Pi (Pi = half rotation, 2Pi = full rotation)
 float2x2 getRotationMatrix(float theta)
-{    
+{
     float s = sin(theta);
     float c = cos(theta);
     return float2x2(c, -s, s, c);
@@ -125,13 +125,13 @@ PixelInput SpriteVertexShader(VertexInput v, InstanceInput i)
     
     // ---Scale Matrix---
     // Scales like the Monogame base Matrix in the right Displaysize
-    float aspecRatio = DisplaySize.x / DisplaySize.y;    
+    float aspecRatio = DisplaySize.x / DisplaySize.y;
     float scaleFactor = 2.0 / DisplaySize.y;
     float x = scaleFactor / aspecRatio;
     float y = scaleFactor;
     float4x4 scalematrix = float4x4(
-    x , 0, 0, 0,
-    0, y , 0, 0,
+    x, 0, 0, 0,
+    0, y, 0, 0,
     0, 0, 1, 0,
     -1, 1, 0, 1); // -1x, 1y translates the Origin to the top Left Corner
     //---End Scale Matrix---
@@ -180,7 +180,7 @@ PixelInput SpriteVertexShader(VertexInput v, InstanceInput i)
 
 
 float4 SpritePixelShader(PixelInput p) : SV_TARGET
-{    
+{
     //Standard texture coloring (Color texture * Tint Color)
     float4 diffuse = tex2D(TextureSampler, p.P_uv.xy);
     return diffuse * p.P_Color;
@@ -190,7 +190,7 @@ technique SpriteBatch
 {
     pass
     {
-        VertexShader = compile VS_SHADERMODEL SpriteVertexShader();
-        PixelShader = compile PS_SHADERMODEL SpritePixelShader();
+        VertexShader = compile VS_SHADERMODELSpriteVertexShader();
+        PixelShader = compile PS_SHADERMODELSpritePixelShader();
     }
 }

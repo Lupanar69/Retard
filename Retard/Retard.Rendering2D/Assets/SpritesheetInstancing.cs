@@ -162,16 +162,14 @@ namespace Monogame.SpritesheetInstancing
             }
 
             this.spriteSheet = spriteSheet;
+
             if (spriteSheet != null)
             {
                 spritesheetWidth = spriteSheet.Width;
                 spritesheetHeight = spriteSheet.Height;
-                hasSpritesheet = true;
             }
-            else
-            {
-                hasSpritesheet = false;
-            }
+
+            hasSpritesheet = spriteSheet != null;
         }
 
         /// <summary>
@@ -182,16 +180,14 @@ namespace Monogame.SpritesheetInstancing
         public void ChangeSpritesheetUnsave(Texture2D spriteSheet)
         {
             this.spriteSheet = spriteSheet;
+
             if (spriteSheet != null)
             {
                 spritesheetWidth = spriteSheet.Width;
                 spritesheetHeight = spriteSheet.Height;
-                hasSpritesheet = true;
             }
-            else
-            {
-                hasSpritesheet = false;
-            }
+
+            hasSpritesheet = spriteSheet != null;
         }
 
         /// <summary>
